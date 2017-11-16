@@ -1,0 +1,247 @@
+{
+  "log_level": "DEBUG",
+  "username": "username",
+  "password": "password",
+  "rds_config": {
+    "region": "us-east-1",
+    "db_prefix": "cf",
+    "allow_user_provision_parameters": true,
+    "allow_user_update_parameters": true,
+    "allow_user_bind_parameters": true,
+    "catalog": {
+      "services": [
+        {
+          "id": "a2c9adda-6511-462c-9934-b3fd8236e9f0",
+          "name": "rdspostgres",
+          "description": "RDS PostgreSQL service",
+          "bindable": true,
+          "tags": [
+            "postgres",
+            "relational"
+          ],
+          "metadata": {
+            "displayName": "RDS PostgreSQL",
+            "imageUrl": "data:image/png;",
+            "longDescription": "RDS PostgreSQL service",
+            "providerDisplayName": "Amazon Web Services",
+            "documentationUrl": "https://aws.amazon.com/documentation/rds/",
+            "supportUrl": "https://forums.aws.amazon.com/forum.jspa?forumID=60"
+          },
+          "plan_updateable": true,
+          "plans": [
+            {
+              "id": "d42fc3cc-1341-4aa3-866e-01bc5243dc3e",
+              "name": "9.3-medium",
+              "description": "RDS PostgreSQL 9.3 (db.m3.medium, 10Gb)",
+              "metadata": {
+                "costs": [
+                  {
+                    "amount": {
+                      "usd": 0.180
+                    },
+                    "unit": "HOUR"
+                  }
+                ],
+                "bullets": [
+                  "Dedicated PostgreSQL 9.3 server",
+                  "PostgreSQL 9.3",
+                  "AWS RDS"
+                ]
+              },
+              "free": false,
+              "rds_properties": {
+                "db_instance_class": "db.m3.medium",
+                "engine": "postgres",
+                "engine_version": "9.3.9",
+                "allocated_storage": 10,
+                "auto_minor_version_upgrade": true,
+                "multi_az": true,
+                "publicly_accessible": true,
+                "copy_tags_to_snapshot":true,
+                "skip_final_snapshot": false,
+                "db_security_groups": [
+                  "default"
+                ]
+              }
+            },
+           {
+              "id": "80768f31-5c2c-40e8-8135-59fe3d710dc3",
+              "name": "9.3-large",
+              "description": "RDS PostgreSQL 9.3 (db.m3.large, 50Gb)",
+              "metadata": {
+                "costs": [
+                  {
+                    "amount": {
+                      "usd": 0.370
+                    },
+                    "unit": "HOUR"
+                  }
+                ],
+                "bullets": [
+                  "Dedicated PostgreSQL 9.3 server",
+                  "PostgreSQL 9.3",
+                  "AWS RDS"
+                ]
+              },
+              "free": false,
+              "rds_properties": {
+                "db_instance_class": "db.m3.large",
+                "engine": "postgres",
+                "engine_version": "9.3.9",
+                "allocated_storage": 50,
+                "auto_minor_version_upgrade": true,
+                "multi_az": true,
+                "publicly_accessible": true,
+                "copy_tags_to_snapshot":true,
+                "skip_final_snapshot": false,
+                "db_security_groups": [
+                  "default"
+                ]
+              }
+            },
+           {
+              "id": "347dfd90-4f0c-42ed-a92c-1d8096d373d1",
+              "name": "9.3-xlarge",
+              "description": "RDS PostgreSQL 9.3 (db.m3.xlarge, 100Gb)",
+              "metadata": {
+                "costs": [
+                  {
+                    "amount": {
+                      "usd": 0.740
+                    },
+                    "unit": "HOUR"
+                  }
+                ],
+                "bullets": [
+                  "Dedicated PostgreSQL 9.3 server",
+                  "PostgreSQL 9.3",
+                  "AWS RDS"
+                ]
+              },
+              "free": false,
+              "rds_properties": {
+                "db_instance_class": "db.m3.xlarge",
+                "engine": "postgres",
+                "engine_version": "9.3.9",
+                "allocated_storage": 100,
+                "auto_minor_version_upgrade": true,
+                "multi_az": true,
+                "publicly_accessible": true,
+                "copy_tags_to_snapshot":true,
+                "skip_final_snapshot": false,
+                "db_security_groups": [
+                  "default"
+                ]
+              }
+            },
+            {
+              "id": "d03b544e-3be5-4aca-bb3b-11544247f313",
+              "name": "9.4-medium",
+              "description": "RDS PostgreSQL 9.4 (db.m3.medium, 10Gb)",
+              "metadata": {
+                "costs": [
+                  {
+                    "amount": {
+                      "usd": 0.180
+                    },
+                    "unit": "HOUR"
+                  }
+                ],
+                "bullets": [
+                  "Dedicated PostgreSQL 9.4 server",
+                  "PostgreSQL 9.4",
+                  "AWS RDS"
+                ]
+              },
+              "free": false,
+              "rds_properties": {
+                "db_instance_class": "db.m3.medium",
+                "engine": "postgres",
+                "engine_version": "9.4.4",
+                "allocated_storage": 10,
+                "auto_minor_version_upgrade": true,
+                "multi_az": true,
+                "publicly_accessible": true,
+                "copy_tags_to_snapshot":true,
+                "skip_final_snapshot": false,
+                "db_security_groups": [
+                  "default"
+                ]
+              }
+            },
+           {
+              "id": "65cfcd68-625d-4635-a828-4ccef50af986",
+              "name": "9.4-large",
+              "description": "RDS PostgreSQL 9.4 (db.m3.large, 50Gb)",
+              "metadata": {
+                "costs": [
+                  {
+                    "amount": {
+                      "usd": 0.370
+                    },
+                    "unit": "HOUR"
+                  }
+                ],
+                "bullets": [
+                  "Dedicated PostgreSQL 9.4 server",
+                  "PostgreSQL 9.4",
+                  "AWS RDS"
+                ]
+              },
+              "free": false,
+              "rds_properties": {
+                "db_instance_class": "db.m3.large",
+                "engine": "postgres",
+                "engine_version": "9.4.4",
+                "allocated_storage": 50,
+                "auto_minor_version_upgrade": true,
+                "multi_az": true,
+                "publicly_accessible": true,
+                "copy_tags_to_snapshot":true,
+                "skip_final_snapshot": false,
+                "db_security_groups": [
+                  "default"
+                ]
+              }
+            },
+           {
+              "id": "8f8d8ed7-ddd3-4b1f-befa-976cf7fc4116",
+              "name": "9.4-xlarge",
+              "description": "RDS PostgreSQL 9.4 (db.m3.xlarge, 100Gb)",
+              "metadata": {
+                "costs": [
+                  {
+                    "amount": {
+                      "usd": 0.740
+                    },
+                    "unit": "HOUR"
+                  }
+                ],
+                "bullets": [
+                  "Dedicated PostgreSQL 9.4 server",
+                  "PostgreSQL 9.4",
+                  "AWS RDS"
+                ]
+              },
+              "free": false,
+              "rds_properties": {
+                "db_instance_class": "db.m3.xlarge",
+                "engine": "postgres",
+                "engine_version": "9.4.4",
+                "allocated_storage": 100,
+                "auto_minor_version_upgrade": true,
+                "multi_az": true,
+                "publicly_accessible": true,
+                "copy_tags_to_snapshot":true,
+                "skip_final_snapshot": false,
+                "db_security_groups": [
+                  "default"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

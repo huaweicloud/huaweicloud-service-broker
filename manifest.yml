@@ -1,0 +1,8 @@
+applications:
+  - name: rds-broker
+    memory: 256M
+    disk_quota: 256M
+    buildpack: go_buildpack
+    env:
+      AWS_ACCESS_KEY_ID: "your-aws-access-key-id"
+      AWS_SECRET_ACCESS_KEY: "your-aws-secret-access-key"
