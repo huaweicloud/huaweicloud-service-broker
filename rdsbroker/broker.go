@@ -8,6 +8,12 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"code.cloudfoundry.org/lager"
 
+	"github.com/gophercloud/gophercloud"
+	"github.com/gophercloud/gophercloud/openstack"
+	trusts "github.com/gophercloud/gophercloud/openstack/identity/v3/extensions/trusts"
+	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
+	"github.com/gophercloud/gophercloud/openstack/rds/v1/instance"
+
 	//"github.com/chenyingkof/rds-broker/awsrds"
 	//"github.com/chenyingkof/rds-broker/sqlengine"
 	//"github.com/chenyingkof/rds-broker/utils"
@@ -79,8 +85,95 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	})
 
 	fmt.Println("########Call Provision#########")
-
 	provisioningResponse := brokerapi.ProvisioningResponse{}
+
+
+	//keystoneEndpoint := "https://iam.eu-de.otc.t-systems.com/v3" //TODO set the endpoint of keystone.
+	//
+	//pc, err := openstack.NewClient(keystoneEndpoint)
+	//fmt.Println("pc '%s' not found", pc)
+	//if err != nil {
+	//	fmt.Println("error 01")
+	//	return provisioningResponse, true, nil
+	//}
+	//eo := gophercloud.EndpointOpts{Region: "eu-de", Availability: "public"} //TODO change the two parameters
+	//fmt.Println("eo '%s' not found", eo)
+	//
+	//err1 := openstack.AuthenticateV3(pc, tokens3.AuthOptions{Username: "", Password: "", DomainID: ""}, eo)
+	//fmt.Println("err1 '%s' not found", err1)
+	//
+	//if err1 != nil {
+	//	fmt.Println("error 02")
+    	//	return provisioningResponse, true, nil
+	//}
+	//
+	//sc, err2 := openstack.NewRdsServiceV1(pc, eo)
+	//fmt.Println("sc '%s' not found", sc)
+	//fmt.Println("err2 '%s' not found", err2)
+
+	keystoneEndpoint := "https://iam.eu-de.otc.t-systems.com/v3" //TODO set the endpoint of keystone.
+	pc, err := openstack.NewClient(keystoneEndpoint)
+	if err != nil {
+		fmt.Println("error 01")
+		return provisioningResponse, true, nil
+	}
+	eo := gophercloud.EndpointOpts{Region: "eu-de", Availability: gophercloud.AvailabilityPublic} //TODO change the two parameters
+	opts := tokens3.AuthOptions{
+		IdentityEndpoint: "https://iam.eu-de.otc.t-systems.com/v3",
+		Username:         "grab_tit",
+		UserID:           "cb3cfa12219b47f5809e864b3d511ff5",
+		Password:         "cnp200@HW",
+		DomainID:         "",
+		DomainName:       "grab_tit",
+		AllowReauth:      true,
+	}
+	authOptsExt := trusts.AuthOptsExt{
+		TrustID:            "", //TODO config the trust id
+		AuthOptionsBuilder: &opts,
+	}
+	//authenticate
+	err = openstack.AuthenticateV3(pc, authOptsExt, eo)
+
+	if err != nil {
+		fmt.Println("error 02")
+		return provisioningResponse, true, nil
+	}
+
+	sc, _ := openstack.NewRdsServiceV1(pc, eo)
+	fmt.Println("sc '%s' not found", sc)
+
+	r := rds.Create(sc, rds.CreateOps{Name: "", FlavorRef: "", ReplicaOf: ""})
+	if r.Err != nil {
+		//TODO log the error
+		fmt.Println("error 03")
+		return provisioningResponse, true, nil
+	}
+
+	var instance rds.Instance
+	err3 := r.ExtractInto(&instance)
+	if err3 != nil {
+		//TODO deal with the error
+		fmt.Println("error 04")
+		return provisioningResponse, true, nil
+	}
+
+
+
+	//r := instance.Create(sc, instance.CreateOps{Name: "", FlavorRef: "", ReplicaOf: ""})
+	//if r.Err != nil {
+	//	//TODO log the error
+	//	fmt.Println("error 03")
+	//	return provisioningResponse, true, nil
+	//}
+
+	//instance1 = instance.Instance{}
+	//err3 := r.commonResult.ExtractInto(&instance1)
+	//if err3 != nil {
+	//	//TODO deal with the error
+	//	fmt.Println("error 02")
+	//	return provisioningResponse, true, nil
+	//}
+
 
 	return provisioningResponse, true, nil
 }
