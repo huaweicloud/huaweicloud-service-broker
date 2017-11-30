@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-        keystoneEndpoint := "https://iam.huaweiclouds.com/v3" //TODO set the endpoint of keystone.
+        keystoneEndpoint := "https://iam.test.com/v3" //TODO set the endpoint of keystone.
         pc, err := openstack.NewClient(keystoneEndpoint)
         if err != nil {
                 fmt.Println("error 01")
@@ -40,7 +40,7 @@ func main() {
                 DomainName:       "DomainName",
                 //TenantName:       "eu-de",
                 //Scope:            '{"project": {"name": "eu-de"}}',                 
-                Scope:            tokens3.Scope{ProjectName: "eu-de", DomainName: "DomainName"},    
+                Scope:            tokens3.Scope{ProjectName: "eu-de", DomainName: "DomainName"},
                 AllowReauth:      true,
         }
         authOptsExt := trusts.AuthOptsExt{
