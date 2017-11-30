@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-        keystoneEndpoint := "https://iam.test.com/v3" //TODO set the endpoint of keystone.
+        keystoneEndpoint := "https://iam.eu-de.otc.t-systems.com/v3" //TODO set the endpoint of keystone.
         pc, err := openstack.NewClient(keystoneEndpoint)
         if err != nil {
                 fmt.Println("error 01")
@@ -24,7 +24,7 @@ func main() {
         roots, err := certutil.NewPool("/root/ca/ca.crt")
         if err != nil {
             fmt.Println("error 001")
-            return
+            return 
         }
         config := &tls.Config{}
         config.RootCAs = roots
@@ -37,7 +37,7 @@ func main() {
                 //UserID:           "cb3cfa12219b47f5809e864b3d511ff5",
                 Password:         "Password",
                 DomainID:         "",
-                DomainName:       "DomainName",
+                DomainName:       "grab_tit",
                 //TenantName:       "eu-de",
                 //Scope:            '{"project": {"name": "eu-de"}}',                 
                 Scope:            tokens3.Scope{ProjectName: "eu-de", DomainName: "DomainName"},
