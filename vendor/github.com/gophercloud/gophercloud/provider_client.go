@@ -1,6 +1,7 @@
 package gophercloud
 
 import (
+        "fmt"
 	"bytes"
 	"encoding/json"
 	"io"
@@ -118,7 +119,10 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		if options.RawBody != nil {
 			panic("Please provide only one of JSONBody or RawBody to gophercloud.Request().")
 		}
-
+		fmt.Println("call Request: url")
+		fmt.Println(url)
+		fmt.Println("call Request: body")
+		fmt.Println(options.JSONBody)
 		rendered, err := json.Marshal(options.JSONBody)
 		if err != nil {
 			return nil, err
@@ -147,7 +151,8 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 
 	// Set the User-Agent header
 	req.Header.Set("User-Agent", client.UserAgent.Join())
-
+	//req.Header.Set("Content-Type", "application/json")
+	//req.Header.Set("X-Language", "en-us")
 	if options.MoreHeaders != nil {
 		for k, v := range options.MoreHeaders {
 			if v != "" {
@@ -165,7 +170,11 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 
 	// Set connection parameter to close the connection immediately when we've got the response
 	req.Close = true
-
+        //fmt.Println("call client.HTTPClient.Do")
+        //fmt.Println(req)
+         
+        //fmt.Println("creq.Header")
+        //fmt.Println(req.Header)
 	// Issue the request.
 	resp, err := client.HTTPClient.Do(req)
 	if err != nil {
@@ -176,7 +185,10 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 	if options.OkCodes == nil {
 		options.OkCodes = defaultOkCodes(method)
 	}
-
+	fmt.Println("options.OkCodes")
+	fmt.Println(options.OkCodes)
+	fmt.Println("resp.StatusCode")
+	fmt.Println(resp.StatusCode)
 	// Validate the HTTP response status.
 	var ok bool
 	for _, code := range options.OkCodes {
@@ -200,7 +212,8 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 			Body:     body,
 		}
 		//respErr.Function = "gophercloud.ProviderClient.Request"
-
+		fmt.Println("resp.StatusCode")
+		fmt.Println(resp.StatusCode)
 		errType := options.ErrorContext
 		switch resp.StatusCode {
 		case http.StatusBadRequest:
@@ -285,6 +298,8 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		if err := json.NewDecoder(resp.Body).Decode(options.JSONResponse); err != nil {
 			return nil, err
 		}
+        fmt.Println("Return Response: body")
+        fmt.Println(resp.Body)
 	}
 
 	return resp, nil

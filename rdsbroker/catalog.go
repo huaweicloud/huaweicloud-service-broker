@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-const minAllocatedStorage = 5
-const maxAllocatedStorage = 6144
 
 type Catalog struct {
 	Services []Service `json:"services,omitempty"`
@@ -61,32 +59,23 @@ type Cost struct {
 }
 
 type RDSProperties struct {
-	DBInstanceClass             string   `json:"db_instance_class"`
-	Engine                      string   `json:"engine"`
-	EngineVersion               string   `json:"engine_version"`
-	AllocatedStorage            int64    `json:"allocated_storage"`
-	AutoMinorVersionUpgrade     bool     `json:"auto_minor_version_upgrade,omitempty"`
-	AvailabilityZone            string   `json:"availability_zone,omitempty"`
-	BackupRetentionPeriod       int64    `json:"backup_retention_period,omitempty"`
-	CharacterSetName            string   `json:"character_set_name,omitempty"`
-	DBParameterGroupName        string   `json:"db_parameter_group_name,omitempty"`
-	DBClusterParameterGroupName string   `json:"db_cluster_parameter_group_name,omitempty"`
-	DBSecurityGroups            []string `json:"db_security_groups,omitempty"`
-	DBSubnetGroupName           string   `json:"db_subnet_group_name,omitempty"`
-	LicenseModel                string   `json:"license_model,omitempty"`
-	MultiAZ                     bool     `json:"multi_az,omitempty"`
-	OptionGroupName             string   `json:"option_group_name,omitempty"`
-	Port                        int64    `json:"port,omitempty"`
-	PreferredBackupWindow       string   `json:"preferred_backup_window,omitempty"`
-	PreferredMaintenanceWindow  string   `json:"preferred_maintenance_window,omitempty"`
-	PubliclyAccessible          bool     `json:"publicly_accessible,omitempty"`
-	StorageEncrypted            bool     `json:"storage_encrypted,omitempty"`
-	KmsKeyID                    string   `json:"kms_key_id,omitempty"`
-	StorageType                 string   `json:"storage_type,omitempty"`
-	Iops                        int64    `json:"iops,omitempty"`
-	VpcSecurityGroupIds         []string `json:"vpc_security_group_ids,omitempty"`
-	CopyTagsToSnapshot          bool     `json:"copy_tags_to_snapshot,omitempty"`
-	SkipFinalSnapshot           bool     `json:"skip_final_snapshot,omitempty"`
+	DatastoreType               string   `json:"datastore_type"`
+	DatastoreVersion            string   `json:"datastore_version"`
+	FlavorName                  string   `json:"flavor_name"`
+	FlavorId                    string   `json:"flavor_id"`
+	VolumeType                  string   `json:"volume_type"`
+	VolumeSize                  int64    `json:"volume_size"`
+	Region                      string   `json:"region"`
+	AvailabilityZone            string   `json:"availability_zone"`
+	VpcId                       string   `json:"vpc_id"`
+	SubnetId                    string   `json:"subnet_id"`
+	SecurityGroupId             string   `json:"security_group_id"`
+	Dbport                      string   `json:"db_port"`
+	BackupStrategyStarttime     string   `json:"backup_strategy_starttime"`
+	BackupStrategyKeepdays      int64    `json:"backup_strategy_keepdays"`
+	Dbpassword                  string   `json:"db_password"`
+	Dbusername                  string   `json:"db_username"`
+	DbName                      string   `json:"db_name"`
 }
 
 func (c Catalog) Validate() error {
@@ -164,21 +153,21 @@ func (sp ServicePlan) Validate() error {
 }
 
 func (rp RDSProperties) Validate() error {
-	if rp.DBInstanceClass == "" {
-		return fmt.Errorf("Must provide a non-empty DBInstanceClass (%+v)", rp)
+	if rp.FlavorId == "" {
+		return fmt.Errorf("Must provide a non-empty DBInstance Flavor (%+v)", rp)
 	}
 
-	if rp.Engine == "" {
+	if rp.DatastoreType == "" {
 		return fmt.Errorf("Must provide a non-empty Engine (%+v)", rp)
 	}
 
-	switch strings.ToLower(rp.Engine) {
+	switch strings.ToLower(rp.DatastoreType) {
 	case "aurora":
 	case "mariadb":
 	case "mysql":
-	case "postgres":
+	case "postgresql":
 	default:
-		return fmt.Errorf("This broker does not support RDS engine '%s' (%+v)", rp.Engine, rp)
+		return fmt.Errorf("This broker does not support RDS engine '%s' (%+v)", rp.DatastoreType, rp)
 	}
 
 	return nil

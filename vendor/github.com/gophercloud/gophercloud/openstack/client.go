@@ -357,8 +357,10 @@ func NewLoadBalancerV2(client *gophercloud.ProviderClient, eo gophercloud.Endpoi
 
 //NewRdsServiceV1 creates the a ServiceClient that may be used to access the v1
 //rds service which is a service of db instances management of huawei cloud
-func NewRdsServiceV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts) (*gophercloud.ServiceClient, error) {
+func NewRdsServiceV1(client *gophercloud.ProviderClient, eo gophercloud.EndpointOpts, project_id string) (*gophercloud.ServiceClient, error) {
 	sc, err := initClientOpts(client, eo, "rds") //TODO make sure what's the register name in keystone
-	//sc.ResourceBase = sc.Endpont + "rds/v1" //TODO make sure if it's neccessary to set the base uri
+	//sc.ResourceBase = sc.Endpoint + "703fdd5a62c84cbfb1385c212881f695/" //TODO make sure if it's neccessary to set the base uri
+	//sc.ResourceBase = sc.Endpoint + "89cd04f168b84af6be287f71730fdb4b/"
+	sc.ResourceBase = sc.Endpoint + project_id +"/"
 	return sc, err
 }

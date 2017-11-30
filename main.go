@@ -8,16 +8,10 @@ import (
 	"os"
 	"strings"
 
-	//"github.com/aws/aws-sdk-go/aws"
-	//"github.com/aws/aws-sdk-go/aws/session"
-	//"github.com/aws/aws-sdk-go/service/iam"
-	//"github.com/aws/aws-sdk-go/service/rds"
 	"github.com/frodenas/brokerapi"
 	"code.cloudfoundry.org/lager"
 
-	//"github.com/chenyingkof/rds-broker/awsrds"
 	"github.com/chenyingkof/rds-broker/rdsbroker"
-	//"github.com/chenyingkof/rds-broker/sqlengine"
 )
 
 var (
@@ -58,16 +52,6 @@ func main() {
 	}
 
 	logger := buildLogger(config.LogLevel)
-
-	//awsConfig := aws.NewConfig().WithRegion(config.RDSConfig.Region)
-	//awsSession := session.New(awsConfig)
-
-	//iamsvc := iam.New(awsSession)
-	//rdssvc := rds.New(awsSession)
-	//dbInstance := awsrds.NewRDSDBInstance(config.RDSConfig.Region, iamsvc, rdssvc, logger)
-	//dbCluster := awsrds.NewRDSDBCluster(config.RDSConfig.Region, iamsvc, rdssvc, logger)
-
-	//sqlProvider := sqlengine.NewProviderService(logger)
 
 	serviceBroker := rdsbroker.New(config.RDSConfig, logger)
 

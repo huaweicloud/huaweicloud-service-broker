@@ -14,6 +14,10 @@ func getURL(c *gophercloud.ServiceClient, id string) string {
 	return c.ServiceURL("instances", id)
 }
 
-func updateVolumeURL(c *gophercloud.ServiceClient, id string) string {
+func listURL(c *gophercloud.ServiceClient) string {
+	return c.ServiceURL("instances")
+}
+
+func updateURL(c *gophercloud.ServiceClient, id string) string {
 	return c.ServiceURL("instances", id, "action")
 }

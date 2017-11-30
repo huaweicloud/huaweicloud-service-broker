@@ -1,5 +1,9 @@
 package gophercloud
 
+//import (
+//        "fmt"
+//)
+
 /*
 AuthOptions stores information needed to authenticate to an OpenStack Cloud.
 You can populate one manually, or use a provider's AuthOptionsFromEnv() function
@@ -190,15 +194,22 @@ func (opts *AuthOptions) ToTokenV3CreateMap(scope map[string]interface{}) (map[s
 	} else {
 		// Password authentication.
 		req.Auth.Identity.Methods = []string{"password"}
-
+                //fmt.Println("call auth_option)")
+                //fmt.Println(opts)
+                //fmt.Println("opts.Username")
+                //fmt.Println(opts.Username)
+                //fmt.Println("opts.UserID")
+                //fmt.Println(opts.UserID)
 		// At least one of Username and UserID must be specified.
 		if opts.Username == "" && opts.UserID == "" {
+                        //fmt.Println("ErrUsernameOrUserID)")
 			return nil, ErrUsernameOrUserID{}
 		}
 
 		if opts.Username != "" {
 			// If Username is provided, UserID may not be provided.
 			if opts.UserID != "" {
+                                //fmt.Println("ErrUsernameOrUserID 02")
 				return nil, ErrUsernameOrUserID{}
 			}
 

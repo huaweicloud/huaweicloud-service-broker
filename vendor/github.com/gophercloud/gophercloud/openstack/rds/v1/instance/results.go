@@ -9,21 +9,21 @@ type Instance struct {
 	Created          string `json:"created"`
 	HostName         string `json:"hostname"`
 	Type             string `json:"type"`
-	Region           string `json:"string"`
+	Region           string `json:"region"`
 	Updated          string `json:"updated"`
 	AvailabilityZone string `json:"availabilityZone"`
 	Vpc              string `json:"vpc"`
-	SubnetId         string `json:"nics.subnetId"`
-	SecurityGroupId  string `json:"securityGroup.id"`
-	FlavorId         string `json:"flavor.id"`
-	Volume           string `json:"volume"`
-	DbPort           int    `json:"dbPort"`
-	DataStoreInfo    string `json:"dataStoreInfo"`
-	JobsId           string `json:"extendParam.jobs.id"`
-	BackupStrategy   string `json:"backupStrategy"`
-	SlaveId          string `json:"slaveId"`
-	ReplicationMode  string `json:"ha.replicationMode"`
-	ReplicaOf        string `json:"replica_of"`
+	Nics             map[string]string `json:"nics""`
+	SecurityGroup    map[string]string `json:"securityGroup""`
+	Flavor           map[string]string `json:"flavor""`
+	Volume           map[string]interface{} `json:"volume""`
+	DbPort           int64  `json:"dbPort"`
+	DataStoreInfo    map[string]string `json:"dataStoreInfo""`
+	Extendparam      map[string]interface{} `json:"extendparam"`
+	BackupStrategy   map[string]interface{} `json:"backupStrategy"`
+	//SlaveId          string `json:"slaveId"`
+	//ReplicationMode  string `json:"ha.replicationMode"`
+	//ReplicaOf        string `json:"replica_of"`
 }
 
 // Extract will get the Volume object out of the commonResult object.
@@ -46,6 +46,10 @@ type CreateResult struct {
 	commonResult
 }
 
+type UpdateResult struct {
+	commonResult
+}
+
 type DeleteResult struct {
 	commonResult
 }
@@ -54,6 +58,14 @@ type GetResult struct {
 	commonResult
 }
 
-type UpdateVolumeResult struct {
-	commonResult
+type ListResult struct {
+	gophercloud.Result
+}
+
+func (lr ListResult) Extract() ([]Instance, error) {
+	var a struct {
+		Instances []Instance `json:"instances"`
+	}
+	err := lr.Result.ExtractInto(&a)
+	return a.Instances, err
 }
