@@ -579,11 +579,11 @@ func (b *RDSBroker) NewRDSClient() (*gophercloud.ServiceClient, error) {
 	eo := gophercloud.EndpointOpts{Region: "eu-de", Availability: gophercloud.AvailabilityPublic}
 	opts := tokens3.AuthOptions{
 		IdentityEndpoint: "https://iam.eu-de.otc.t-systems.com/v3",
-		Username:         "swx414799",
-		Password:         "Huawei@1234",
+		Username:         "xxxxxx",
+		Password:         "xxxxxx",
 		//DomainID:         "",
-		DomainName:       "swx414799",
-		Scope:            tokens3.Scope{ProjectName: "eu-de", DomainName: "swx414799"},
+		DomainName:       "xxxxxx",
+		Scope:            tokens3.Scope{ProjectName: "eu-de", DomainName: "xxxxxx"},
 		AllowReauth:      true,
 	}
 	authOptsExt := trusts.AuthOptsExt{
@@ -597,7 +597,7 @@ func (b *RDSBroker) NewRDSClient() (*gophercloud.ServiceClient, error) {
 		return nil, err
 	}
 
-	sc, err := openstack.NewRdsServiceV1(pc, eo, "89cd04f168b84af6be287f71730fdb4b")
+	sc, err := openstack.NewRdsServiceV1(pc, eo, "xxxxxx")
 	if err != nil {
 		fmt.Println("Creating RDS Client failed. Error: '%s'", err)
 		return nil, err
