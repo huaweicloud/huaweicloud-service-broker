@@ -5,7 +5,6 @@ import (
 	"strings"
 )
 
-
 type Catalog struct {
 	Services []Service `json:"services,omitempty"`
 }
@@ -59,23 +58,23 @@ type Cost struct {
 }
 
 type RDSProperties struct {
-	DatastoreType               string   `json:"datastore_type"`
-	DatastoreVersion            string   `json:"datastore_version"`
-	FlavorName                  string   `json:"flavor_name"`
-	FlavorId                    string   `json:"flavor_id"`
-	VolumeType                  string   `json:"volume_type"`
-	VolumeSize                  int64    `json:"volume_size"`
-	Region                      string   `json:"region"`
-	AvailabilityZone            string   `json:"availability_zone"`
-	VpcId                       string   `json:"vpc_id"`
-	SubnetId                    string   `json:"subnet_id"`
-	SecurityGroupId             string   `json:"security_group_id"`
-	Dbport                      string   `json:"db_port"`
-	BackupStrategyStarttime     string   `json:"backup_strategy_starttime"`
-	BackupStrategyKeepdays      int64    `json:"backup_strategy_keepdays"`
-	Dbpassword                  string   `json:"db_password"`
-	Dbusername                  string   `json:"db_username"`
-	DbName                      string   `json:"db_name"`
+	DatastoreType           string `json:"datastore_type"`
+	DatastoreVersion        string `json:"datastore_version"`
+	FlavorName              string `json:"flavor_name"`
+	FlavorId                string `json:"flavor_id"`
+	VolumeType              string `json:"volume_type"`
+	VolumeSize              int64  `json:"volume_size"`
+	Region                  string `json:"region"`
+	AvailabilityZone        string `json:"availability_zone"`
+	VpcId                   string `json:"vpc_id"`
+	SubnetId                string `json:"subnet_id"`
+	SecurityGroupId         string `json:"security_group_id"`
+	Dbport                  string `json:"db_port"`
+	BackupStrategyStarttime string `json:"backup_strategy_starttime"`
+	BackupStrategyKeepdays  int64  `json:"backup_strategy_keepdays"`
+	Dbpassword              string `json:"db_password"`
+	Dbusername              string `json:"db_username"`
+	DbName                  string `json:"db_name"`
 }
 
 func (c Catalog) Validate() error {

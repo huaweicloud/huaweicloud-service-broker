@@ -6,14 +6,14 @@ import (
 )
 
 type Config struct {
-	IdentityEndpoint             string  `json:"identity_endpoint"`
-	Ca                           string  `json:"ca"`
-	Username                     string  `json:"username"`
-	Password                     string  `json:"password"`
-	DomainName                   string  `json:"domain_name"`
-	ProjectName                  string  `json:"project_name"`
-	ProjectID                    string  `json:"project_id"`
-	Region                       string  `json:"region"`
+	IdentityEndpoint string `json:"identity_endpoint"`
+	Ca               string `json:"ca"`
+	Username         string `json:"username"`
+	Password         string `json:"password"`
+	DomainName       string `json:"domain_name"`
+	ProjectName      string `json:"project_name"`
+	ProjectID        string `json:"project_id"`
+	Region           string `json:"region"`
 	//
 	DBPrefix                     string  `json:"db_prefix"`
 	AllowUserProvisionParameters bool    `json:"allow_user_provision_parameters"`
