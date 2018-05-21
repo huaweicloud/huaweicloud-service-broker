@@ -559,7 +559,8 @@ func (b *RDSBroker) LastOperation(instanceID string) (brokerapi.LastOperationRes
 }
 
 func (b *RDSBroker) NewRDSClient() (*gophercloud.ServiceClient, error) {
-	keystoneEndpoint := "https://iam.eu-de.otc.t-systems.com/v3"
+	// TODO configure keystone endpoint
+	keystoneEndpoint := ""
 	pc, err := openstack.NewClient(keystoneEndpoint)
 	if err != nil {
 		fmt.Println("Creating OpenStack provider failed. Error:", err)
@@ -578,7 +579,7 @@ func (b *RDSBroker) NewRDSClient() (*gophercloud.ServiceClient, error) {
 
 	eo := gophercloud.EndpointOpts{Region: "eu-de", Availability: gophercloud.AvailabilityPublic}
 	opts := tokens3.AuthOptions{
-		IdentityEndpoint: "https://iam.eu-de.otc.t-systems.com/v3",
+		IdentityEndpoint: keystoneEndpoint,
 		Username:         "xxxxxx",
 		Password:         "xxxxxx",
 		//DomainID:         "",
