@@ -1,1 +1,1 @@
-web: rds-broker --config=config.json -port=$PORT
+web: huaweicloud-service-broker --config=config.json -port=$PORT
