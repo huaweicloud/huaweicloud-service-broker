@@ -108,7 +108,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	servicePlan, ok := b.catalog.FindServicePlan(details.PlanID)
 	if !ok {
-		return provisioningResponse, false, fmt.Errorf("Service Plan '%s' not found", details.PlanID)
+		return provisioningResponse, false, fmt.Errorf("Service Plan %s not found", details.PlanID)
 	}
 
 	rds_prop := servicePlan.RDSProperties
@@ -121,7 +121,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	//dbList := rds.List(rdsClient)
-	//fmt.Println("call db_list Provision call list '%s'", dbList)
+	//fmt.Println("call db_list Provision call list", dbList)
 
 	createResult := rds.Create(rdsClient, rds.CreateOps{
 		Name:             instanceID,
@@ -141,7 +141,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return provisioningResponse, false, createResult.Err
 	}
 
-	fmt.Println("call db_create Provision create_result '%s'", createResult)
+	fmt.Println("call db_create Provision create_result:", createResult)
 
 	dbInstance, err := createResult.Extract()
 	if err != nil {
@@ -149,7 +149,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return provisioningResponse, false, err
 	}
 
-	fmt.Println("instance '%s' call create", dbInstance)
+	fmt.Println("instance call create:", dbInstance)
 
 	rdsInstance := RDSInstance{
 		instanceID:      instanceID,
@@ -158,8 +158,8 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 	b.rdsInstances = append(b.rdsInstances, rdsInstance)
 
-	fmt.Println("rdsInstance '%s' call create", rdsInstance)
-	fmt.Println("rdsInstance '%s' call create", b.rdsInstances)
+	fmt.Println("rdsInstance call create", rdsInstance)
+	fmt.Println("rdsInstance call create", b.rdsInstances)
 
 	return provisioningResponse, true, nil
 }
@@ -177,7 +177,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	var rdsInstanceID string
 	for _, v := range b.rdsInstances {
 		if v.instanceID == instanceID {
-			fmt.Println("Update: rdsInstance: ", v)
+			fmt.Println("Update: rdsInstance:", v)
 			rdsInstanceID = v.rdsInstanceID
 		}
 	}
@@ -187,7 +187,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 
 	updateParameters := UpdateParameters{}
 	if err := mapstructure.Decode(details.Parameters, &updateParameters); err != nil {
-		return false, fmt.Errorf("Update: Getting updateParameters failed. Error:", err)
+		return false, fmt.Errorf("Update: Getting updateParameters failed. Error: %s", err)
 	}
 
 	fmt.Println("Update: updateParameters:", updateParameters)
@@ -196,21 +196,21 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	rdsClient, err := b.NewRDSClientFromConfig()
 	if err != nil {
 		fmt.Println("Deprovision:Creating RDS Client failed. Error:", err)
-		return false, fmt.Errorf("Creating RDS Client failed. Error:", err)
+		return false, fmt.Errorf("Creating RDS Client failed. Error: %s", err)
 	}
 
 	// Find the rdsInstanceID from rds service
 	dbList := rds.List(rdsClient)
-	fmt.Println("Update: call list '%s'", dbList)
+	fmt.Println("Update: call list: ", dbList)
 	dbInstanceList, err := dbList.Extract()
 	if err != nil {
 		fmt.Println("Update: Converting db dbList failed. Error:", err)
-		return false, fmt.Errorf("Update: Converting db dbList failed. Error:", err)
+		return false, fmt.Errorf("Update: Converting db dbList failed. Error: %s", err)
 	}
-	fmt.Println("Update: dbInstanceList '%s'", dbInstanceList)
+	fmt.Println("Update: dbInstanceList", dbInstanceList)
 
 	if rdsInstanceID == "" {
-		fmt.Println("Update: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
+		fmt.Println("Update: Getting rds InstanceID from rdsInstances failed.", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
 			if dbinstance.Name == instanceName {
@@ -226,19 +226,19 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	updateResult := rds.UpdateVolumeSize(rdsClient, rds.UpdateOps{
 		Volume: map[string]interface{}{"size": updateParameters.VolumeSize},
 	}, rdsInstanceID)
-	fmt.Println("Update: updateResult  '%s'", updateResult)
+	fmt.Println("Update: updateResult", updateResult)
 	if updateResult.Err != nil {
 		fmt.Println("Update:Updating dbInstance failed. Error:", updateResult.Err)
-		return false, fmt.Errorf("Update: Updating dbInstance failed. Error:", updateResult.Err)
+		return false, fmt.Errorf("Update: Updating dbInstance failed. Error: %s", updateResult.Err)
 	}
 
 	newgetResult := rds.Get(rdsClient, rdsInstanceID)
 	if newgetResult.Err != nil {
 		fmt.Println("Getting dbInstance failed. Error:", newgetResult.Err)
-		return false, fmt.Errorf("Getting dbInstance failed. Error:", newgetResult.Err)
+		return false, fmt.Errorf("Getting dbInstance failed. Error: %s", newgetResult.Err)
 	}
 
-	fmt.Println("Update: newgetResult  '%s'", newgetResult)
+	fmt.Println("Update: newgetResult", newgetResult)
 
 	return true, nil
 }
@@ -257,7 +257,7 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	var rdsInstanceID string
 	for _, v := range b.rdsInstances {
 		if v.instanceID == instanceID {
-			fmt.Println("Deprovision: rdsInstance: ", v)
+			fmt.Println("Deprovision: rdsInstance:", v)
 			rdsInstanceID = v.rdsInstanceID
 		}
 	}
@@ -267,21 +267,21 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	rdsClient, err := b.NewRDSClientFromConfig()
 	if err != nil {
 		fmt.Println("Deprovision:Creating RDS Client failed. Error:", err)
-		return false, fmt.Errorf("Creating RDS Client failed. Error:", err)
+		return false, fmt.Errorf("Creating RDS Client failed. Error: %s", err)
 	}
 
 	// Find the rdsInstanceID from rds service
 	dbList := rds.List(rdsClient)
-	fmt.Println("Deprovision: call list '%s'", dbList)
+	fmt.Println("Deprovision: call list", dbList)
 	dbInstanceList, err := dbList.Extract()
 	if err != nil {
 		fmt.Println("Deprovision: Converting db dbList failed. Error:", err)
-		return false, fmt.Errorf("Deprovision: Converting db dbList failed. Error:", err)
+		return false, fmt.Errorf("Deprovision: Converting db dbList failed. Error: %s", err)
 	}
-	fmt.Println("Deprovision: dbInstanceList '%s'", dbInstanceList)
+	fmt.Println("Deprovision: dbInstanceList", dbInstanceList)
 
 	if rdsInstanceID == "" {
-		fmt.Println("Deprovision: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
+		fmt.Println("Deprovision: Getting rds InstanceID from rdsInstances failed.", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
 			if dbinstance.Name == instanceName {
@@ -297,12 +297,12 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	getResult := rds.Delete(rdsClient, rdsInstanceID)
 	if getResult.Err != nil {
 		fmt.Println("Deprovision:Deleting dbInstance failed. Error:", getResult.Err)
-		return false, fmt.Errorf("Deprovision:Deleting dbInstance failed. Error:", getResult.Err)
+		return false, fmt.Errorf("Deprovision:Deleting dbInstance failed. Error: %s", getResult.Err)
 	}
 
 	for _, v := range b.rdsInstances {
 		if v.instanceID == instanceID {
-			fmt.Println("Deprovision: rdsInstance: ", v)
+			fmt.Println("Deprovision: rdsInstance:", v)
 			v.instanceID = ""
 			v.rdsInstanceID = ""
 		}
@@ -324,7 +324,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	bindingResponse := brokerapi.BindingResponse{}
 	service, ok := b.catalog.FindService(details.ServiceID)
 	if !ok {
-		return bindingResponse, fmt.Errorf("Service '%s' not found", details.ServiceID)
+		return bindingResponse, fmt.Errorf("Service %s not found", details.ServiceID)
 	}
 
 	if !service.Bindable {
@@ -333,7 +333,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 
 	servicePlan, ok := b.catalog.FindServicePlan(details.PlanID)
 	if !ok {
-		return bindingResponse, fmt.Errorf("Service Plan '%s' not found", details.PlanID)
+		return bindingResponse, fmt.Errorf("Service Plan %s not found", details.PlanID)
 	}
 
 	fmt.Println("Bind: Service", servicePlan)
@@ -345,7 +345,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	var rdsInstanceID string
 	for _, v := range b.rdsInstances {
 		if v.instanceID == instanceID {
-			fmt.Println("Bind: rdsInstance: ", v)
+			fmt.Println("Bind: rdsInstance:", v)
 			rdsInstanceID = v.rdsInstanceID
 		}
 	}
@@ -355,21 +355,21 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	rdsClient, err := b.NewRDSClientFromConfig()
 	if err != nil {
 		fmt.Println("Creating RDS Client failed. Error:", err)
-		return bindingResponse, fmt.Errorf("Creating RDS Client failed. Error:", err)
+		return bindingResponse, fmt.Errorf("Creating RDS Client failed. Error: %s", err)
 	}
 
 	// Find the rdsInstanceID from rds service
 	dbList := rds.List(rdsClient)
-	fmt.Println("Bind: call list '%s'", dbList)
+	fmt.Println("Bind: call list", dbList)
 	dbInstanceList, err := dbList.Extract()
 	if err != nil {
 		fmt.Println("Bind: Converting db dbList failed. Error:", err)
-		return bindingResponse, fmt.Errorf("Bind: Converting db dbList failed. Error:", err)
+		return bindingResponse, fmt.Errorf("Bind: Converting db dbList failed. Error: %s", err)
 	}
-	fmt.Println("Bind: dbInstanceList '%s'", dbInstanceList)
+	fmt.Println("Bind: dbInstanceList", dbInstanceList)
 
 	if rdsInstanceID == "" {
-		fmt.Println("Bind: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
+		fmt.Println("Bind: Getting rds InstanceID from rdsInstances failed.", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
 			if dbinstance.Name == instanceName {
@@ -385,19 +385,19 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	getResult := rds.Get(rdsClient, rdsInstanceID)
 	if getResult.Err != nil {
 		fmt.Println("Getting dbInstance failed. Error:", getResult.Err)
-		return bindingResponse, fmt.Errorf("Getting dbInstance failed. Error:", getResult.Err)
+		return bindingResponse, fmt.Errorf("Getting dbInstance failed. Error: %s", getResult.Err)
 	}
 
-	fmt.Println("Bind: getResult  '%s'", getResult)
+	fmt.Println("Bind: getResult", getResult)
 
 	dbInstance, err := getResult.Extract()
 	if err != nil {
 		fmt.Println("Converting db intersence failed. Error:", err)
-		return bindingResponse, fmt.Errorf("Converting db intersence failed. Error:", err)
+		return bindingResponse, fmt.Errorf("Converting db intersence failed. Error: %s", err)
 	}
 
-	fmt.Println("Bind: dbInstance '%s'", dbInstance)
-	fmt.Println("Bind: dbInstance status '%s'", dbInstance.Status)
+	fmt.Println("Bind: dbInstance", dbInstance)
+	fmt.Println("Bind: dbInstance status", dbInstance.Status)
 	var dbAddress, dbName, dbUsername, dbPassword string
 	var dbPort int64
 	dbAddress = dbInstance.HostName
@@ -408,7 +408,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 
 	var jdbcurl string
 	jdbcurl = b.JDBCURI(dbAddress, dbPort, dbName, dbUsername, dbPassword)
-	fmt.Println("Bind: jdbcurl '%s'", jdbcurl)
+	fmt.Println("Bind: jdbcurl", jdbcurl)
 
 	bindingResponse.Credentials = &brokerapi.CredentialsHash{
 		Host:     dbAddress,
@@ -433,16 +433,16 @@ func (b *RDSBroker) Unbind(instanceID, bindingID string, details brokerapi.Unbin
 	fmt.Println("Unbind: Prefixed instanceID:", instanceID)
 	servicePlan, ok := b.catalog.FindServicePlan(details.PlanID)
 	if !ok {
-		return fmt.Errorf("Service Plan '%s' not found", details.PlanID)
+		return fmt.Errorf("Service Plan %s not found", details.PlanID)
 	}
 
-	fmt.Println("Unbind : Service '%s'", servicePlan)
+	fmt.Println("Unbind : Service", servicePlan)
 
 	fmt.Println("Unbind: rdsInstanceID:", b.rdsInstances)
 	var rdsInstanceID string
 	for _, v := range b.rdsInstances {
 		if v.instanceID == instanceID {
-			fmt.Println("Unbind: rdsInstance: ", v)
+			fmt.Println("Unbind: rdsInstance:", v)
 			rdsInstanceID = v.rdsInstanceID
 		}
 	}
@@ -452,20 +452,20 @@ func (b *RDSBroker) Unbind(instanceID, bindingID string, details brokerapi.Unbin
 	rdsClient, err := b.NewRDSClientFromConfig()
 	if err != nil {
 		fmt.Println("Unbind: Creating RDS Client failed. Error:", err)
-		return fmt.Errorf("Unbind: Creating RDS Client failed. Error:", err)
+		return fmt.Errorf("Unbind: Creating RDS Client failed. Error: %s", err)
 	}
 
 	dbList := rds.List(rdsClient)
-	fmt.Println("Unbind: call list '%s'", dbList)
+	fmt.Println("Unbind: call list", dbList)
 	dbInstanceList, err := dbList.Extract()
 	if err != nil {
 		fmt.Println("Unbind: Converting db dbList failed. Error:", err)
-		return fmt.Errorf("Unbind: Converting db dbList failed. Error:", err)
+		return fmt.Errorf("Unbind: Converting db dbList failed. Error: %s", err)
 	}
-	fmt.Println("Unbind: dbInstanceList '%s'", dbInstanceList)
+	fmt.Println("Unbind: dbInstanceList", dbInstanceList)
 
 	if rdsInstanceID == "" {
-		fmt.Println("Unbind: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
+		fmt.Println("Unbind: Getting rds InstanceID from rdsInstances failed.", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
 			if dbinstance.Name == instanceName {
@@ -494,7 +494,7 @@ func (b *RDSBroker) LastOperation(instanceID string) (brokerapi.LastOperationRes
 	var rdsInstanceID string
 	for _, v := range b.rdsInstances {
 		if v.instanceID == instanceID {
-			fmt.Println("LastOperation: rdsInstance: ", v)
+			fmt.Println("LastOperation: rdsInstance:", v)
 			rdsInstanceID = v.rdsInstanceID
 		}
 	}
@@ -509,16 +509,16 @@ func (b *RDSBroker) LastOperation(instanceID string) (brokerapi.LastOperationRes
 
 	// Find the rdsInstanceID from rds service
 	dbList := rds.List(rdsClient)
-	fmt.Println("LastOperation: call list '%s'", dbList)
+	fmt.Println("LastOperation: call list", dbList)
 	dbInstanceList, err := dbList.Extract()
 	if err != nil {
 		fmt.Println("LastOperation: Converting db dbList failed. Error:", err)
-		return lastOperationResponse, fmt.Errorf("LastOperation: Converting db dbList failed. Error:", err)
+		return lastOperationResponse, fmt.Errorf("LastOperation: Converting db dbList failed. Error: %s", err)
 	}
-	fmt.Println("LastOperation: dbInstanceList '%s'", dbInstanceList)
+	fmt.Println("LastOperation: dbInstanceList", dbInstanceList)
 
 	if rdsInstanceID == "" {
-		fmt.Println("LastOperation: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
+		fmt.Println("LastOperation: Getting rds InstanceID from rdsInstances failed.", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
 			if dbinstance.Name == instanceName {
@@ -537,7 +537,7 @@ func (b *RDSBroker) LastOperation(instanceID string) (brokerapi.LastOperationRes
 		return lastOperationResponse, nil
 	}
 
-	fmt.Println("LastOperation: getResult  '%s'", getResult)
+	fmt.Println("LastOperation: getResult", getResult)
 
 	dbInstance, err := getResult.Extract()
 	if err != nil {
@@ -545,8 +545,8 @@ func (b *RDSBroker) LastOperation(instanceID string) (brokerapi.LastOperationRes
 		return lastOperationResponse, nil
 	}
 
-	fmt.Println("LastOperation: dbInstance '%s'", dbInstance)
-	fmt.Println("LastOperation: dbInstance status '%s'", dbInstance.Status)
+	fmt.Println("LastOperation: dbInstance", dbInstance)
+	fmt.Println("LastOperation: dbInstance status", dbInstance.Status)
 
 	if dbInstance.Status == "BUILD" {
 		lastOperationResponse.State = brokerapi.LastOperationInProgress
@@ -562,13 +562,13 @@ func (b *RDSBroker) NewRDSClient() (*gophercloud.ServiceClient, error) {
 	keystoneEndpoint := "https://iam.eu-de.otc.t-systems.com/v3"
 	pc, err := openstack.NewClient(keystoneEndpoint)
 	if err != nil {
-		fmt.Println("Creating OpenStack provider failed. Error: '%s'", err)
+		fmt.Println("Creating OpenStack provider failed. Error:", err)
 		return nil, err
 	}
 
 	roots, err := certutil.NewPool("/root/ca/ca.crt")
 	if err != nil {
-		fmt.Println("Creating roots Ca failed. Error: '%s'", err)
+		fmt.Println("Creating roots Ca failed. Error:", err)
 		return nil, err
 	}
 
@@ -593,13 +593,13 @@ func (b *RDSBroker) NewRDSClient() (*gophercloud.ServiceClient, error) {
 
 	err = openstack.AuthenticateV3(pc, authOptsExt, gophercloud.EndpointOpts{})
 	if err != nil {
-		fmt.Println("Creating Keystone Auth failed. Error: '%s'", err)
+		fmt.Println("Creating Keystone Auth failed. Error:", err)
 		return nil, err
 	}
 
 	sc, err := openstack.NewRdsServiceV1(pc, eo, "xxxxxx")
 	if err != nil {
-		fmt.Println("Creating RDS Client failed. Error: '%s'", err)
+		fmt.Println("Creating RDS Client failed. Error:", err)
 		return nil, err
 	}
 	return sc, nil
@@ -610,14 +610,14 @@ func (b *RDSBroker) NewRDSClientFromConfig() (*gophercloud.ServiceClient, error)
 	keystoneEndpoint := b.IdentityEndpoint
 	pc, err := openstack.NewClient(keystoneEndpoint)
 	if err != nil {
-		fmt.Println("Creating OpenStack provider failed. Error: '%s'", err)
+		fmt.Println("Creating OpenStack provider failed. Error:", err)
 		return nil, err
 	}
 
 	if b.Ca != "" {
 		roots, err := certutil.NewPool(b.Ca)
 		if err != nil {
-			fmt.Println("Creating roots Ca failed. Error: '%s'", err)
+			fmt.Println("Creating roots Ca failed. Error:", err)
 			return nil, err
 		}
 		config := &tls.Config{}
@@ -642,13 +642,13 @@ func (b *RDSBroker) NewRDSClientFromConfig() (*gophercloud.ServiceClient, error)
 
 	err = openstack.AuthenticateV3(pc, authOptsExt, gophercloud.EndpointOpts{})
 	if err != nil {
-		fmt.Println("Creating Keystone Auth failed. Error: '%s'", err)
+		fmt.Println("Creating Keystone Auth failed. Error:", err)
 		return nil, err
 	}
 
 	sc, err := openstack.NewRdsServiceV1(pc, eo, b.ProjectID)
 	if err != nil {
-		fmt.Println("Creating RDS Client failed. Error: '%s'", err)
+		fmt.Println("Creating RDS Client failed. Error:'", err)
 		return nil, err
 	}
 	return sc, nil
