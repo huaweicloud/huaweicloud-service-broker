@@ -1,4 +1,7 @@
 # Huawei Cloud Service Broker
+[![Go Report Card](https://goreportcard.com/badge/github.com/huaweicloud/huaweicloud-service-broker?branch=master)](https://goreportcard.com/badge/github.com/huaweicloud/huaweicloud-service-broker)
+[![Build Status](https://travis-ci.org/huaweicloud/huaweicloud-service-broker.svg?branch=master)](https://travis-ci.org/huaweicloud/huaweicloud-service-broker)
+[![LICENSE](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/LICENSE)
 
 This is a [Cloud Foundry Service Broker](https://docs.cloudfoundry.org/services/overview.html) for Huawei Cloud.
 Currently it includes [Huawei Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html) supporting [PostgreSQL](http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html) RDS Databases.
