@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/frodenas/brokerapi"
 	"code.cloudfoundry.org/lager"
+	"github.com/frodenas/brokerapi"
 
 	"github.com/huaweicloud/huaweicloud-service-broker/rdsbroker"
 )

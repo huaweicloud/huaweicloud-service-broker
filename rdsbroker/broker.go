@@ -54,22 +54,22 @@ func New(
 	logger lager.Logger,
 ) *RDSBroker {
 	return &RDSBroker{
-		IdentityEndpoint:             config.IdentityEndpoint,
-		Ca:                           config.Ca,
-		Username:                     config.Username,
-		Password:                     config.Password,
-		DomainName:                   config.DomainName,
-		ProjectName:                  config.ProjectName,
-		ProjectID:                    config.ProjectID,
-		Region:                       config.Region,
+		IdentityEndpoint: config.IdentityEndpoint,
+		Ca:               config.Ca,
+		Username:         config.Username,
+		Password:         config.Password,
+		DomainName:       config.DomainName,
+		ProjectName:      config.ProjectName,
+		ProjectID:        config.ProjectID,
+		Region:           config.Region,
 		//
 		dbPrefix:                     config.DBPrefix,
 		allowUserProvisionParameters: config.AllowUserProvisionParameters,
 		allowUserUpdateParameters:    config.AllowUserUpdateParameters,
 		allowUserBindParameters:      config.AllowUserBindParameters,
 		catalog:                      config.Catalog,
-		logger:       logger.Session("broker"),
-		rdsInstances: []RDSInstance{},
+		logger:                       logger.Session("broker"),
+		rdsInstances:                 []RDSInstance{},
 	}
 }
 
@@ -213,7 +213,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		fmt.Println("Update: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
-			if dbinstance.Name == instanceName{
+			if dbinstance.Name == instanceName {
 				rdsInstanceID = dbinstance.ID
 				fmt.Println("Update: range rdsInstanceID:", rdsInstanceID)
 			}
@@ -224,8 +224,8 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Find the rdsInstanceID from rds service end
 
 	updateResult := rds.UpdateVolumeSize(rdsClient, rds.UpdateOps{
-		Volume:  map[string]interface{}{"size": updateParameters.VolumeSize},
-		}, rdsInstanceID)
+		Volume: map[string]interface{}{"size": updateParameters.VolumeSize},
+	}, rdsInstanceID)
 	fmt.Println("Update: updateResult  '%s'", updateResult)
 	if updateResult.Err != nil {
 		fmt.Println("Update:Updating dbInstance failed. Error:", updateResult.Err)
@@ -284,7 +284,7 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		fmt.Println("Deprovision: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
-			if dbinstance.Name == instanceName{
+			if dbinstance.Name == instanceName {
 				rdsInstanceID = dbinstance.ID
 				fmt.Println("Deprovision: range rdsInstanceID:", rdsInstanceID)
 			}
@@ -372,7 +372,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 		fmt.Println("Bind: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
-			if dbinstance.Name == instanceName{
+			if dbinstance.Name == instanceName {
 				rdsInstanceID = dbinstance.ID
 				fmt.Println("Bind: range rdsInstanceID:", rdsInstanceID)
 			}
@@ -468,7 +468,7 @@ func (b *RDSBroker) Unbind(instanceID, bindingID string, details brokerapi.Unbin
 		fmt.Println("Unbind: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
-			if dbinstance.Name == instanceName{
+			if dbinstance.Name == instanceName {
 				rdsInstanceID = dbinstance.ID
 				fmt.Println("Unbind: range rdsInstanceID:", rdsInstanceID)
 			}
@@ -521,7 +521,7 @@ func (b *RDSBroker) LastOperation(instanceID string) (brokerapi.LastOperationRes
 		fmt.Println("LastOperation: Getting rds InstanceID from rdsInstances failed. ", b.rdsInstances)
 		for _, dbinstance := range dbInstanceList {
 			var instanceName string = fmt.Sprintf("%s-%s", instanceID, "PostgreSQL-1")
-			if dbinstance.Name == instanceName{
+			if dbinstance.Name == instanceName {
 				rdsInstanceID = dbinstance.ID
 				fmt.Println("LastOperation: range rdsInstanceID:", rdsInstanceID)
 			}
@@ -551,7 +551,7 @@ func (b *RDSBroker) LastOperation(instanceID string) (brokerapi.LastOperationRes
 	if dbInstance.Status == "BUILD" {
 		lastOperationResponse.State = brokerapi.LastOperationInProgress
 	}
-	if dbInstance.Status == "ACTIVE" || dbInstance.Status == "DELETED"{
+	if dbInstance.Status == "ACTIVE" || dbInstance.Status == "DELETED" {
 		lastOperationResponse.State = brokerapi.LastOperationSucceeded
 	}
 
@@ -582,9 +582,9 @@ func (b *RDSBroker) NewRDSClient() (*gophercloud.ServiceClient, error) {
 		Username:         "xxxxxx",
 		Password:         "xxxxxx",
 		//DomainID:         "",
-		DomainName:       "xxxxxx",
-		Scope:            tokens3.Scope{ProjectName: "eu-de", DomainName: "xxxxxx"},
-		AllowReauth:      true,
+		DomainName:  "xxxxxx",
+		Scope:       tokens3.Scope{ProjectName: "eu-de", DomainName: "xxxxxx"},
+		AllowReauth: true,
 	}
 	authOptsExt := trusts.AuthOptsExt{
 		TrustID:            "",
@@ -614,7 +614,7 @@ func (b *RDSBroker) NewRDSClientFromConfig() (*gophercloud.ServiceClient, error)
 		return nil, err
 	}
 
-	if b.Ca != ""{
+	if b.Ca != "" {
 		roots, err := certutil.NewPool(b.Ca)
 		if err != nil {
 			fmt.Println("Creating roots Ca failed. Error: '%s'", err)
@@ -631,9 +631,9 @@ func (b *RDSBroker) NewRDSClientFromConfig() (*gophercloud.ServiceClient, error)
 		Username:         b.Username,
 		Password:         b.Password,
 		//DomainID:         "",
-		DomainName:       b.DomainName,
-		Scope:            tokens3.Scope{ProjectName: b.ProjectName, DomainName: b.DomainName},
-		AllowReauth:      true,
+		DomainName:  b.DomainName,
+		Scope:       tokens3.Scope{ProjectName: b.ProjectName, DomainName: b.DomainName},
+		AllowReauth: true,
 	}
 	authOptsExt := trusts.AuthOptsExt{
 		TrustID:            "",
@@ -653,7 +653,6 @@ func (b *RDSBroker) NewRDSClientFromConfig() (*gophercloud.ServiceClient, error)
 	}
 	return sc, nil
 }
-
 
 func (d *RDSBroker) URI(address string, port int64, dbname string, username string, password string) string {
 	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?reconnect=true", username, password, address, port, dbname)
