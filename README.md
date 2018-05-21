@@ -77,3 +77,6 @@ We use the [GitHub issue tracker](https://github.com/huaweicloud/huaweicloud-ser
 4. Commit and push your changes.
 5. Submit a pull request.
 
+## License
+
+huaweicloud-service-broker is under the Apache 2.0 license. See the [LICENSE](LICENSE) file for details.
