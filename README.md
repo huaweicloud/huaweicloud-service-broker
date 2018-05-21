@@ -1,6 +1,7 @@
-# Huawei PostgreSQL RDS Service Broker
+# Huawei Cloud Service Broker
 
-This is a [Cloud Foundry Service Broker](https://docs.cloudfoundry.org/services/overview.html) for [Huawei Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html) supporting [PostgreSQL](http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html) RDS Databases.
+This is a [Cloud Foundry Service Broker](https://docs.cloudfoundry.org/services/overview.html) for Huawei Cloud.
+Currently it includes [Huawei Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html) supporting [PostgreSQL](http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html) RDS Databases.
 
 ## Installation
 
@@ -9,7 +10,7 @@ This is a [Cloud Foundry Service Broker](https://docs.cloudfoundry.org/services/
 Using the standard `go install` (you must have [Go](https://golang.org/) already installed in your local machine):
 
 ```
-$ go install github.com/chenyingkof/rds-broker
+$ go install github.com/huaweicloud/huaweicloud-service-broker
 $ rds-broker -port=3000 -config=<path-to-your-config-file>
 ```
 
@@ -18,11 +19,11 @@ $ rds-broker -port=3000 -config=<path-to-your-config-file>
 The broker can be deployed to an already existing [Cloud Foundry](https://www.cloudfoundry.org/) installation:
 
 ```
-$ git clone https://github.com/chenyingkof/rds-broker.git
-$ cd rds-broker
+$ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
+$ cd huaweicloud-service-broker
 ```
 
-Modify the [configuration file](https://github.com/chenyingkof/rds-broker/blob/master/config-sample.json) to include your RDS authentication configurations and some parameters or configurations for providing the DB Instances in the [sample configuration file](https://github.com/chenyingkof/rds-broker/blob/master/config-sample.json). Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
+Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config-sample.json) to include your RDS authentication configurations and some parameters or configurations for providing the DB Instances in the [sample configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config-sample.json). Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
 
 ```
 $ cp config-sample.json config.json
@@ -44,7 +45,7 @@ Configure and deploy the broker. Then:
 
 Application Developers can start to consume the services using the standard [CF CLI commands](https://docs.cloudfoundry.org/devguide/services/managing-services.html).
 
-Depending on the [broker configuration](https://github.com/chenyingkof/rds-broker/blob/master/CONFIGURATION.md#rds-broker-configuration), Application Developers can use the Credentials information from the
+Depending on the [broker configuration](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/CONFIGURATION.md#rds-broker-configuration), Application Developers can use the Credentials information from the
 response of broker Bind call for accessing DB Instances from RDS.
 
 
@@ -61,12 +62,12 @@ Here are some ways *you* can contribute:
 * by writing specifications
 * by writing code (**no patch is too small**: fix typos, add comments, clean up inconsistent whitespace)
 * by refactoring code
-* by closing [issues](https://github.com/chenyingkof/rds-broker/issues)
+* by closing [issues](https://github.com/huaweicloud/huaweicloud-service-broker/issues)
 * by reviewing patches
 
 ### Submitting an Issue
 
-We use the [GitHub issue tracker](https://github.com/chenyingkof/rds-broker/issues) to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted. You can indicate support for an existing issue by voting it up. When submitting a bug report, please include a [Gist](http://gist.github.com/) that includes a stack trace and any details that may be necessary to reproduce the bug, including your Golang version and operating system. Ideally, a bug report should include a pull request with failing specs.
+We use the [GitHub issue tracker](https://github.com/huaweicloud/huaweicloud-service-broker/issues) to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted. You can indicate support for an existing issue by voting it up. When submitting a bug report, please include a [Gist](http://gist.github.com/) that includes a stack trace and any details that may be necessary to reproduce the bug, including your Golang version and operating system. Ideally, a bug report should include a pull request with failing specs.
 
 ### Submitting a Pull Request
 

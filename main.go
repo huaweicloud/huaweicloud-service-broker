@@ -11,7 +11,7 @@ import (
 	"github.com/frodenas/brokerapi"
 	"code.cloudfoundry.org/lager"
 
-	"github.com/chenyingkof/rds-broker/rdsbroker"
+	"github.com/huaweicloud/huaweicloud-service-broker/rdsbroker"
 )
 
 var (

@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/chenyingkof/rds-broker/rdsbroker"
+	"github.com/huaweicloud/huaweicloud-service-broker/rdsbroker"
 )
 
 type Config struct {
