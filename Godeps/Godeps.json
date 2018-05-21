@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/chenyingkof/rds-broker",
+	"ImportPath": "github.com/huaweicloud/huaweicloud-service-broker",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Deps": [
