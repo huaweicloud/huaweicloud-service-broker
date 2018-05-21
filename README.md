@@ -11,7 +11,7 @@ Using the standard `go install` (you must have [Go](https://golang.org/) already
 
 ```
 $ go install github.com/huaweicloud/huaweicloud-service-broker
-$ rds-broker -port=3000 -config=<path-to-your-config-file>
+$ huaweicloud-service-broker -port=3000 -config=<path-to-your-config-file>
 ```
 
 ### Cloud Foundry
@@ -27,7 +27,7 @@ Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-servi
 
 ```
 $ cp config-sample.json config.json
-$ cf push rds-broker
+$ cf push huaweicloud-service-broker
 ```
 
 ## Usage

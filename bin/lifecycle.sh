@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./rds-broker --config=config-sample.json
+huaweicloud-service-broker --config=config-sample.json
 
 ####################################################################################################################################
 
