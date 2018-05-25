@@ -1,0 +1,120 @@
+{
+  "broker_config": {
+      "log_level": "DEBUG",
+      "username": "username",
+      "password": "password"
+  },
+  "cloud_credentials": {
+      "auth_url": "https://iam.cn-north-1.myhwclouds.com",
+      "user_name": "******",
+      "password": "******",
+      "domain_name": "******",
+      "tenant_name": "cn-north-1",
+      "region": "cn-north-1"
+  },
+  "catalog": {
+      "services": [
+          {
+              "id": "a2c9adda-6511-462c-9934-b3fd8236e9f0",
+              "name": "rds-postgresql",
+              "description": "RDS PostgreSQL service",
+              "bindable": true,
+              "tags": [
+                  "postgres",
+                  "relational"
+              ],
+              "metadata": {
+                  "displayName": "RDS PostgreSQL",
+                  "imageUrl": "data:image/png;",
+                  "longDescription": "RDS PostgreSQL service",
+                  "providerDisplayName": "Huawei Cloud Services",
+                  "documentationUrl": "http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html",
+                  "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+              },
+              "plan_updateable": true,
+              "plans": [
+                  {
+                      "id": "d42fc3cc-1341-4aa3-866e-01bc5243dc3e",
+                      "name": "9.5.5-medium",
+                      "description": "RDS PostgreSQL 9.5.5 (db.s1.medium, 4Gb)",
+                      "metadata": {
+                          "costs": [
+                              {
+                                  "amount": {
+                                      "usd": 0.180
+                                  },
+                                  "unit": "HOUR"
+                              }
+                          ],
+                          "bullets": [
+                              "Dedicated PostgreSQL 9.5.5 server",
+                              "PostgreSQL 9.5.5",
+                              "Huawei RDS"
+                          ]
+                      },
+                      "free": false,
+                      "rds_properties": {
+                          "datastore_type": "PostgreSQL",
+                          "datastore_version": "9.5.5",
+                          "flavor_name": "db.s1.medium",
+                          "flavor_id": "7fbf27c5-07e5-43dc-cf13-ad7a0f1c5d9a",
+                          "volume_type": "COMMON",
+                          "volume_size": 100,
+                          "region": "eu-de",
+                          "availability_zone": "eu-de-01",
+                          "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                          "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                          "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                          "db_port": "8635",
+                          "backup_strategy_starttime": "00:00:00",
+                          "backup_strategy_keepdays": 0,
+                          "db_password": "password",
+                          "db_username": "root",
+                          "db_name": "postgres"
+                      }
+                  },
+                  {
+                      "id": "8f8d8ed7-ddd3-4b1f-befa-976cf7fc4116",
+                      "name": "9.5.5-large",
+                      "description": "RDS PostgreSQL 9.5.5 (db.s1.large, 8Gb)",
+                      "metadata": {
+                          "costs": [
+                              {
+                                  "amount": {
+                                      "usd": 0.740
+                                  },
+                                  "unit": "HOUR"
+                              }
+                          ],
+                          "bullets": [
+                              "Dedicated PostgreSQL 9.5.5 server",
+                              "PostgreSQL 9.5.5",
+                              "Huawei RDS"
+                          ]
+                      },
+                      "free": false,
+                      "rds_properties": {
+                          "datastore_type": "PostgreSQL",
+                          "datastore_version": "9.5.5",
+                          "flavor_name": "db.s1.large",
+                          "flavor_id": "a5c71167-6d85-026c-cea2-0d78488247e5",
+                          "volume_type": "COMMON",
+                          "volume_size": 100,
+                          "region": "eu-de",
+                          "availability_zone": "eu-de-01",
+                          "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                          "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                          "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                          "db_port": "8635",
+                          "backup_strategy_starttime": "00:00:00",
+                          "backup_strategy_keepdays": 0,
+                          "db_password": "db_password",
+                          "db_username": "root",
+                          "db_name": "postgres"
+                      }
+                  }
+              ]
+          }
+      ]
+  }
+}

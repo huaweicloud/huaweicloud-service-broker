@@ -1,6 +1,6 @@
 # Configuration
 
-A sample configuration can be found at [config-sample.json](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config-sample.json).
+A sample configuration can be found at [config.json](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json).
 
 ## General Configuration
 
@@ -9,22 +9,29 @@ A sample configuration can be found at [config-sample.json](https://github.com/h
 | log_level  | Y        | String | Broker Log Level (DEBUG, INFO, ERROR, FATAL)
 | username   | Y        | String | Broker Auth Username
 | password   | Y        | String | Broker Auth Password
-| rds_config | Y        | Hash   | [RDS Broker configuration](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/CONFIGURATION.md#rds-broker-configuration)
 
-## RDS Broker Configuration
+## Cloud Credentials Configuration
 
 | Option                         | Required | Type    | Description
 |:-------------------------------|:--------:|:------- |:-----------
-| identity_endpoint              | Y        | String  | The identity endpoint URL of Keystone
-| ca                             | Y        | String  | Keystone Auth ca file
-| username                       | Y        | String  | Keystone Auth username
-| password                       | Y        | String  | Keystone Auth password
+| access_key                     | Y        | String  | Keystone Auth access key
+| secret_key                     | Y        | String  | Keystone Auth secret key
+| cacert_file                    | Y        | String  | Keystone Auth ca file
+| cert                           | Y        | String  | Keystone Auth client cert file
+| key                            | Y        | String  | Keystone Auth client key file
+| domain_id                      | Y        | String  | Keystone Auth domain id
 | domain_name                    | Y        | String  | Keystone Auth domain name
-| project_name                   | Y        | String  | Keystone Auth project name
-| project_id                     | Y        | String  | Keystone Auth project id
+| endpoint_type                  | Y        | String  | Keystone endpoint type
+| auth_url                       | Y        | String  | Keystone Auth URL
+| insecure                       | Y        | Boolean | Keystone insecure setting
+| password                       | Y        | String  | Keystone Auth password
 | region                         | Y        | String  | Keystone Auth region
-| db_prefix                      | Y        | String  | Prefix to add to RDS DB Identifiers
-| catalog                        | Y        | Hash    | [RDS Broker catalog](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/CONFIGURATION.md#rds-broker-catalog)
+| swauth                         | Y        | Boolean | Keystone swauth setting
+| tenant_id                      | Y        | String  | Keystone Auth tenant id
+| tenant_name                    | Y        | String  | Keystone Auth tenant name
+| token                          | Y        | String  | Keystone Auth token
+| user_name                      | Y        | String  | Keystone Auth username
+| UserID                         | Y        | String  | Keystone Auth userid
 
 1 If the broker api will be deployed in the cloudfoundry, the value of ca could be the absolute path of this project. For example: ca =  ./ca.crt. The ca.crt can be deployed
 in the rds-broker itself.
@@ -119,9 +126,3 @@ These credentials information can be used by the applications in CloudFoundry.
 The Unbind action of this rds broker API will return unbind the credentials information about the created database instance in Relational Database Service.
 
 The Update action of this rds broker API will update some information for Relational Database Service database instance.
-
-
-
-
-
-

@@ -26,10 +26,9 @@ $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
 $ cd huaweicloud-service-broker
 ```
 
-Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config-sample.json) to include your RDS authentication configurations and some parameters or configurations for providing the DB Instances in the [sample configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config-sample.json). Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
+Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json) to include your RDS authentication configurations and some parameters or configurations for providing the DB Instances in the [sample configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json). Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
 
 ```
-$ cp config-sample.json config.json
 $ cf push huaweicloud-service-broker
 ```
 
