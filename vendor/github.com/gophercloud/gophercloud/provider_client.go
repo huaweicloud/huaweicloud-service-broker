@@ -1,13 +1,13 @@
 package gophercloud
 
 import (
-        "fmt"
 	"bytes"
 	"encoding/json"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 )
 
 // DefaultUserAgent is the default User-Agent string set in the request header.
@@ -52,6 +52,8 @@ type ProviderClient struct {
 	IdentityEndpoint string
 
 	// TokenID is the ID of the most recently issued valid token.
+	// NOTE: Aside from within a custom ReauthFunc, this field shouldn't be set by an application.
+	// To safely read or write this value, call `Token` or `SetToken`, respectively
 	TokenID string
 
 	// EndpointLocator describes how this provider discovers the endpoints for
@@ -69,16 +71,89 @@ type ProviderClient struct {
 	// authentication functions for different Identity service versions.
 	ReauthFunc func() error
 
-	Debug bool
+	mut *sync.RWMutex
+
+	reauthmut *reauthlock
+}
+
+type reauthlock struct {
+	sync.RWMutex
+	reauthing bool
 }
 
 // AuthenticatedHeaders returns a map of HTTP headers that are common for all
 // authenticated service requests.
-func (client *ProviderClient) AuthenticatedHeaders() map[string]string {
-	if client.TokenID == "" {
-		return map[string]string{}
+func (client *ProviderClient) AuthenticatedHeaders() (m map[string]string) {
+	if client.reauthmut != nil {
+		client.reauthmut.RLock()
+		if client.reauthmut.reauthing {
+			client.reauthmut.RUnlock()
+			return
+		}
+		client.reauthmut.RUnlock()
 	}
-	return map[string]string{"X-Auth-Token": client.TokenID}
+	t := client.Token()
+	if t == "" {
+		return
+	}
+	return map[string]string{"X-Auth-Token": t}
+}
+
+// UseTokenLock creates a mutex that is used to allow safe concurrent access to the auth token.
+// If the application's ProviderClient is not used concurrently, this doesn't need to be called.
+func (client *ProviderClient) UseTokenLock() {
+	client.mut = new(sync.RWMutex)
+	client.reauthmut = new(reauthlock)
+}
+
+// Token safely reads the value of the auth token from the ProviderClient. Applications should
+// call this method to access the token instead of the TokenID field
+func (client *ProviderClient) Token() string {
+	if client.mut != nil {
+		client.mut.RLock()
+		defer client.mut.RUnlock()
+	}
+	return client.TokenID
+}
+
+// SetToken safely sets the value of the auth token in the ProviderClient. Applications may
+// use this method in a custom ReauthFunc
+func (client *ProviderClient) SetToken(t string) {
+	if client.mut != nil {
+		client.mut.Lock()
+		defer client.mut.Unlock()
+	}
+	client.TokenID = t
+}
+
+//Reauthenticate calls client.ReauthFunc in a thread-safe way. If this is
+//called because of a 401 response, the caller may pass the previous token. In
+//this case, the reauthentication can be skipped if another thread has already
+//reauthenticated in the meantime. If no previous token is known, an empty
+//string should be passed instead to force unconditional reauthentication.
+func (client *ProviderClient) Reauthenticate(previousToken string) (err error) {
+	if client.ReauthFunc == nil {
+		return nil
+	}
+
+	if client.mut == nil {
+		return client.ReauthFunc()
+	}
+	client.mut.Lock()
+	defer client.mut.Unlock()
+
+	client.reauthmut.Lock()
+	client.reauthmut.reauthing = true
+	client.reauthmut.Unlock()
+
+	if previousToken == "" || client.TokenID == previousToken {
+		err = client.ReauthFunc()
+	}
+
+	client.reauthmut.Lock()
+	client.reauthmut.reauthing = false
+	client.reauthmut.Unlock()
+	return
 }
 
 // RequestOpts customizes the behavior of the provider.Request() method.
@@ -119,10 +194,7 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		if options.RawBody != nil {
 			panic("Please provide only one of JSONBody or RawBody to gophercloud.Request().")
 		}
-		fmt.Println("call Request: url")
-		fmt.Println(url)
-		fmt.Println("call Request: body")
-		fmt.Println(options.JSONBody)
+
 		rendered, err := json.Marshal(options.JSONBody)
 		if err != nil {
 			return nil, err
@@ -151,8 +223,7 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 
 	// Set the User-Agent header
 	req.Header.Set("User-Agent", client.UserAgent.Join())
-	//req.Header.Set("Content-Type", "application/json")
-	//req.Header.Set("X-Language", "en-us")
+
 	if options.MoreHeaders != nil {
 		for k, v := range options.MoreHeaders {
 			if v != "" {
@@ -170,11 +241,9 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 
 	// Set connection parameter to close the connection immediately when we've got the response
 	req.Close = true
-        //fmt.Println("call client.HTTPClient.Do")
-        //fmt.Println(req)
-         
-        //fmt.Println("creq.Header")
-        //fmt.Println(req.Header)
+
+	prereqtok := req.Header.Get("X-Auth-Token")
+
 	// Issue the request.
 	resp, err := client.HTTPClient.Do(req)
 	if err != nil {
@@ -185,10 +254,7 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 	if options.OkCodes == nil {
 		options.OkCodes = defaultOkCodes(method)
 	}
-	fmt.Println("options.OkCodes")
-	fmt.Println(options.OkCodes)
-	fmt.Println("resp.StatusCode")
-	fmt.Println(resp.StatusCode)
+
 	// Validate the HTTP response status.
 	var ok bool
 	for _, code := range options.OkCodes {
@@ -201,9 +267,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 	if !ok {
 		body, _ := ioutil.ReadAll(resp.Body)
 		resp.Body.Close()
-		//pc := make([]uintptr, 1)
-		//runtime.Callers(2, pc)
-		//f := runtime.FuncForPC(pc[0])
 		respErr := ErrUnexpectedResponseCode{
 			URL:      url,
 			Method:   method,
@@ -211,9 +274,7 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 			Actual:   resp.StatusCode,
 			Body:     body,
 		}
-		//respErr.Function = "gophercloud.ProviderClient.Request"
-		fmt.Println("resp.StatusCode")
-		fmt.Println(resp.StatusCode)
+
 		errType := options.ErrorContext
 		switch resp.StatusCode {
 		case http.StatusBadRequest:
@@ -223,7 +284,7 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 			}
 		case http.StatusUnauthorized:
 			if client.ReauthFunc != nil {
-				err = client.ReauthFunc()
+				err = client.Reauthenticate(prereqtok)
 				if err != nil {
 					e := &ErrUnableToReauthenticate{}
 					e.ErrOriginal = respErr
@@ -252,6 +313,11 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 			err = ErrDefault401{respErr}
 			if error401er, ok := errType.(Err401er); ok {
 				err = error401er.Error401(respErr)
+			}
+		case http.StatusForbidden:
+			err = ErrDefault403{respErr}
+			if error403er, ok := errType.(Err403er); ok {
+				err = error403er.Error403(respErr)
 			}
 		case http.StatusNotFound:
 			err = ErrDefault404{respErr}
@@ -298,8 +364,6 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 		if err := json.NewDecoder(resp.Body).Decode(options.JSONResponse); err != nil {
 			return nil, err
 		}
-        fmt.Println("Return Response: body")
-        fmt.Println(resp.Body)
 	}
 
 	return resp, nil

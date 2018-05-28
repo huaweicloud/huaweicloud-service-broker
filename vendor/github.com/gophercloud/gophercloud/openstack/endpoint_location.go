@@ -1,7 +1,6 @@
 package openstack
 
 import (
-        //"fmt"
 	"github.com/gophercloud/gophercloud"
 	tokens2 "github.com/gophercloud/gophercloud/openstack/identity/v2/tokens"
 	tokens3 "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens"
@@ -72,15 +71,7 @@ available on your OpenStack deployment.
 func V3EndpointURL(catalog *tokens3.ServiceCatalog, opts gophercloud.EndpointOpts) (string, error) {
 	// Extract Endpoints from the catalog entries that match the requested Type, Interface,
 	// Name if provided, and Region if provided.
-        //fmt.Println("call V3EndpointURL")
-        //fmt.Println("catalog")
-        //fmt.Println(catalog)
 	var endpoints = make([]tokens3.Endpoint, 0, 1)
-        //fmt.Println("endpoints")
-        //fmt.Println(endpoints)
-        //fmt.Println("opts")
-        //fmt.Println(opts)
-         
 	for _, entry := range catalog.Entries {
 		if (entry.Type == opts.Type) && (opts.Name == "" || entry.Name == opts.Name) {
 			for _, endpoint := range entry.Endpoints {
@@ -93,7 +84,7 @@ func V3EndpointURL(catalog *tokens3.ServiceCatalog, opts gophercloud.EndpointOpt
 					return "", err
 				}
 				if (opts.Availability == gophercloud.Availability(endpoint.Interface)) &&
-					(opts.Region == "" || endpoint.Region == opts.Region) {
+					(opts.Region == "" || endpoint.Region == opts.Region || endpoint.RegionID == opts.Region) {
 					endpoints = append(endpoints, endpoint)
 				}
 			}
