@@ -1,5 +1,17 @@
 package rds
 
+import (
+	"code.cloudfoundry.org/lager"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+)
+
+// RDSBroker define
+type RDSBroker struct {
+	CloudCredentials config.CloudCredentials
+	Catalog          config.Catalog
+	Logger           lager.Logger
+}
+
 // BindingCredential represent rds binding credential
 type BindingCredential struct {
 	Host     string `json:"host,omitempty"`
