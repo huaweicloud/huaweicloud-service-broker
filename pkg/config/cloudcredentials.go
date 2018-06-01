@@ -176,3 +176,19 @@ func (c *CloudCredentials) RDSV1Client() (*golangsdk.ServiceClient, error) {
 		Availability: c.getEndpointType(),
 	})
 }
+
+// DCSV1Client return dcs v1 client
+func (c *CloudCredentials) DCSV1Client() (*golangsdk.ServiceClient, error) {
+	return openstack.NewDCSServiceV1(c.CloudClient, golangsdk.EndpointOpts{
+		Region:       c.Region,
+		Availability: c.getEndpointType(),
+	})
+}
+
+// DMSV1Client return dms v1 client
+func (c *CloudCredentials) DMSV1Client() (*golangsdk.ServiceClient, error) {
+	return openstack.NewDMSServiceV1(c.CloudClient, golangsdk.EndpointOpts{
+		Region:       c.Region,
+		Availability: c.getEndpointType(),
+	})
+}
