@@ -34,7 +34,7 @@ func BuildBindingCredential(
 		return BindingCredential{}, fmt.Errorf("unknown service type: %s", servicetype)
 	}
 
-	// Init provisionOpts
+	// Init BindingCredential
 	bc := BindingCredential{
 		Host:     host,
 		Port:     port,
