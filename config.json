@@ -4,6 +4,14 @@
       "username": "username",
       "password": "password"
   },
+  "back_database" :{
+    "database_type": "mysql",
+    "database_host": "127.0.0.1",
+    "database_port": "3306",
+    "database_name": "broker",
+    "database_username": "******",
+    "database_password": "******"
+  },
   "cloud_credentials": {
       "auth_url": "https://iam.cn-north-1.myhwclouds.com",
       "user_name": "******",

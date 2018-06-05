@@ -10,6 +10,7 @@ import (
 
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/broker"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/logger"
 )
 
@@ -33,6 +34,11 @@ func main() {
 	}
 
 	logger := logger.BuildLogger(config.BrokerConfig.LogLevel)
+
+	err = database.New(logger, config)
+	if err != nil {
+		log.Fatalf("Error init back database: %s", err)
+	}
 
 	serviceBroker, err := broker.New(logger, config)
 	if err != nil {
