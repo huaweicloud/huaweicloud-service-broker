@@ -11,6 +11,7 @@ import (
 // Config for all
 type Config struct {
 	BrokerConfig     BrokerConfig     `json:"broker_config"`
+	BackDatabase     BackDatabase     `json:"back_database"`
 	CloudCredentials CloudCredentials `json:"cloud_credentials"`
 	Catalog          Catalog          `json:"catalog"`
 }
@@ -38,6 +39,10 @@ func LoadConfig(configFile string) (config Config, err error) {
 
 	if err = config.BrokerConfig.Validate(); err != nil {
 		return config, fmt.Errorf("Validating BrokerConfig contents: %s", err)
+	}
+
+	if err = config.BackDatabase.Validate(); err != nil {
+		return config, fmt.Errorf("Validating BackDatabase contents: %s", err)
 	}
 
 	if err = config.CloudCredentials.Validate(); err != nil {
