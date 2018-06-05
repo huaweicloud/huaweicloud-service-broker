@@ -26,7 +26,6 @@ A sample configuration can be found at [config.json](https://github.com/huaweicl
 | insecure                       | Y        | Boolean | Keystone insecure setting
 | password                       | Y        | String  | Keystone Auth password
 | region                         | Y        | String  | Keystone Auth region
-| swauth                         | Y        | Boolean | Keystone swauth setting
 | tenant_id                      | Y        | String  | Keystone Auth tenant id
 | tenant_name                    | Y        | String  | Keystone Auth tenant name
 | token                          | Y        | String  | Keystone Auth token
