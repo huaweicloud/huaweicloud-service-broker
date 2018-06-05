@@ -11,3 +11,13 @@ type OBSBroker struct {
 	Catalog          config.Catalog
 	Logger           lager.Logger
 }
+
+// BindingCredential represent obs binding credential
+type BindingCredential struct {
+	Region     string `json:"region,omitempty"`
+	URL        string `json:"url,omitempty"`
+	BucketName string `json:"bucketname,omitempty"`
+	AK         string `json:"ak,omitempty"`
+	SK         string `json:"sk,omitempty"`
+	Type       string `json:"type,omitempty"`
+}

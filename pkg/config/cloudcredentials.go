@@ -9,6 +9,7 @@ import (
 
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack"
+	"github.com/huaweicloud/golangsdk/openstack/obs"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/logger"
 )
 
@@ -26,7 +27,6 @@ type CloudCredentials struct {
 	Insecure         bool   `json:"insecure"`
 	Password         string `json:"password"`
 	Region           string `json:"region"`
-	Swauth           bool   `json:"swauth"`
 	TenantID         string `json:"tenant_id"`
 	TenantName       string `json:"tenant_name"`
 	Token            string `json:"token"`
@@ -127,17 +127,12 @@ func (c *CloudCredentials) newCloudClient() error {
 		},
 	}
 
-	// If using Swift Authentication, there's no need to validate authentication normally.
-	if !c.Swauth {
-		err = openstack.Authenticate(client, ao)
-		if err != nil {
-			return err
-		}
+	err = openstack.Authenticate(client, ao)
+	if err != nil {
+		return err
 	}
 
 	c.CloudClient = client
-
-	// TODO: add s3 and obs auth with ak/sk
 
 	return nil
 }
@@ -151,22 +146,6 @@ func (c *CloudCredentials) getEndpointType() golangsdk.Availability {
 		return golangsdk.AvailabilityAdmin
 	}
 	return golangsdk.AvailabilityPublic
-}
-
-// OBSV1Client return obs v1 client
-func (c *CloudCredentials) OBSV1Client() (*golangsdk.ServiceClient, error) {
-	// TODO: If Swift Authentication is being used, return a swauth client.
-	/*if c.Swauth {
-		return swauth.NewObjectStorageV1(c.CloudClient, swauth.AuthOpts{
-			User: c.Username,
-			Key:  c.Password,
-		})
-	}*/
-
-	return openstack.NewObjectStorageV1(c.CloudClient, golangsdk.EndpointOpts{
-		Region:       c.Region,
-		Availability: c.getEndpointType(),
-	})
 }
 
 // RDSV1Client return rds v1 client
@@ -191,4 +170,17 @@ func (c *CloudCredentials) DMSV1Client() (*golangsdk.ServiceClient, error) {
 		Region:       c.Region,
 		Availability: c.getEndpointType(),
 	})
+}
+
+// OBSClient return obs client
+func (c *CloudCredentials) OBSClient() (*obs.ObsClient, error) {
+	sc, err := openstack.NewOBSService(c.CloudClient, golangsdk.EndpointOpts{
+		Region:       c.Region,
+		Availability: c.getEndpointType(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return obs.New(c.AccessKey, c.SecretKey, sc.ServiceURL())
 }
