@@ -21,7 +21,7 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("check rds instance length in back database failed. Error: %s", err)
 	}
 	// ErrInstanceDoesNotExist
-	if length > 0 {
+	if length == 0 {
 		return brokerapi.DeprovisionServiceSpec{}, brokerapi.ErrInstanceDoesNotExist
 	}
 
@@ -50,6 +50,12 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	result := instances.Delete(rdsClient, ids.TargetID)
 	if result.Err != nil {
 		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("deprovision rds instance failed. Error: %s", err)
+	}
+
+	// Delete InstanceDetails in back database
+	err = database.BackDBConnection.Delete(&ids).Error
+	if err != nil {
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("delete rds instance in back database failed. Error: %s", err)
 	}
 
 	// Log result

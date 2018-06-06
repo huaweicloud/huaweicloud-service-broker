@@ -77,6 +77,16 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("marshal rds instance failed. Error: %s", err)
 	}
 
+	// Constuct addtional info
+	addtionalparam := map[string]string{}
+	addtionalparam["dbrtpd"] = provisionOpts.DbRtPd
+
+	// Marshal addtional info
+	addtionalinfo, err := json.Marshal(addtionalparam)
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("marshal rds addtional info failed. Error: %s", err)
+	}
+
 	// create InstanceDetails in back database
 	idsOpts := database.InstanceDetails{
 		ServiceID:      details.ServiceID,
@@ -86,7 +96,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		TargetName:     freshInstance.Name,
 		TargetStatus:   freshInstance.Status,
 		TargetInfo:     string(targetinfo),
-		AdditionalInfo: "",
+		AdditionalInfo: string(addtionalinfo),
 	}
 
 	// log InstanceDetails opts
