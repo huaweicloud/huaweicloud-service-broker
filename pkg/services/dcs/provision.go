@@ -7,12 +7,27 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/availablezones"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/products"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
 // Provision implematation
 func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDetails, asyncAllowed bool) (brokerapi.ProvisionedServiceSpec, error) {
+
+	// Check dcs instance length in back database
+	var length int
+	err := database.BackDBConnection.
+		Model(&database.InstanceDetails{}).
+		Where("instance_id = ? and service_id = ? and plan_id = ?", instanceID, details.ServiceID, details.PlanID).
+		Count(&length).Error
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("check dcs instance length in back database failed. Error: %s", err)
+	}
+	// ErrInstanceAlreadyExists
+	if length > 0 {
+		return brokerapi.ProvisionedServiceSpec{}, brokerapi.ErrInstanceAlreadyExists
+	}
 
 	// Init dcs client
 	dcsClient, err := b.CloudCredentials.DCSV1Client()
@@ -111,6 +126,41 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Log result
 	b.Logger.Debug(fmt.Sprintf("provision dcs instance result: %v", dcsInstance))
+
+	// Invoke sdk get
+	freshInstance, err := instances.Get(dcsClient, dcsInstance.InstanceID).Extract()
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get dcs instance failed. Error: %s", err)
+	}
+
+	// Marshal instance
+	targetinfo, err := json.Marshal(freshInstance)
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("marshal dcs instance failed. Error: %s", err)
+	}
+
+	// create InstanceDetails in back database
+	idsOpts := database.InstanceDetails{
+		ServiceID:      details.ServiceID,
+		PlanID:         details.PlanID,
+		InstanceID:     instanceID,
+		TargetID:       freshInstance.InstanceID,
+		TargetName:     freshInstance.Name,
+		TargetStatus:   freshInstance.Status,
+		TargetInfo:     string(targetinfo),
+		AdditionalInfo: "",
+	}
+
+	// log InstanceDetails opts
+	b.Logger.Debug(fmt.Sprintf("create dcs instance in back database opts: %v", idsOpts))
+
+	err = database.BackDBConnection.Create(&idsOpts).Error
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create dcs instance in back database failed. Error: %s", err)
+	}
+
+	// Log InstanceDetails result
+	b.Logger.Debug(fmt.Sprintf("create dcs instance in back database succeed: %s", instanceID))
 
 	// Return result
 	return brokerapi.ProvisionedServiceSpec{IsAsync: false, DashboardURL: "", OperationData: ""}, nil

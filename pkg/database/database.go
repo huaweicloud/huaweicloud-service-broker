@@ -54,7 +54,11 @@ func UpgradeBackDatabase(logger lager.Logger, backdatabase *gorm.DB) error {
 	upgrades := make([]func() error, 1)
 	upgrades[0] = func() error {
 		// table upgrades
-		if err := backdatabase.Exec(UpgradeTableSQL).Error; err != nil {
+		if err := backdatabase.Exec(UpgradesTableSQL).Error; err != nil {
+			return err
+		}
+		// table instance_details
+		if err := backdatabase.Exec(InstanceDetailsTableSQL).Error; err != nil {
 			return err
 		}
 		return nil
@@ -62,8 +66,8 @@ func UpgradeBackDatabase(logger lager.Logger, backdatabase *gorm.DB) error {
 
 	// Get UpgradeID
 	var lastUpgrade = -1
-	if backdatabase.HasTable(UpgradeTableName) {
-		var ups []Upgrade
+	if backdatabase.HasTable(UpgradesTableName) {
+		var ups []Upgrades
 		err := backdatabase.Order("upgrade_id desc").Find(&ups).Error
 		if err != nil {
 			logger.Error("Error getting upgrades", err)
@@ -89,7 +93,7 @@ func UpgradeBackDatabase(logger lager.Logger, backdatabase *gorm.DB) error {
 		}
 
 		// Save last upgrade
-		err = backdatabase.Save(&Upgrade{
+		err = backdatabase.Save(&Upgrades{
 			UpgradeID: index,
 		}).Error
 		if err != nil {
