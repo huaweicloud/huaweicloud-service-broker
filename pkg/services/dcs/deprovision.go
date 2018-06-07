@@ -21,7 +21,7 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("check dcs instance length in back database failed. Error: %s", err)
 	}
 	// ErrInstanceDoesNotExist
-	if length > 0 {
+	if length == 0 {
 		return brokerapi.DeprovisionServiceSpec{}, brokerapi.ErrInstanceDoesNotExist
 	}
 
@@ -50,6 +50,12 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	result := instances.Delete(dcsClient, ids.TargetID)
 	if result.Err != nil {
 		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("deprovision dcs instance failed. Error: %s", err)
+	}
+
+	// Delete InstanceDetails in back database
+	err = database.BackDBConnection.Delete(&ids).Error
+	if err != nil {
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("delete dcs instance in back database failed. Error: %s", err)
 	}
 
 	// Log result

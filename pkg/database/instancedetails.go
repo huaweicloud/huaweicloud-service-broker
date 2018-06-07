@@ -10,7 +10,7 @@ import (
 // InstanceDetailsTableName defines
 var InstanceDetailsTableName = "instance_details"
 
-// InstanceDetailsTableSQL matches with Upgrades Object
+// InstanceDetailsTableSQL matches with InstanceDetails Object
 var InstanceDetailsTableSQL = fmt.Sprintf(`CREATE TABLE %s (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	created_at timestamp NULL DEFAULT NULL,
@@ -18,7 +18,7 @@ var InstanceDetailsTableSQL = fmt.Sprintf(`CREATE TABLE %s (
 	deleted_at timestamp NULL DEFAULT NULL,
 	service_id varchar(255) DEFAULT NULL,
 	plan_id varchar(255) DEFAULT NULL,
-	instance_id varchar(255) NOT NULL,
+	instance_id varchar(255) DEFAULT NULL,
 	target_id varchar(255) DEFAULT NULL,
 	target_name varchar(255) DEFAULT NULL,
 	target_status varchar(255) DEFAULT NULL,

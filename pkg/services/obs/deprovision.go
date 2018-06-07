@@ -20,7 +20,7 @@ func (b *OBSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("check obs instance length in back database failed. Error: %s", err)
 	}
 	// ErrInstanceDoesNotExist
-	if length > 0 {
+	if length == 0 {
 		return brokerapi.DeprovisionServiceSpec{}, brokerapi.ErrInstanceDoesNotExist
 	}
 
@@ -53,6 +53,12 @@ func (b *OBSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	obsResponse, err := obsClient.DeleteBucket(ids.TargetID)
 	if err != nil {
 		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("deprovision obs bucket failed. Error: %s", err)
+	}
+
+	// Delete InstanceDetails in back database
+	err = database.BackDBConnection.Delete(&ids).Error
+	if err != nil {
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("delete obs bucket in back database failed. Error: %s", err)
 	}
 
 	// Log result
