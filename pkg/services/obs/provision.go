@@ -6,6 +6,7 @@ import (
 
 	"github.com/huaweicloud/golangsdk/openstack/obs"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
@@ -114,5 +115,30 @@ func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	b.Logger.Debug(fmt.Sprintf("create obs bucket in back database succeed: %s", instanceID))
 
 	// Return result
+	if asyncAllowed && models.OperationAsyncOBS {
+		// OperationDatas for OperationProvisioning
+		ods := models.OperationDatas{
+			OperationType:  models.OperationProvisioning,
+			ServiceID:      details.ServiceID,
+			PlanID:         details.PlanID,
+			InstanceID:     instanceID,
+			TargetID:       provisionOpts.Bucket,
+			TargetName:     provisionOpts.Bucket,
+			TargetStatus:   "",
+			TargetInfo:     string(targetinfo),
+			AdditionalInfo: "",
+		}
+
+		operationdata, err := ods.ToString()
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("convert obs bucket operation datas failed. Error: %s", err)
+		}
+
+		// log OperationDatas
+		b.Logger.Debug(fmt.Sprintf("create obs bucket operation datas: %s", operationdata))
+
+		return brokerapi.ProvisionedServiceSpec{IsAsync: true, DashboardURL: "", OperationData: operationdata}, nil
+	}
+
 	return brokerapi.ProvisionedServiceSpec{IsAsync: false, DashboardURL: "", OperationData: ""}, nil
 }

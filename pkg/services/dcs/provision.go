@@ -173,5 +173,30 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	b.Logger.Debug(fmt.Sprintf("create dcs instance in back database succeed: %s", instanceID))
 
 	// Return result
+	if asyncAllowed && models.OperationAsyncDCS {
+		// OperationDatas for OperationProvisioning
+		ods := models.OperationDatas{
+			OperationType:  models.OperationProvisioning,
+			ServiceID:      details.ServiceID,
+			PlanID:         details.PlanID,
+			InstanceID:     instanceID,
+			TargetID:       freshInstance.InstanceID,
+			TargetName:     freshInstance.Name,
+			TargetStatus:   freshInstance.Status,
+			TargetInfo:     string(targetinfo),
+			AdditionalInfo: string(addtionalinfo),
+		}
+
+		operationdata, err := ods.ToString()
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("convert dcs instance operation datas failed. Error: %s", err)
+		}
+
+		// log OperationDatas
+		b.Logger.Debug(fmt.Sprintf("create dcs instance operation datas: %s", operationdata))
+
+		return brokerapi.ProvisionedServiceSpec{IsAsync: true, DashboardURL: "", OperationData: operationdata}, nil
+	}
+
 	return brokerapi.ProvisionedServiceSpec{IsAsync: false, DashboardURL: "", OperationData: ""}, nil
 }

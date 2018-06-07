@@ -5,6 +5,7 @@ import (
 
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
@@ -62,5 +63,30 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	b.Logger.Debug(fmt.Sprintf("deprovision dcs instance success: %s", instanceID))
 
 	// Return result
+	if asyncAllowed && models.OperationAsyncDCS {
+		// OperationDatas for OperationDeprovisioning
+		ods := models.OperationDatas{
+			OperationType:  models.OperationDeprovisioning,
+			ServiceID:      details.ServiceID,
+			PlanID:         details.PlanID,
+			InstanceID:     instanceID,
+			TargetID:       ids.TargetID,
+			TargetName:     ids.TargetName,
+			TargetStatus:   ids.TargetStatus,
+			TargetInfo:     ids.TargetInfo,
+			AdditionalInfo: ids.AdditionalInfo,
+		}
+
+		operationdata, err := ods.ToString()
+		if err != nil {
+			return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("convert dcs instance operation datas failed. Error: %s", err)
+		}
+
+		// log OperationDatas
+		b.Logger.Debug(fmt.Sprintf("create dcs instance operation datas: %s", operationdata))
+
+		return brokerapi.DeprovisionServiceSpec{IsAsync: true, OperationData: operationdata}, nil
+	}
+
 	return brokerapi.DeprovisionServiceSpec{IsAsync: false, OperationData: ""}, nil
 }
