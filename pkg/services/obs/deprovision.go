@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
@@ -65,5 +66,30 @@ func (b *OBSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	b.Logger.Debug(fmt.Sprintf("deprovision obs bucket %s success: %v", instanceID, obsResponse))
 
 	// Return result
+	if asyncAllowed && models.OperationAsyncOBS {
+		// OperationDatas for OperationDeprovisioning
+		ods := models.OperationDatas{
+			OperationType:  models.OperationDeprovisioning,
+			ServiceID:      details.ServiceID,
+			PlanID:         details.PlanID,
+			InstanceID:     instanceID,
+			TargetID:       ids.TargetID,
+			TargetName:     ids.TargetName,
+			TargetStatus:   ids.TargetStatus,
+			TargetInfo:     ids.TargetInfo,
+			AdditionalInfo: ids.AdditionalInfo,
+		}
+
+		operationdata, err := ods.ToString()
+		if err != nil {
+			return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("convert obs bucket operation datas failed. Error: %s", err)
+		}
+
+		// log OperationDatas
+		b.Logger.Debug(fmt.Sprintf("create obs bucket operation datas: %s", operationdata))
+
+		return brokerapi.DeprovisionServiceSpec{IsAsync: true, OperationData: operationdata}, nil
+	}
+
 	return brokerapi.DeprovisionServiceSpec{IsAsync: false, OperationData: ""}, nil
 }

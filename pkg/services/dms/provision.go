@@ -147,5 +147,30 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	b.Logger.Debug(fmt.Sprintf("create dms queue in back database succeed: %s", instanceID))
 
 	// Return result
+	if asyncAllowed && models.OperationAsyncDMS {
+		// OperationDatas for OperationProvisioning
+		ods := models.OperationDatas{
+			OperationType:  models.OperationProvisioning,
+			ServiceID:      details.ServiceID,
+			PlanID:         details.PlanID,
+			InstanceID:     instanceID,
+			TargetID:       freshQueue.ID,
+			TargetName:     freshQueue.Name,
+			TargetStatus:   "",
+			TargetInfo:     string(targetinfo),
+			AdditionalInfo: "",
+		}
+
+		operationdata, err := ods.ToString()
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("convert dms queue operation datas failed. Error: %s", err)
+		}
+
+		// log OperationDatas
+		b.Logger.Debug(fmt.Sprintf("create dms queue operation datas: %s", operationdata))
+
+		return brokerapi.ProvisionedServiceSpec{IsAsync: true, DashboardURL: "", OperationData: operationdata}, nil
+	}
+
 	return brokerapi.ProvisionedServiceSpec{IsAsync: false, DashboardURL: "", OperationData: ""}, nil
 }

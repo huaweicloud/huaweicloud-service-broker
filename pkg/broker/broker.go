@@ -2,6 +2,7 @@ package broker
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"code.cloudfoundry.org/lager"
@@ -25,7 +26,6 @@ type CloudServiceBroker struct {
 // New returns a composed service broker object
 func New(logger lager.Logger, config config.Config) (*CloudServiceBroker, error) {
 
-	// TODO: add os client
 	self := CloudServiceBroker{}
 	self.CloudCredentials = config.CloudCredentials
 	self.Catalog = config.Catalog
@@ -237,6 +237,29 @@ func (cloudBroker *CloudServiceBroker) LastOperation(
 	ctx context.Context,
 	instanceID string,
 	operationData string) (brokerapi.LastOperation, error) {
-	// TODO: check which service broker proxy to invoke by instanceID
+
+	// operationData is existing
+	if operationData != "" {
+		ods := models.OperationDatas{}
+		err := json.Unmarshal([]byte(operationData), &ods)
+		if err != nil {
+			return brokerapi.LastOperation{}, err
+		}
+
+		// find service plan
+		_, err = cloudBroker.Catalog.FindServicePlan(ods.ServiceID, ods.PlanID)
+		if err != nil {
+			return brokerapi.LastOperation{}, err
+		}
+
+		// get detail service broker proxy from ServiceBrokerMap
+		servicebrokerproxy := cloudBroker.ServiceBrokerMap[ods.ServiceID]
+		if servicebrokerproxy == nil {
+			return brokerapi.LastOperation{}, fmt.Errorf("could not find service broker: %s", ods.ServiceID)
+		}
+
+		// detail service broker proxy bind
+		return servicebrokerproxy.LastOperation(instanceID, ods)
+	}
 	return brokerapi.LastOperation{}, nil
 }

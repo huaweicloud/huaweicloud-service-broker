@@ -6,6 +6,7 @@ import (
 
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
@@ -111,5 +112,30 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	b.Logger.Debug(fmt.Sprintf("create rds instance in back database succeed: %s", instanceID))
 
 	// Return result
+	if asyncAllowed && models.OperationAsyncRDS {
+		// OperationDatas for OperationProvisioning
+		ods := models.OperationDatas{
+			OperationType:  models.OperationProvisioning,
+			ServiceID:      details.ServiceID,
+			PlanID:         details.PlanID,
+			InstanceID:     instanceID,
+			TargetID:       freshInstance.ID,
+			TargetName:     freshInstance.Name,
+			TargetStatus:   freshInstance.Status,
+			TargetInfo:     string(targetinfo),
+			AdditionalInfo: string(addtionalinfo),
+		}
+
+		operationdata, err := ods.ToString()
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("convert rds instance operation datas failed. Error: %s", err)
+		}
+
+		// log OperationDatas
+		b.Logger.Debug(fmt.Sprintf("create rds instance operation datas: %s", operationdata))
+
+		return brokerapi.ProvisionedServiceSpec{IsAsync: true, DashboardURL: "", OperationData: operationdata}, nil
+	}
+
 	return brokerapi.ProvisionedServiceSpec{IsAsync: false, DashboardURL: "", OperationData: ""}, nil
 }

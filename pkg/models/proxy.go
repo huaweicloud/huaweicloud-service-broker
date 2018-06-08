@@ -16,5 +16,5 @@ type ServiceBrokerProxy interface {
 
 	Update(instanceID string, details brokerapi.UpdateDetails, asyncAllowed bool) (brokerapi.UpdateServiceSpec, error)
 
-	LastOperation(instanceID, operationData string) (brokerapi.LastOperation, error)
+	LastOperation(instanceID string, operationData OperationDatas) (brokerapi.LastOperation, error)
 }
