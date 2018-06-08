@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/layer3/routers"
+	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/groups"
+	"github.com/gophercloud/gophercloud/openstack/networking/v2/networks"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/availablezones"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/products"
@@ -66,19 +69,67 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("unknown service name: %s", servicePlan.Name)
 	}
 
-	// TODO get default vpc
+	// Init networking client
+	networkingClient, err := b.CloudCredentials.NetworkingV2Client()
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create networking client failed. Error: %s", err)
+	}
+
+	// get default vpc
 	if provisionOpts.VPCID == "" {
-
+		routersListOpts := routers.ListOpts{}
+		routersPages, err := routers.List(networkingClient, routersListOpts).AllPages()
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to list vpc: %s", err)
+		}
+		allRouters, err := routers.ExtractRouters(routersPages)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to extract vpc: %s", err)
+		}
+		if len(allRouters) == 0 {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to get default vpc: %s", err)
+		} else {
+			router := allRouters[0]
+			provisionOpts.VPCID = router.ID
+		}
 	}
 
-	// TODO get default security group
-	if provisionOpts.SecurityGroupID == "" {
-
-	}
-
-	// TODO get default Subnet
+	// get default Subnet
 	if provisionOpts.SubnetID == "" {
+		networksListOpts := networks.ListOpts{Status: "ACTIVE"}
+		networksPages, err := networks.List(networkingClient, networksListOpts).AllPages()
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to list subnet: %s", err)
+		}
+		allnetworks, err := networks.ExtractNetworks(networksPages)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to extract subnet: %s", err)
+		}
+		if len(allnetworks) == 0 {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to get default subnet: %s", err)
+		} else {
+			network := allnetworks[0]
+			provisionOpts.SubnetID = network.ID
+		}
+	}
 
+	// get default security group
+	if provisionOpts.SecurityGroupID == "" {
+		groupsListOpts := groups.ListOpts{}
+		groupsPages, err := groups.List(networkingClient, groupsListOpts).AllPages()
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to list security groups: %s", err)
+		}
+		allSecGroups, err := groups.ExtractGroups(groupsPages)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to extract security groups: %s", err)
+		}
+		if len(allSecGroups) == 0 {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to get default security groups: %s", err)
+		} else {
+			secGroup := allSecGroups[0]
+			provisionOpts.SecurityGroupID = secGroup.ID
+		}
 	}
 
 	// Get default AvailableZones

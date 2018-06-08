@@ -11,6 +11,9 @@ import (
 	"github.com/huaweicloud/golangsdk/openstack"
 	"github.com/huaweicloud/golangsdk/openstack/obs"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/logger"
+
+	"github.com/gophercloud/gophercloud"
+	nativeopenstack "github.com/gophercloud/gophercloud/openstack"
 )
 
 // CloudCredentials define
@@ -33,7 +36,8 @@ type CloudCredentials struct {
 	Username         string `json:"user_name"`
 	UserID           string `json:"user_id"`
 
-	CloudClient *golangsdk.ProviderClient
+	OpenStackClient *gophercloud.ProviderClient
+	CloudClient     *golangsdk.ProviderClient
 }
 
 // Validate CloudCredentials
@@ -56,7 +60,90 @@ func (c *CloudCredentials) Validate() error {
 		return fmt.Errorf("Invalid endpoint type provided")
 	}
 
+	err := c.newOpenStackClient()
+	if err != nil {
+		return err
+	}
+
 	return c.newCloudClient()
+}
+
+// newOpenStackClient returns new native openstack client
+func (c *CloudCredentials) newOpenStackClient() error {
+	ao := gophercloud.AuthOptions{
+		DomainID:         c.DomainID,
+		DomainName:       c.DomainName,
+		IdentityEndpoint: c.IdentityEndpoint,
+		Password:         c.Password,
+		TenantID:         c.TenantID,
+		TenantName:       c.TenantName,
+		TokenID:          c.Token,
+		Username:         c.Username,
+		UserID:           c.UserID,
+	}
+
+	client, err := nativeopenstack.NewClient(ao.IdentityEndpoint)
+	if err != nil {
+		return err
+	}
+
+	config := &tls.Config{}
+	if c.CACertFile != "" {
+		caCert, _, err := ReadContents(c.CACertFile)
+		if err != nil {
+			return fmt.Errorf("Error reading CA Cert: %s", err)
+		}
+
+		caCertPool := x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM([]byte(caCert))
+		config.RootCAs = caCertPool
+	}
+
+	if c.Insecure {
+		config.InsecureSkipVerify = true
+	}
+
+	if c.ClientCertFile != "" && c.ClientKeyFile != "" {
+		clientCert, _, err := ReadContents(c.ClientCertFile)
+		if err != nil {
+			return fmt.Errorf("Error reading Client Cert: %s", err)
+		}
+		clientKey, _, err := ReadContents(c.ClientKeyFile)
+		if err != nil {
+			return fmt.Errorf("Error reading Client Key: %s", err)
+		}
+
+		cert, err := tls.X509KeyPair([]byte(clientCert), []byte(clientKey))
+		if err != nil {
+			return err
+		}
+
+		config.Certificates = []tls.Certificate{cert}
+		config.BuildNameToCertificate()
+	}
+
+	// if OS_DEBUG is set, log the requests and responses
+	var osDebug bool
+	if os.Getenv("OS_DEBUG") != "" {
+		osDebug = true
+	}
+
+	transport := &http.Transport{Proxy: http.ProxyFromEnvironment, TLSClientConfig: config}
+	client.HTTPClient = http.Client{
+		Transport: &logger.LogRoundTripper{
+			Rt:      transport,
+			OsDebug: osDebug,
+		},
+	}
+
+	err = nativeopenstack.Authenticate(client, ao)
+	if err != nil {
+		return err
+	}
+
+	c.OpenStackClient = client
+
+	return nil
 }
 
 // newCloudClient returns new cloud client
@@ -137,6 +224,17 @@ func (c *CloudCredentials) newCloudClient() error {
 	return nil
 }
 
+// getNativeEndpointType returns native openstack endpoint type
+func (c *CloudCredentials) getNativeEndpointType() gophercloud.Availability {
+	if c.EndpointType == "internal" || c.EndpointType == "internalURL" {
+		return gophercloud.AvailabilityInternal
+	}
+	if c.EndpointType == "admin" || c.EndpointType == "adminURL" {
+		return gophercloud.AvailabilityAdmin
+	}
+	return gophercloud.AvailabilityPublic
+}
+
 // getEndpointType returns cloud endpoint type
 func (c *CloudCredentials) getEndpointType() golangsdk.Availability {
 	if c.EndpointType == "internal" || c.EndpointType == "internalURL" {
@@ -146,6 +244,14 @@ func (c *CloudCredentials) getEndpointType() golangsdk.Availability {
 		return golangsdk.AvailabilityAdmin
 	}
 	return golangsdk.AvailabilityPublic
+}
+
+// NetworkingV2Client return native networking v2 client
+func (c *CloudCredentials) NetworkingV2Client() (*gophercloud.ServiceClient, error) {
+	return nativeopenstack.NewNetworkV2(c.OpenStackClient, gophercloud.EndpointOpts{
+		Region:       c.Region,
+		Availability: c.getNativeEndpointType(),
+	})
 }
 
 // RDSV1Client return rds v1 client
