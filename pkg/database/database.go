@@ -7,6 +7,9 @@ import (
 	"code.cloudfoundry.org/lager"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
 	"github.com/jinzhu/gorm"
+
+	// import mysql driver
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 // BackDBConnection is used to operate on database
