@@ -72,6 +72,7 @@ type ServicePlanMetadata struct {
 	DisplayName        string            `json:"displayName,omitempty"`
 	Bullets            []string          `json:"bullets,omitempty"`
 	Costs              []ServicePlanCost `json:"costs,omitempty"`
+	Parameters         json.RawMessage   `json:"parameters,omitempty"`
 	AdditionalMetadata map[string]interface{}
 }
 
