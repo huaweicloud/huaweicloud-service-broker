@@ -39,7 +39,7 @@ func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Init provisionOpts
 	var params map[string]string
-	if len(details.RawParameters) >= 0 {
+	if len(details.RawParameters) > 0 {
 		err := json.Unmarshal(details.RawParameters, &params)
 		if err != nil {
 			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)

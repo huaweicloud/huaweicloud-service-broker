@@ -48,7 +48,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Init updateOpts
 	updateOpts := instances.UpdateOpts{}
 
-	if len(details.RawParameters) >= 0 {
+	if len(details.RawParameters) > 0 {
 		err := json.Unmarshal(details.RawParameters, &updateOpts)
 		if err != nil {
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("Error unmarshalling parameters: %s", err)

@@ -2,8 +2,11 @@ package rds
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
+	"github.com/huaweicloud/golangsdk/openstack/rds/v1/datastores"
+	"github.com/huaweicloud/golangsdk/openstack/rds/v1/flavors"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
@@ -45,30 +48,29 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("create rds client failed. Error: %s", err)
 	}
 
-	// Init rawParameters
-	rawParameters := map[string]string{}
-
-	if len(details.RawParameters) >= 0 {
-		err := json.Unmarshal(details.RawParameters, &rawParameters)
+	// Init updateParameters
+	updateParameters := UpdateParameters{}
+	if len(details.RawParameters) > 0 {
+		err := json.Unmarshal(details.RawParameters, &updateParameters)
 		if err != nil {
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("Error unmarshalling parameters: %s", err)
 		}
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", rawParameters))
+	b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", updateParameters))
 
 	// Invoke sdk
-	if volumesize, ok := rawParameters["volumesize"]; ok {
+	if updateParameters.VolumeSize > 0 {
 		// UpdateVolumeSize
 		rdsInstance, err := instances.UpdateVolumeSize(
 			rdsClient,
 			instances.UpdateOps{
 				Volume: map[string]interface{}{
-					"size": volumesize,
+					"size": updateParameters.VolumeSize,
 				},
 			},
-			instanceID).Extract()
+			ids.TargetID).Extract()
 		if err != nil {
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance volume size failed. Error: %s", err)
 		}
@@ -78,15 +80,84 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Invoke sdk
-	if flavorname, ok := rawParameters["flavorname"]; ok {
+	if updateParameters.SpecCode != "" {
+
+		// Find service plan
+		servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("find service plan failed. Error: %s", err)
+		}
+
+		// Get parameters from service plan metadata
+		metadataParameters := MetadataParameters{}
+		if servicePlan.Metadata != nil {
+			if len(servicePlan.Metadata.Parameters) > 0 {
+				err := json.Unmarshal(servicePlan.Metadata.Parameters, &metadataParameters)
+				if err != nil {
+					return brokerapi.UpdateServiceSpec{},
+						fmt.Errorf("Error unmarshalling Parameters from service plan: %s", err)
+				}
+			}
+		}
+
+		// Get datastoresList
+		datastoresList, err := datastores.List(rdsClient, metadataParameters.DatastoreType).Extract()
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{},
+				fmt.Errorf("Unable to retrieve datastores: %s ", err)
+		}
+		if len(datastoresList) < 1 {
+			return brokerapi.UpdateServiceSpec{},
+				errors.New("Returned no datastore result")
+		}
+		b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", datastoresList))
+
+		// Get datastoreID
+		var datastoreID string
+		for _, datastore := range datastoresList {
+			if datastore.Name == metadataParameters.DatastoreVersion {
+				datastoreID = datastore.ID
+				break
+			}
+		}
+		if datastoreID == "" {
+			return brokerapi.UpdateServiceSpec{},
+				errors.New("Returned no datastore ID")
+		}
+		b.Logger.Debug(fmt.Sprintf("Received datastore ID: %s", datastoreID))
+
+		// Get flavorsList
+		flavorsList, err := flavors.List(rdsClient, datastoreID, b.CloudCredentials.Region).Extract()
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{},
+				fmt.Errorf("Unable to retrieve flavors: %s", err)
+		}
+		if len(flavorsList) < 1 {
+			return brokerapi.UpdateServiceSpec{},
+				errors.New("Returned no flavor result")
+		}
+
+		// Get flavorID
+		var flavorID string
+		for _, flavor := range flavorsList {
+			if flavor.SpecCode == updateParameters.SpecCode {
+				flavorID = flavor.ID
+				break
+			}
+		}
+		if flavorID == "" {
+			return brokerapi.UpdateServiceSpec{},
+				errors.New("Returned no flavor Id")
+		}
+		b.Logger.Debug(fmt.Sprintf("Received datastore ID: %s", flavorID))
+
 		// UpdateFlavorRef
 		rdsInstance, err := instances.UpdateFlavorRef(
 			rdsClient,
 			instances.UpdateFlavorOps{
-				// TODO convert flavor name to flavor ref
-				FlavorRef: flavorname,
+				FlavorRef: flavorID,
 			},
-			instanceID).Extract()
+			ids.TargetID).Extract()
 		if err != nil {
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance flavor failed. Error: %s", err)
 		}

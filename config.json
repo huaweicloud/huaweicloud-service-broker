@@ -1,100 +1,320 @@
 {
-  "broker_config": {
-      "log_level": "DEBUG",
-      "username": "username",
-      "password": "password"
-  },
-  "back_database" :{
-    "database_type": "mysql",
-    "database_host": "127.0.0.1",
-    "database_port": "3306",
-    "database_name": "broker",
-    "database_username": "******",
-    "database_password": "******"
-  },
-  "cloud_credentials": {
-      "auth_url": "https://iam.cn-north-1.myhwclouds.com",
-      "user_name": "******",
-      "password": "******",
-      "domain_name": "******",
-      "tenant_name": "cn-north-1",
-      "region": "cn-north-1"
-  },
-  "catalog": {
-      "services": [
-          {
-              "id": "a2c9adda-6511-462c-9934-b3fd8236e9f0",
-              "name": "rds-postgresql",
-              "description": "RDS PostgreSQL service",
-              "bindable": true,
-              "tags": [
-                  "postgres",
-                  "relational"
-              ],
-              "metadata": {
-                  "displayName": "RDS PostgreSQL",
-                  "imageUrl": "data:image/png;",
-                  "longDescription": "RDS PostgreSQL service",
-                  "providerDisplayName": "Huawei Cloud Services",
-                  "documentationUrl": "http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html",
-                  "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
-              },
-              "plan_updateable": true,
-              "plans": [
-                  {
-                      "id": "d42fc3cc-1341-4aa3-866e-01bc5243dc3e",
-                      "name": "9.5.5-medium",
-                      "description": "RDS PostgreSQL 9.5.5 (db.s1.medium, 4Gb)",
-                      "metadata": {
-                        "parameters": {
-                            "datastore_type": "PostgreSQL",
-                            "datastore_version": "9.5.5",
-                            "flavor_name": "db.s1.medium",
-                            "flavor_id": "7fbf27c5-07e5-43dc-cf13-ad7a0f1c5d9a",
-                            "volume_type": "COMMON",
-                            "volume_size": 100,
-                            "region": "eu-de",
-                            "availability_zone": "eu-de-01",
-                            "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
-                            "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
-                            "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
-                            "db_port": "8635",
-                            "backup_strategy_starttime": "00:00:00",
-                            "backup_strategy_keepdays": 0,
-                            "db_password": "password",
-                            "db_username": "root",
-                            "db_name": "postgres"
-                          }
-                      }
-                  },
-                  {
-                      "id": "8f8d8ed7-ddd3-4b1f-befa-976cf7fc4116",
-                      "name": "9.5.5-large",
-                      "description": "RDS PostgreSQL 9.5.5 (db.s1.large, 8Gb)",
-                      "metadata": {
-                          "parameters": {
-                            "datastore_type": "PostgreSQL",
-                            "datastore_version": "9.5.5",
-                            "flavor_name": "db.s1.large",
-                            "flavor_id": "a5c71167-6d85-026c-cea2-0d78488247e5",
-                            "volume_type": "COMMON",
-                            "volume_size": 100,
-                            "region": "eu-de",
-                            "availability_zone": "eu-de-01",
-                            "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
-                            "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
-                            "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
-                            "db_port": "8635",
-                            "backup_strategy_starttime": "00:00:00",
-                            "backup_strategy_keepdays": 0,
-                            "db_password": "db_password",
-                            "db_username": "root",
-                            "db_name": "postgres"
-                          }
-                      }
-                  }
-              ]
-          }
-      ]
-  }
+    "broker_config": {
+        "log_level": "DEBUG",
+        "username": "username",
+        "password": "password"
+    },
+    "back_database" :{
+        "database_type": "mysql",
+        "database_host": "127.0.0.1",
+        "database_port": "3306",
+        "database_name": "broker",
+        "database_username": "******",
+        "database_password": "******"
+    },
+    "cloud_credentials": {
+        "auth_url": "https://iam.cn-north-1.myhwclouds.com",
+        "user_name": "******",
+        "password": "******",
+        "domain_name": "******",
+        "tenant_name": "cn-north-1",
+        "region": "cn-north-1"
+    },
+    "catalog": {
+        "services": [
+            {
+                "id": "275f3e0b-86fd-4303-946c-171374d29150",
+                "name": "rds-mysql",
+                "description": "RDS MySQL service",
+                "bindable": true,
+                "tags": [
+                    "mysql",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS MySQL",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS MySQL service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262671.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "fc1b0ebf-aabf-4ab1-87e9-83544a5902e8",
+                        "name": "5.6.39",
+                        "description": "RDS MySQL 5.6.39",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.39",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "839f4458-309a-4e05-a069-807e950cf6da",
+                        "name": "5.7.21",
+                        "description": "RDS MySQL 5.7.21",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.7.21",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-01",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "root"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "3beb990b-841b-40ee-a65d-8b9d1f61b38e",
+                "name": "rds-sqlserver",
+                "description": "RDS SQLServer service",
+                "bindable": true,
+                "tags": [
+                    "sqlserver",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS SQLServer",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS SQLServer service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0053089719.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "08710d25-f4ee-4f70-a7e3-f321d58601b0",
+                        "name": "2008_R2_SP3_SE",
+                        "description": "RDS SQLServer 2008_R2_SP3_SE",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "SQLServer",
+                                "datastore_version": "2008_R2_SP3_SE",
+                                "speccode": "rds.dec.mssql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "rdsuser"
+                            }
+                        }
+                    },
+                    {
+                        "id": "4e7f5068-4c06-4efc-b275-4b83a8a46f6b",
+                        "name": "2014_SP2_SE",
+                        "description": "RDS SQLServer 2014_SP2_SE",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "SQLServer",
+                                "datastore_version": "2014_SP2_SE",
+                                "speccode": "rds.dec.mssql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "rdsuser"
+                            }
+                        }
+                    },
+                    {
+                        "id": "42c6c971-1aef-4b09-b383-45aefea06716",
+                        "name": "2014_SP2_EE",
+                        "description": "RDS SQLServer 2014_SP2_EE",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "SQLServer",
+                                "datastore_version": "2014_SP2_EE",
+                                "speccode": "rds.dec.mssql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "rdsuser"
+                            }
+                        }
+                    },
+                    {
+                        "id": "c6f69cd4-fbb1-4e8a-a810-f73313e475e4",
+                        "name": "2016_SP1_SE",
+                        "description": "RDS SQLServer 2016_SP1_SE",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "SQLServer",
+                                "datastore_version": "2016_SP1_SE",
+                                "speccode": "rds.mssql.se.m3.xlarge.8",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "rdsuser"
+                            }
+                        }
+                    },
+                    {
+                        "id": "74fa877c-52cd-46eb-9383-431361ad9fbc",
+                        "name": "2016_SP1_EE",
+                        "description": "RDS SQLServer 2016_SP1_EE",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "SQLServer",
+                                "datastore_version": "2016_SP1_EE",
+                                "speccode": "rds.mssql.ee.m3.xlarge.8",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "rdsuser"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "a2c9adda-6511-462c-9934-b3fd8236e9f0",
+                "name": "rds-postgresql",
+                "description": "RDS PostgreSQL service",
+                "bindable": true,
+                "tags": [
+                    "postgres",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS PostgreSQL",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS PostgreSQL service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "d8ed862b-4fa6-4104-acf6-6e2e1e15be80",
+                        "name": "9.5.5",
+                        "description": "RDS PostgreSQL 9.5.5",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "PostgreSQL",
+                                "datastore_version": "9.5.5",
+                                "speccode": "rds.pg.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "8f2d40ac-50d5-43eb-8458-013b9cf85239",
+                        "name": "9.6.5",
+                        "description": "RDS PostgreSQL 9.6.5",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "PostgreSQL",
+                                "datastore_version": "9.6.5",
+                                "speccode": "rds.pg.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "8f2d40ac-50d5-43eb-8458-013b9cf85239",
+                        "name": "10.0.3",
+                        "description": "RDS PostgreSQL 10.0.3",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "PostgreSQL",
+                                "datastore_version": "10.0.3",
+                                "speccode": "rds.pg.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "root"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "1f3e38e8-4563-417f-8506-ec1ac61ea3a6",
+                "name": "rds-hwsql",
+                "description": "RDS HWSQL service",
+                "bindable": true,
+                "tags": [
+                    "hwsql",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS HWSQL",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS HWSQL service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262773.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "4ee06ed1-64f4-42e5-b8b2-d7adb1a20635",
+                        "name": "5.6.39H1",
+                        "description": "RDS HWSQL 5.6.39H1",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "HWSQL",
+                                "datastore_version": "5.6.39H1",
+                                "speccode": "rds.hwsql.sn2.xlarge.2",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "cn-north-1",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b",
+                                "database_username": "root"
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
 }
