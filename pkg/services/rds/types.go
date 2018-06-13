@@ -37,7 +37,7 @@ type MetadataParameters struct {
 	DatabaseUsername string `json:"database_username,omitempty"`
 }
 
-// ProvisionParameters represent plan metadata parameters in config
+// ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
 	SpecCode                string `json:"speccode,omitempty"`
 	VolumeType              string `json:"volume_type,omitempty"`
@@ -53,4 +53,10 @@ type ProvisionParameters struct {
 	BackupStrategyKeepdays  int    `json:"backup_strategy_keepdays,omitempty"`
 	HAEnable                bool   `json:"ha_enable,omitempty"`
 	HAReplicationMode       string `json:"ha_replicationmode,omitempty"`
+}
+
+// UpdateParameters represent update parameters
+type UpdateParameters struct {
+	VolumeSize int    `json:"volume_size,omitempty"`
+	SpecCode   string `json:"speccode,omitempty"`
 }
