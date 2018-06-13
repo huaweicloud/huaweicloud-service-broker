@@ -40,7 +40,7 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Init provisionOpts
 	provisionOpts := instances.CreateOps{}
-	if len(details.RawParameters) >= 0 {
+	if len(details.RawParameters) > 0 {
 		err := json.Unmarshal(details.RawParameters, &provisionOpts)
 		if err != nil {
 			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)

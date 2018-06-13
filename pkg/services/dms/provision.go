@@ -36,7 +36,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Init provisionOpts
 	provisionOpts := queues.CreateOps{}
-	if len(details.RawParameters) >= 0 {
+	if len(details.RawParameters) > 0 {
 		err := json.Unmarshal(details.RawParameters, &provisionOpts)
 		if err != nil {
 			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)
@@ -87,7 +87,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Init provisionGroupOpts
 	provisionGroupOpts := groups.CreateOps{}
-	if len(details.RawParameters) >= 0 {
+	if len(details.RawParameters) > 0 {
 		err := json.Unmarshal(details.RawParameters, &provisionGroupOpts)
 		if err != nil {
 			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)

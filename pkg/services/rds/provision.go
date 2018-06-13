@@ -2,8 +2,11 @@ package rds
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
+	"github.com/huaweicloud/golangsdk/openstack/rds/v1/datastores"
+	"github.com/huaweicloud/golangsdk/openstack/rds/v1/flavors"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
@@ -33,25 +36,156 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create rds client failed. Error: %s", err)
 	}
 
+	// Find service plan
+	servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("find service plan failed. Error: %s", err)
+	}
+
+	// Get parameters from service plan metadata
+	metadataParameters := MetadataParameters{}
+	if servicePlan.Metadata != nil {
+		if len(servicePlan.Metadata.Parameters) > 0 {
+			err := json.Unmarshal(servicePlan.Metadata.Parameters, &metadataParameters)
+			if err != nil {
+				return brokerapi.ProvisionedServiceSpec{},
+					fmt.Errorf("Error unmarshalling Parameters from service plan: %s", err)
+			}
+		}
+	}
+
+	// Get parameters from details
+	provisionParameters := ProvisionParameters{}
+	if len(details.RawParameters) > 0 {
+		err := json.Unmarshal(details.RawParameters, &provisionParameters)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{},
+				fmt.Errorf("Error unmarshalling rawParameters from details: %s", err)
+		}
+	}
+
+	// Get datastoresList
+	datastoresList, err := datastores.List(rdsClient, metadataParameters.DatastoreType).Extract()
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{},
+			fmt.Errorf("Unable to retrieve datastores: %s ", err)
+	}
+	if len(datastoresList) < 1 {
+		return brokerapi.ProvisionedServiceSpec{},
+			errors.New("Returned no datastore result")
+	}
+	b.Logger.Debug(fmt.Sprintf("provision rds instance opts: %v", datastoresList))
+
+	// Get datastoreID
+	var datastoreID string
+	for _, datastore := range datastoresList {
+		if datastore.Name == metadataParameters.DatastoreVersion {
+			datastoreID = datastore.ID
+			break
+		}
+	}
+	if datastoreID == "" {
+		return brokerapi.ProvisionedServiceSpec{},
+			errors.New("Returned no datastore ID")
+	}
+	b.Logger.Debug(fmt.Sprintf("Received datastore ID: %s", datastoreID))
+
+	// Get flavorsList
+	flavorsList, err := flavors.List(rdsClient, datastoreID, b.CloudCredentials.Region).Extract()
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{},
+			fmt.Errorf("Unable to retrieve flavors: %s", err)
+	}
+	if len(flavorsList) < 1 {
+		return brokerapi.ProvisionedServiceSpec{},
+			errors.New("Returned no flavor result")
+	}
+
+	// Get flavorID
+	var flavorID string
+	// Default SpecCode
+	specCode := metadataParameters.SpecCode
+	if provisionParameters.SpecCode != "" {
+		specCode = provisionParameters.SpecCode
+	}
+	for _, flavor := range flavorsList {
+		if flavor.SpecCode == specCode {
+			flavorID = flavor.ID
+			break
+		}
+	}
+	if flavorID == "" {
+		return brokerapi.ProvisionedServiceSpec{},
+			errors.New("Returned no flavor Id")
+	}
+	b.Logger.Debug(fmt.Sprintf("Received datastore ID: %s", flavorID))
+
 	// Init provisionOpts
 	provisionOpts := instances.CreateOps{}
-	/*Name:             instanceID,
-	Datastore:        map[string]string{"type": rds_prop.DatastoreType, "version": rds_prop.DatastoreVersion},
-	FlavorRef:        rds_prop.FlavorId,
-	Volume:           map[string]interface{}{"type": rds_prop.VolumeType, "size": rds_prop.VolumeSize},
-	Region:           rds_prop.Region,
-	AvailabilityZone: rds_prop.AvailabilityZone,
-	Vpc:              rds_prop.VpcId,
-	Nics:             map[string]string{"subnetId": rds_prop.SubnetId},
-	SecurityGroup:    map[string]string{"id": rds_prop.SecurityGroupId},
-	DbPort:           rds_prop.Dbport,
-	BackupStrategy:   map[string]interface{}{"startTime": rds_prop.BackupStrategyStarttime, "keepDays": rds_prop.BackupStrategyKeepdays},
-	DbRtPd:           rds_prop.Dbpassword,*/
-	if len(details.RawParameters) >= 0 {
-		err := json.Unmarshal(details.RawParameters, &provisionOpts)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)
+	provisionOpts.Name = provisionParameters.Name
+	provisionOpts.DataStore = instances.DataStoreOps{
+		Type:    metadataParameters.DatastoreType,
+		Version: metadataParameters.DatastoreVersion,
+	}
+	provisionOpts.FlavorRef = flavorID
+	// Default VolumeType
+	volumeType := metadataParameters.VolumeType
+	if provisionParameters.VolumeType != "" {
+		volumeType = provisionParameters.VolumeType
+	}
+	// Default VolumeSize
+	volumeSize := metadataParameters.VolumeSize
+	if provisionParameters.VolumeSize > 0 {
+		volumeSize = provisionParameters.VolumeSize
+	}
+	provisionOpts.Volume = instances.VolumeOps{
+		Type: volumeType,
+		Size: volumeSize,
+	}
+	provisionOpts.Region = b.CloudCredentials.Region
+	// Default AvailabilityZone
+	availabilityZone := metadataParameters.AvailabilityZone
+	if provisionParameters.AvailabilityZone != "" {
+		availabilityZone = provisionParameters.AvailabilityZone
+	}
+	provisionOpts.AvailabilityZone = availabilityZone
+	// Default VPCID
+	vpcID := metadataParameters.VPCID
+	if provisionParameters.VPCID != "" {
+		vpcID = provisionParameters.VPCID
+	}
+	provisionOpts.Vpc = vpcID
+	// Default SubnetID
+	subnetID := metadataParameters.SubnetID
+	if provisionParameters.SubnetID != "" {
+		subnetID = provisionParameters.SubnetID
+	}
+	provisionOpts.Nics = instances.NicsOps{
+		SubnetId: subnetID,
+	}
+	// Default SecurityGroupID
+	securitygroupID := metadataParameters.SecurityGroupID
+	if provisionParameters.SecurityGroupID != "" {
+		securitygroupID = provisionParameters.SecurityGroupID
+	}
+	provisionOpts.SecurityGroup = instances.SecurityGroupOps{
+		Id: securitygroupID,
+	}
+	if provisionParameters.DatabasePort != "" {
+		provisionOpts.DbPort = provisionParameters.DatabasePort
+	}
+	if provisionParameters.BackupStrategyStarttime != "" {
+		provisionOpts.BackupStrategy = instances.BackupStrategyOps{}
+		provisionOpts.BackupStrategy.StartTime = provisionParameters.BackupStrategyStarttime
+		if provisionParameters.BackupStrategyKeepdays > 0 {
+			provisionOpts.BackupStrategy.KeepDays = provisionParameters.BackupStrategyKeepdays
 		}
+	}
+	provisionOpts.DbRtPd = provisionParameters.DatabasePassword
+	provisionOpts.Ha = instances.HaOps{}
+	provisionOpts.Ha.Enable = provisionParameters.HAEnable
+	if provisionParameters.HAReplicationMode != "" {
+		provisionOpts.Ha.ReplicationMode = provisionParameters.HAReplicationMode
 	}
 
 	// Log opts

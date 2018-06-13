@@ -48,7 +48,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Init rawParameters
 	rawParameters := map[string]string{}
 
-	if len(details.RawParameters) >= 0 {
+	if len(details.RawParameters) > 0 {
 		err := json.Unmarshal(details.RawParameters, &rawParameters)
 		if err != nil {
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("Error unmarshalling parameters: %s", err)

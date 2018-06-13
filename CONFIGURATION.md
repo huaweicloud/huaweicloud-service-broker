@@ -125,3 +125,64 @@ These credentials information can be used by the applications in CloudFoundry.
 The Unbind action of this rds broker API will return unbind the credentials information about the created database instance in Relational Database Service.
 
 The Update action of this rds broker API will update some information for Relational Database Service database instance.
+
+
+## RDS
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| name                            | Y        | String     | Specifies the DB instance name. The DB instance name of the same DB engine is unique for the same tenant. Valid value: The value must be 4 to 64 characters in length and start with a letter. It is case-insensitive and can contain only letters, digits, hyphens (-), and underscores (_).
+| datastore                       | Y        | Dictionary | Specifies database information.
+| flavorRef                       | Y        | String     | Specifies the specification ID.
+| volume                          | Y        | Dictionary | Specifies the volume information.
+| region                          | Y        | String     | Specifies the region ID. Valid value: The value cannot be empty.
+| availabilityZone                | Y        | String     | Specifies the ID of the AZ. Valid value: The value cannot be empty.
+| vpc                             | N        | String     | Specifies the VPC ID.
+| nics                            | N        | Dictionary | Specifies the nics information.
+| securityGroup                   | N        | Dictionary | Specifies the security group which the RDS DB instance belongs to.
+| dbPort                          | N        | String     | Specifies the database port number.
+| backupStrategy                  | N        | Dictionary | Specifies the advanced backup policy.
+| dbRtPd                          | Y        | String     | Specifies the password for user root of the database. Valid value: The value cannot be empty and should contain 8 to 32 characters, including uppercase and lowercase letters, digits, and the following special characters: ~!@#%^*-_=+?
+| ha                              | N        | Dictionary | Specifies the parameters configured on HA and is used when creating HA DB instances.
+| dbUserName                      | Y        | String     | Specifies the username of the database. The default value of username is root.
+
+### datastore
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| type                            | Y        | String     | Specifies the DB engine. Currently, MySQL, HWSQL, PostgreSQL, and Microsoft SQL Server are supported. The value is MySQL, HWSQL, PostgreSQL, or SQLServer.
+| version                         | Y        | String     | Specifies database information.Specifies the database version. MySQL databases support MySQL 5.6 and 5.7. Example value: 5.7 HWSQL databases support HWSQL 5.6. Example value: 5.6 PostgreSQL databases support PostgreSQL 9.5 and 9.6. Example value: 9.6 Microsoft SQL Server databases support Microsoft SQL Server 2014 SP2 SE, 2014 SP2 EE, 2016 SP1 SE, 2016 SP1 EE, and 2008 R2 SP3 SE. Example value: 2008_R2_SP3_SE
+
+
+### volume
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| type                            | Y        | String     | Specifies the volume type. Valid value: It must be COMMON (SATA), HIGH (SAS), or ULTRAHIGH (SSD) and is case-sensitive.
+| size                            | Y        | Int        | Specifies the volume size. Its value must be a multiple of 10 and the value range is from 40 GB to 2,000 GB.
+
+### nics
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| subnetId                        | Y        | String     | Specifies the subnet ID obtained from the VPC.
+
+### securityGroup
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| id                              | Y        | String     | Valid value: The value cannot be empty. The name length and whether the name complies with UUID regular expression rules are verified.
+
+### backupStrategy
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| startTime                       | Y        | String     | Specifies the backup start time that has been set. Valid value: The value cannot be empty. It must use the hh:mm:ss format and must be valid. The current time is the UTC time.
+| keepDays                        | N        | Int        | Specifies the number of days to retain the generated backup files. Its value range is from 0 to 35. If this parameter is not specified or set to 0, the automated backup policy is disabled.
+
+### ha
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| enable                          | Y        | Boolean    | Specifies the HA configuration parameter. Valid value: The value is true or false. The value true indicates creating HA DB instances. The value false indicates creating a single DB instance.
+| replicationMode                 | Y        | String     | Specifies the replication mode for the standby DB instance. The value cannot be empty. For MySQL, the value is async or semisync. For PostgreSQL, the value is async or sync. For Microsoft SQL Server, the value is sync. For HWSQL, the value is async or semisync.

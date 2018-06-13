@@ -22,3 +22,35 @@ type BindingCredential struct {
 	URI      string `json:"uri,omitempty"`
 	Type     string `json:"type,omitempty"`
 }
+
+// MetadataParameters represent plan metadata parameters in config
+type MetadataParameters struct {
+	DatastoreType    string `json:"datastore_type,omitempty"`
+	DatastoreVersion string `json:"datastore_version,omitempty"`
+	SpecCode         string `json:"speccode,omitempty"`
+	VolumeType       string `json:"volume_type,omitempty"`
+	VolumeSize       int    `json:"volume_size,omitempty"`
+	AvailabilityZone string `json:"availability_zone,omitempty"`
+	VPCID            string `json:"vpc_id,omitempty"`
+	SubnetID         string `json:"subnet_id,omitempty"`
+	SecurityGroupID  string `json:"security_group_id,omitempty"`
+	DatabaseUsername string `json:"database_username,omitempty"`
+}
+
+// ProvisionParameters represent plan metadata parameters in config
+type ProvisionParameters struct {
+	SpecCode                string `json:"speccode,omitempty"`
+	VolumeType              string `json:"volume_type,omitempty"`
+	VolumeSize              int    `json:"volume_size,omitempty"`
+	AvailabilityZone        string `json:"availability_zone,omitempty"`
+	VPCID                   string `json:"vpc_id,omitempty"`
+	SubnetID                string `json:"subnet_id,omitempty"`
+	SecurityGroupID         string `json:"security_group_id,omitempty"`
+	Name                    string `json:"name,omitempty"`
+	DatabasePort            string `json:"database_port,omitempty"`
+	DatabasePassword        string `json:"database_password,omitempty"`
+	BackupStrategyStarttime string `json:"backup_strategy_starttime,omitempty"`
+	BackupStrategyKeepdays  int    `json:"backup_strategy_keepdays,omitempty"`
+	HAEnable                bool   `json:"ha_enable,omitempty"`
+	HAReplicationMode       string `json:"ha_replicationmode,omitempty"`
+}
