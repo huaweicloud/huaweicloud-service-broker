@@ -60,3 +60,10 @@ type UpdateParameters struct {
 	VolumeSize int    `json:"volume_size,omitempty"`
 	SpecCode   string `json:"speccode,omitempty"`
 }
+
+const (
+	// AddtionalParamDBUsername for dbusername
+	AddtionalParamDBUsername string = "dbusername"
+	// AddtionalParamDBPassword for dbpassword
+	AddtionalParamDBPassword string = "dbpassword"
+)

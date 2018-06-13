@@ -214,7 +214,8 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Constuct addtional info
 	addtionalparam := map[string]string{}
-	addtionalparam["dbrtpd"] = provisionOpts.DbRtPd
+	addtionalparam[AddtionalParamDBUsername] = metadataParameters.DatabaseUsername
+	addtionalparam[AddtionalParamDBPassword] = provisionOpts.DbRtPd
 
 	// Marshal addtional info
 	addtionalinfo, err := json.Marshal(addtionalparam)
