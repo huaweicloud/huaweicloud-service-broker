@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/layer3/routers"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/extensions/security/groups"
-	"github.com/gophercloud/gophercloud/openstack/networking/v2/networks"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/availablezones"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/products"
@@ -38,132 +35,125 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create dcs client failed. Error: %s", err)
 	}
 
-	// Init provisionOpts
-	provisionOpts := instances.CreateOps{}
-	if len(details.RawParameters) > 0 {
-		err := json.Unmarshal(details.RawParameters, &provisionOpts)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)
-		}
-	}
-
 	// Find service plan
 	servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("find service plan failed. Error: %s", err)
 	}
 
-	// Setting provisionOpts
-	if provisionOpts.Name == "" {
-		provisionOpts.Name = instanceID
+	// Get parameters from service plan metadata
+	metadataParameters := MetadataParameters{}
+	if servicePlan.Metadata != nil {
+		if len(servicePlan.Metadata.Parameters) > 0 {
+			err := json.Unmarshal(servicePlan.Metadata.Parameters, &metadataParameters)
+			if err != nil {
+				return brokerapi.ProvisionedServiceSpec{},
+					fmt.Errorf("Error unmarshalling Parameters from service plan: %s", err)
+			}
+		}
 	}
 
-	// TODO need to confirm different engine name
-	if servicePlan.Name == models.DCSRedisServiceName {
-		provisionOpts.Engine = "Redis"
-	} else if servicePlan.Name == models.DCSMemcachedServiceName {
-		provisionOpts.Engine = "Memcached"
-	} else if servicePlan.Name == models.DCSIMDGServiceName {
-		provisionOpts.Engine = "IMDG"
-	} else {
-		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("unknown service name: %s", servicePlan.Name)
+	// Get parameters from details
+	provisionParameters := ProvisionParameters{}
+	if len(details.RawParameters) > 0 {
+		err := json.Unmarshal(details.RawParameters, &provisionParameters)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{},
+				fmt.Errorf("Error unmarshalling rawParameters from details: %s", err)
+		}
 	}
 
-	// Init networking client
-	networkingClient, err := b.CloudCredentials.NetworkingV2Client()
+	// List all the products
+	ps, err := products.Get(dcsClient).Extract()
 	if err != nil {
-		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create networking client failed. Error: %s", err)
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get dcs products failed. Error: %s", err)
 	}
 
-	// get default vpc
-	if provisionOpts.VPCID == "" {
-		routersListOpts := routers.ListOpts{}
-		routersPages, err := routers.List(networkingClient, routersListOpts).AllPages()
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to list vpc: %s", err)
-		}
-		allRouters, err := routers.ExtractRouters(routersPages)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to extract vpc: %s", err)
-		}
-		if len(allRouters) == 0 {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to get default vpc: %s", err)
-		} else {
-			router := allRouters[0]
-			provisionOpts.VPCID = router.ID
+	// Get ProductID
+	productID := ""
+	for _, p := range ps.Products {
+		if (p.SpecCode == metadataParameters.SpecCode) &&
+			(p.ChargingType == metadataParameters.ChargingType) {
+			productID = p.ProductID
+			break
 		}
 	}
 
-	// get default Subnet
-	if provisionOpts.SubnetID == "" {
-		networksListOpts := networks.ListOpts{Status: "ACTIVE"}
-		networksPages, err := networks.List(networkingClient, networksListOpts).AllPages()
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to list subnet: %s", err)
-		}
-		allnetworks, err := networks.ExtractNetworks(networksPages)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to extract subnet: %s", err)
-		}
-		if len(allnetworks) == 0 {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to get default subnet: %s", err)
-		} else {
-			network := allnetworks[0]
-			provisionOpts.SubnetID = network.ID
-		}
+	// Init provisionOpts
+	provisionOpts := instances.CreateOps{}
+	provisionOpts.Name = provisionParameters.Name
+	if provisionParameters.Description != "" {
+		provisionOpts.Description = provisionParameters.Description
 	}
-
-	// get default security group
-	if provisionOpts.SecurityGroupID == "" {
-		groupsListOpts := groups.ListOpts{}
-		groupsPages, err := groups.List(networkingClient, groupsListOpts).AllPages()
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to list security groups: %s", err)
-		}
-		allSecGroups, err := groups.ExtractGroups(groupsPages)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to extract security groups: %s", err)
-		}
-		if len(allSecGroups) == 0 {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Unable to get default security groups: %s", err)
-		} else {
-			secGroup := allSecGroups[0]
-			provisionOpts.SecurityGroupID = secGroup.ID
-		}
+	provisionOpts.Engine = metadataParameters.Engine
+	// Default Capacity
+	provisionOpts.Capacity = metadataParameters.Capacity
+	if provisionParameters.Capacity > 0 {
+		provisionOpts.Capacity = provisionParameters.Capacity
 	}
-
-	// Get default AvailableZones
-	if len(provisionOpts.AvailableZones) == 0 {
+	provisionOpts.Password = provisionParameters.Password
+	// Default VPCID
+	provisionOpts.VPCID = metadataParameters.VPCID
+	if provisionParameters.VPCID != "" {
+		provisionOpts.VPCID = provisionParameters.VPCID
+	}
+	// Default SubnetID
+	provisionOpts.SubnetID = metadataParameters.SubnetID
+	if provisionParameters.SubnetID != "" {
+		provisionOpts.SubnetID = provisionParameters.SubnetID
+	}
+	// Default SecurityGroupID
+	provisionOpts.SecurityGroupID = metadataParameters.SecurityGroupID
+	if provisionParameters.SecurityGroupID != "" {
+		provisionOpts.SecurityGroupID = provisionParameters.SecurityGroupID
+	}
+	// Default AvailabilityZones
+	provisionOpts.AvailableZones = metadataParameters.AvailabilityZones
+	if len(provisionParameters.AvailabilityZones) > 0 {
+		provisionOpts.AvailableZones = provisionParameters.AvailabilityZones
+	}
+	// Convert AvailabilityZones from code to id
+	if len(provisionOpts.AvailableZones) > 0 {
 		// List all the azs in this region
 		azs, err := availablezones.Get(dcsClient).Extract()
 		if err != nil {
 			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get dcs availablezones failed. Error: %s", err)
 		}
-
-		// Choose the first one Still have available resources in this az
+		// Convert code to id
+		azIDs := []string{}
 		for _, az := range azs.AvailableZones {
-			if az.ResourceAvailability == "true" {
-				provisionOpts.AvailableZones = []string{az.ID}
-				break
+			for _, azCode := range provisionOpts.AvailableZones {
+				if az.Code == azCode {
+					azIDs = append(azIDs, az.ID)
+				}
 			}
+		}
+		provisionOpts.AvailableZones = azIDs
+	}
+	provisionOpts.ProductID = productID
+	// BackupStrategy
+	if (provisionParameters.BackupStrategySavedays > 0) &&
+		(provisionParameters.BackupStrategyBackupType != "") &&
+		(provisionParameters.BackupStrategyBeginAt != "") &&
+		(provisionParameters.BackupStrategyPeriodType != "") &&
+		(len(provisionParameters.BackupStrategyBackupAt) > 0) {
+		provisionOpts.InstanceBackupPolicy = instances.InstanceBackupPolicy{
+			SaveDays:   provisionParameters.BackupStrategySavedays,
+			BackupType: provisionParameters.BackupStrategyBackupType,
+			PeriodicalBackupPlan: instances.PeriodicalBackupPlan{
+				BeginAt:    provisionParameters.BackupStrategyBeginAt,
+				PeriodType: provisionParameters.BackupStrategyPeriodType,
+				BackupAt:   provisionParameters.BackupStrategyBackupAt,
+			},
 		}
 	}
-
-	// 	Get default Product
-	if provisionOpts.ProductID == "" {
-		// List all the products
-		ps, err := products.Get(dcsClient).Extract()
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get dcs products failed. Error: %s", err)
-		}
-
-		// Choose the first one
-		for _, p := range ps.Products {
-			if p.ProductID != "" {
-				provisionOpts.ProductID = p.ProductID
-				break
-			}
-		}
+	// MaintainBegin
+	if provisionParameters.MaintainBegin != "" {
+		provisionOpts.MaintainBegin = provisionParameters.MaintainBegin
+	}
+	// MaintainEnd
+	if provisionParameters.MaintainEnd != "" {
+		provisionOpts.MaintainEnd = provisionParameters.MaintainEnd
 	}
 
 	// Log opts
@@ -192,7 +182,7 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Constuct addtional info
 	addtionalparam := map[string]string{}
-	addtionalparam["password"] = provisionOpts.Password
+	addtionalparam[AddtionalParamPassword] = provisionOpts.Password
 
 	// Marshal addtional info
 	addtionalinfo, err := json.Marshal(addtionalparam)

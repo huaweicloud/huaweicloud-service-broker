@@ -186,3 +186,39 @@ The Update action of this rds broker API will update some information for Relati
 |:--------------------------------|:--------:|:---------  |:-----------
 | enable                          | Y        | Boolean    | Specifies the HA configuration parameter. Valid value: The value is true or false. The value true indicates creating HA DB instances. The value false indicates creating a single DB instance.
 | replicationMode                 | Y        | String     | Specifies the replication mode for the standby DB instance. The value cannot be empty. For MySQL, the value is async or semisync. For PostgreSQL, the value is async or sync. For Microsoft SQL Server, the value is sync. For HWSQL, the value is async or semisync.
+
+## DCS
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| name                            | Y        | String     | DCS instance name. An instance name is a string of 4–64 characters that contain letters, digits, underscores (_), and hyphens (-). An instance name must start with letters.
+| description                     | N        | String     | Brief description of the DCS instance. A brief description supports up to 1024 characters.
+| engine                          | Y        | String     | Cache engine, which is Redis.
+| engine_version                  | Y        | String     | Cache engine version, which is 3.0.7.
+| capacity                        | Y        | Int        | Cache capacity. Unit: GB. For a DCS Redis instance in single-node or master/standby mode, the cache capacity can be 2 GB, 4 GB, 8 GB, 16 GB, 32 GB, or 64 GB. For a DCS Redis instance in cluster mode, the cache capacity can be 64, 128, 256, 512, or 1024 GB.
+| username                        | Y        | String     | Username of a DCS instance.
+| password                        | Y        | String     | Password of a DCS instance. The password of a DCS Redis instance must meet the following complexity requirements: A string of 6–32 characters. Contains at least two of the following character types: Uppercase letters; Lowercase letters; Digits; Special characters, such as `~!@#$%^&*()-_=+\|[{}]:'",<.>/?
+| vpc_id                          | Y        | String     | Tenant's VPC ID.
+| security_group_id               | Y        | String     | Tenant's security group ID.
+| subnet_id                       | Y        | String     | Subnet ID.
+| available_zones                 | Y        | Array      | IDs of the AZs where cache nodes reside.
+| product_id                      | Y        | String     | Product ID used to differentiate DCS instance types.
+| instance_backup_policy          | N        | JSON       | Backup policy.
+| maintain_begin                  | N        | String     | Time at which the maintenance time window starts.
+| maintain_end                    | N        | String     | Time at which the maintenance time window ends.
+
+### instance_backup_policy
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| save_days                       | Y        | Int        | Retention time. Unit: day. Range: 1–7.
+| backup_type                     | Y        | String     | Backup type. Options: auto: automatic backup. manual: manual backup.
+| periodical_backup_plan          | Y        | JSON       | Backup plan.
+
+### periodical_backup_plan
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| begin_at                        | Y        | String     | Time at which backup starts. "00:00-01:00" indicates that backup starts at 00:00:00.
+| period_type                     | Y        | String     | Interval at which backup is performed. Currently, only weekly backup is supported.
+| backup_at                       | Y        | Array      | Day in a week on which backup starts. Range: 1–7. Where: 1 indicates Monday; 7 indicates Sunday.

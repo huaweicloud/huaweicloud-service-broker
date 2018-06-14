@@ -80,7 +80,7 @@ func (b *DCSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// Get specified parameters
-	password := addtionalparam["password"]
+	password := addtionalparam[AddtionalParamPassword]
 
 	// Build Binding Credential
 	credential, err := BuildBindingCredential(instance.IP, instance.Port, instance.UserName, password, instance.Name, service.Name)
