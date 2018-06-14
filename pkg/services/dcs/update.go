@@ -45,20 +45,57 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("create dcs client failed. Error: %s", err)
 	}
 
-	// Init updateOpts
-	updateOpts := instances.UpdateOpts{}
-
+	// Init updateParameters
+	updateParameters := UpdateParameters{}
 	if len(details.RawParameters) > 0 {
-		err := json.Unmarshal(details.RawParameters, &updateOpts)
+		err := json.Unmarshal(details.RawParameters, &updateParameters)
 		if err != nil {
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("Error unmarshalling parameters: %s", err)
 		}
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("update dcs instance opts: %v", updateOpts))
+	b.Logger.Debug(fmt.Sprintf("update dcs instance opts: %v", updateParameters))
 
-	// Invoke sdk
+	// Init updateOpts
+	updateOpts := instances.UpdateOpts{}
+	// Name
+	if updateParameters.Name != "" {
+		updateOpts.Name = updateParameters.Name
+	}
+	// Description
+	if updateParameters.Description != "" {
+		updateOpts.Description = updateParameters.Description
+	}
+	// BackupStrategy
+	if (updateParameters.BackupStrategySavedays > 0) &&
+		(updateParameters.BackupStrategyBackupType != "") &&
+		(updateParameters.BackupStrategyBeginAt != "") &&
+		(updateParameters.BackupStrategyPeriodType != "") &&
+		(len(updateParameters.BackupStrategyBackupAt) > 0) {
+		updateOpts.InstanceBackupPolicy = instances.InstanceBackupPolicy{
+			SaveDays:   updateParameters.BackupStrategySavedays,
+			BackupType: updateParameters.BackupStrategyBackupType,
+			PeriodicalBackupPlan: instances.PeriodicalBackupPlan{
+				BeginAt:    updateParameters.BackupStrategyBeginAt,
+				PeriodType: updateParameters.BackupStrategyPeriodType,
+				BackupAt:   updateParameters.BackupStrategyBackupAt,
+			},
+		}
+	}
+	// MaintainBegin
+	if updateParameters.MaintainBegin != "" {
+		updateOpts.MaintainBegin = updateParameters.MaintainBegin
+	}
+	// MaintainEnd
+	if updateParameters.MaintainEnd != "" {
+		updateOpts.MaintainEnd = updateParameters.MaintainEnd
+	}
+	if updateParameters.SecurityGroupID != "" {
+		updateOpts.SecurityGroupID = updateParameters.SecurityGroupID
+	}
+
+	// Invoke sdk update
 	updateResult := instances.Update(dcsClient, ids.TargetID, updateOpts)
 	if updateResult.Err != nil {
 		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dcs instance failed. Error: %s", err)
@@ -66,6 +103,59 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 
 	// Log result
 	b.Logger.Debug(fmt.Sprintf("update dcs instance result: %v", updateResult))
+
+	// Extend capacity
+	if updateParameters.NewCapacity > 0 {
+		extendResult := instances.Extend(
+			dcsClient,
+			ids.TargetID,
+			instances.ExtendOpts{
+				NewCapacity: updateParameters.NewCapacity,
+			})
+		if extendResult.Err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("extend dcs instance failed. Error: %s", err)
+		}
+
+		// Log result
+		b.Logger.Debug(fmt.Sprintf("extend dcs instance result: %v", extendResult))
+	}
+
+	// Update password
+	if updateParameters.NewPassword != "" {
+		updatePasswordResult := instances.UpdatePassword(
+			dcsClient,
+			ids.TargetID,
+			instances.UpdatePasswordOpts{
+				OldPassword: updateParameters.OldPassword,
+				NewPassword: updateParameters.NewPassword,
+			})
+		if updatePasswordResult.Err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dcs instance password failed. Error: %s", err)
+		}
+
+		// Update back database
+		addtionalparam := map[string]string{}
+		if ids.AdditionalInfo != "" {
+			err := json.Unmarshal([]byte(ids.AdditionalInfo), &addtionalparam)
+			if err != nil {
+				return brokerapi.UpdateServiceSpec{},
+					fmt.Errorf("unmarshalling dcs addtional info failed. Error: %s", err)
+			}
+		}
+		// Reset addtional info
+		addtionalparam[AddtionalParamPassword] = updateParameters.NewPassword
+		// Marshal addtional info
+		addtionalinfo, err := json.Marshal(addtionalparam)
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{},
+				fmt.Errorf("marshal dcs addtional info failed. Error: %s", err)
+		}
+		ids.AdditionalInfo = string(addtionalinfo)
+
+		// Log result
+		b.Logger.Debug(fmt.Sprintf("update dcs instance password result: %v", updatePasswordResult))
+
+	}
 
 	// Invoke sdk get
 	freshInstance, err := instances.Get(dcsClient, ids.TargetID).Extract()
