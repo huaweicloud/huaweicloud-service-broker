@@ -21,3 +21,21 @@ type BindingCredential struct {
 	SK        string `json:"sk,omitempty"`
 	Type      string `json:"type,omitempty"`
 }
+
+// MetadataParameters represent plan metadata parameters in config
+type MetadataParameters struct {
+	QueueMode       string `json:"queue_mode,omitempty"`
+	RedrivePolicy   string `json:"redrive_policy,omitempty"`
+	MaxConsumeCount int    `json:"max_consume_count,omitempty"`
+	RetentionHours  int    `json:"retention_hours,omitempty"`
+}
+
+// ProvisionParameters represent provision parameters
+type ProvisionParameters struct {
+	RedrivePolicy   string `json:"redrive_policy,omitempty"`
+	MaxConsumeCount int    `json:"max_consume_count,omitempty"`
+	RetentionHours  int    `json:"retention_hours,omitempty"`
+	QueueName       string `json:"queue_name,omitempty"`
+	GroupName       string `json:"group_name,omitempty"`
+	Description     string `json:"description,omitempty"`
+}

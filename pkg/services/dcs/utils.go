@@ -15,7 +15,6 @@ func BuildBindingCredential(
 	name string,
 	servicetype string) (BindingCredential, error) {
 
-	// TODO confirm from different dcs instance
 	if servicetype == models.DCSRedisServiceName ||
 		servicetype == models.DCSMemcachedServiceName ||
 		servicetype == models.DCSIMDGServiceName {

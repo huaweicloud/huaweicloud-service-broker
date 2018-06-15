@@ -10,7 +10,7 @@ import (
 	"github.com/pivotal-cf/brokerapi"
 )
 
-// Update implematation
+// Update implematation is not necessary for DMSStandardServiceName, DMSActiveMQServiceName and DMSKafkaServiceName
 func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, asyncAllowed bool) (brokerapi.UpdateServiceSpec, error) {
 
 	// Check dms instance length in back database
@@ -44,8 +44,6 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	if err != nil {
 		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("create dms client failed. Error: %s", err)
 	}
-
-	// TODO only do something update for RabbitMQ
 
 	// Invoke sdk get
 	freshQueue, err := queues.Get(dmsClient, ids.TargetID, false).Extract()
