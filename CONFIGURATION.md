@@ -222,3 +222,12 @@ The Update action of this rds broker API will update some information for Relati
 | begin_at                        | Y        | String     | Time at which backup starts. "00:00-01:00" indicates that backup starts at 00:00:00.
 | period_type                     | Y        | String     | Interval at which backup is performed. Currently, only weekly backup is supported.
 | backup_at                       | Y        | Array      | Day in a week on which backup starts. Range: 1–7. Where: 1 indicates Monday; 7 indicates Sunday.
+
+## OBS
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| bucket_name                     | Y        | String     | Enter the bucket name, which must be globally unique. Name the bucket according to the globally applied DNS naming regulation as follows: Must contain 3 to 63 characters, including lowercase letters, digits, hyphens (-), and periods (.) Cannot be an IP address. Cannot start or end with a hyphen (-) or period (.) Cannot contain two consecutive periods (.), for example, my..bucket. Cannot contain periods (.) and hyphens (-) adjacent to each other, for example, my-.bucket or my.-bucket.
+| storage_class                   | Y        | String     | OBS storage classes (Standard, Infrequent Access, and Archive) are designed to meet customers' varying requirements on storage performance and costs. Standard: features low access latency and high throughput. Infrequent Access: applicable to storing semi-frequently accessed (less than 12 times a year) data requiring quick response. Archive: applicable to archiving rarely-accessed (once a year) data.
+| bucket_policy                   | Y        | String     | A bucket policy defines the access control policy of resources (buckets and objects) on OBS. private: Only the bucket owner can read, write, and delete objects in the bucket. This policy is the default bucket policy. public-read: Any user can read objects in the bucket. Only the bucket owner can write and delete objects in the bucket. public-read-write: Any user can read, write, and delete objects in the bucket.
+| status                          | Y        | String     | By default, the versioning function is disabled for new buckets on OBS. The status include: Enabled and Suspended.

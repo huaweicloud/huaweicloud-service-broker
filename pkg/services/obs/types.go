@@ -21,3 +21,21 @@ type BindingCredential struct {
 	SK         string `json:"sk,omitempty"`
 	Type       string `json:"type,omitempty"`
 }
+
+// MetadataParameters represent plan metadata parameters in config
+type MetadataParameters struct {
+	StorageClass string `json:"storage_class,omitempty"`
+	BucketPolicy string `json:"bucket_policy,omitempty"`
+}
+
+// ProvisionParameters represent provision parameters
+type ProvisionParameters struct {
+	BucketName   string `json:"bucket_name,omitempty"`
+	BucketPolicy string `json:"bucket_policy,omitempty"`
+}
+
+// UpdateParameters represent update parameters
+type UpdateParameters struct {
+	BucketPolicy string `json:"bucket_policy,omitempty"`
+	Status       string `json:"status,omitempty"`
+}

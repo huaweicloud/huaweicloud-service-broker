@@ -49,7 +49,48 @@ func (b *OBSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		defer obsClient.Close()
 	}
 
-	// TODO only do something update
+	// Init updateParameters
+	updateParameters := UpdateParameters{}
+	if len(details.RawParameters) > 0 {
+		err := json.Unmarshal(details.RawParameters, &updateParameters)
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("Error unmarshalling parameters: %s", err)
+		}
+	}
+
+	// Log opts
+	b.Logger.Debug(fmt.Sprintf("update obs bucket opts: %v", updateParameters))
+
+	// Setting BucketAcl
+	if updateParameters.BucketPolicy != "" {
+		// Init aclOpts
+		aclOpts := &obs.SetBucketAclInput{}
+		aclOpts.Bucket = ids.TargetID
+		aclOpts.ACL = obs.AclType(updateParameters.BucketPolicy)
+		// Invoke sdk
+		aclResponse, err := obsClient.SetBucketAcl(aclOpts)
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("set obs bucket acl failed. Error: %s", err)
+		}
+		// Log result
+		b.Logger.Debug(fmt.Sprintf("set obs bucket acl result: %v", aclResponse))
+	}
+
+	// Setting BucketVersioning
+	if updateParameters.Status != "" {
+		// Init versioningOpts
+		versioningOpts := &obs.SetBucketVersioningInput{}
+		versioningOpts.Bucket = ids.TargetID
+		// Enabled && Suspended
+		versioningOpts.Status = obs.VersioningStatusType(updateParameters.Status)
+		// Invoke sdk
+		versioningResponse, err := obsClient.SetBucketVersioning(versioningOpts)
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("set obs bucket versioning failed. Error: %s", err)
+		}
+		// Log result
+		b.Logger.Debug(fmt.Sprintf("set obs bucket versioning result: %v", versioningResponse))
+	}
 
 	// Invoke sdk get
 	getOpts := &obs.GetBucketMetadataInput{}
