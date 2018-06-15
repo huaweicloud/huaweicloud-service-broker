@@ -1,10 +1,10 @@
-package dms
+package instance
 
 import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/huaweicloud/golangsdk/openstack/dms/v1/queues"
+	"github.com/huaweicloud/golangsdk/openstack/dms/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/pivotal-cf/brokerapi"
 )
@@ -60,8 +60,8 @@ func (b *DMSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("bind dms instance opts: instanceID: %s bindingID: %s", instanceID, bindingID))
 
-	// Invoke sdk: the default includeDeadLetter value is false
-	_, err = queues.Get(dmsClient, ids.TargetID, false).Extract()
+	// Invoke sdk
+	instance, err := instances.Get(dmsClient, ids.TargetID).Extract()
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("get dms instance failed. Error: %s", err)
 	}
@@ -72,13 +72,22 @@ func (b *DMSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 		return brokerapi.Binding{}, fmt.Errorf("find dms service failed. Error: %s", err)
 	}
 
+	// Get additional info from InstanceDetails
+	addtionalparam := map[string]string{}
+	err = ids.GetAdditionalInfo(&addtionalparam)
+	if err != nil {
+		return brokerapi.Binding{}, fmt.Errorf("get rds instance additional info failed. Error: %s", err)
+	}
+
+	// Get specified parameters
+	password := addtionalparam[AddtionalParamPassword]
+
 	// Build Binding Credential
 	credential, err := BuildBindingCredential(
-		b.CloudCredentials.Region,
-		dmsClient.Endpoint,
-		b.CloudCredentials.TenantID,
-		b.CloudCredentials.AccessKey,
-		b.CloudCredentials.SecretKey,
+		instance.ConnectAddress,
+		instance.Port,
+		instance.UserName,
+		password,
 		service.Name)
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("build dms instance binding credential failed. Error: %s", err)

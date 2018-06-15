@@ -1,4 +1,4 @@
-package dms
+package queue
 
 import (
 	"fmt"
