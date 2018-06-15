@@ -231,3 +231,41 @@ The Update action of this rds broker API will update some information for Relati
 | storage_class                   | Y        | String     | OBS storage classes (Standard, Infrequent Access, and Archive) are designed to meet customers' varying requirements on storage performance and costs. Standard: features low access latency and high throughput. Infrequent Access: applicable to storing semi-frequently accessed (less than 12 times a year) data requiring quick response. Archive: applicable to archiving rarely-accessed (once a year) data.
 | bucket_policy                   | Y        | String     | A bucket policy defines the access control policy of resources (buckets and objects) on OBS. private: Only the bucket owner can read, write, and delete objects in the bucket. This policy is the default bucket policy. public-read: Any user can read objects in the bucket. Only the bucket owner can write and delete objects in the bucket. public-read-write: Any user can read, write, and delete objects in the bucket.
 | status                          | Y        | String     | By default, the versioning function is disabled for new buckets on OBS. The status include: Enabled and Suspended.
+
+## DMS Queues
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| name                            | Y        | String     | Indicates the unique name of a queue. A string of 1 to 64 characters that contain a-z, A-Z, 0-9, hyphens (-), and underscores (_). The name cannot be modified once specified.
+| queue_mode                      | N        | String     | Indicates the queue type. Options: NORMAL: Standard queue. Best-effort ordering. Messages might be retrieved in an order different from which they were sent. Select standard queues when throughput is important. FIFO: First-ln-First-out (FIFO) queue. FIFO delivery. Messages are retrieved in the order they were sent. Select FIFO queues when the order of messages is important. KAFKA_HA: High-availability Kafka queue. All message replicas are flushed to a disk synchronously. Select the high availability mode when message reliability is important. KAFKA_HT: High-throughput Kafka queue. All message replicas are flushed to a disk asynchronously. Select the high throughput mode when message delivery performance is important. AMQP: Advanced Message Queuing Protocol (AMQP) queue. AMQP is an open standard application layer protocol for message-oriented middleware. Default value: NORMAL.
+| description                     | N        | String     | Indicates the basic information about a queue. The queue description must be 0 to 160 characters in length, and does not contain angle brackets (<) and (>).
+| redrive_policy                  | N        | String     | This parameter is mandatory only when queue_mode is NORMAL or FIFO. Indicates whether to enable dead letter messages. Dead letter messages indicate messages that cannot be normally consumed. If a message fails to be consumed after the number of consumption attempts of this message reaches the maximum value, DMS stores this message into the dead letter queue. This message will be retained in the deal letter queue for 72 hours. During this period, consumers can consume the dead letter message. Dead letter messages can be consumed only by the consumer group that generates these dead letter messages. Dead letter messages of a FIFO queue are stored and consumed based on the FIFO sequence. Options: enable disable Default value: disable.
+| max_consume_count               | N        | Int        | This parameter is mandatory only when redrive_policy is set to enable. This parameter indicates the maximum number of allowed message consumption failures. When a message fails to be consumed after the number of consumption attempts of this message reaches this value, DMS stores this message into the dead letter queue. Value range: 1-100.
+| retention_hours                 | N        | Int        | This parameter is mandatory only when queue_mode is set to KAFKA_HA or KAFKA_HT. This parameter indicates the retention time of messages in Kafka queues. Value range: 1 to 72 hours.
+
+## DMS Groups
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| name                            | Y        | String     | Indicates the name of a consumer group. A string of 1 to 32 characters that contain a-z, A-Z, 0-9, hyphens (-), and underscores (_).
+
+## DMS Instances
+
+| Option                          | Required | Type       | Description
+|:--------------------------------|:--------:|:---------  |:-----------
+| name                            | Y        | String     | Indicates the name of an instance. An instance name starts with a letter, consists of 4 to 64 characters, and supports only letters, digits, and hyphens (-).
+| description                     | N        | String     | Indicates the description of an instance. It is a character string containing not more than 1024 characters.
+| engine                          | Y        | String     | Indicates a message engine. Currently, only RabbitMQ is supported.
+| engine_version                  | N        | String     | Indicates the version of a message engine.
+| storage_space                   | Y        | Int        | Indicates the message storage space. Storage space of a single-node RabbitMQ instance: 100 GBStorage space of a cluster RabbitMQ instance: 100 GB x Number of nodes.
+| password                        | Y        | String     | Indicates the password of an instance. An instance password must meet the following complexity requirements: Must be 6 to 32 characters long. Must contain at least two of the following character types: Lowercase letters Uppercase letters
+Digits Special characters (`~!@#$%^&*()-_=+\|[{}]:'",<.>/?)
+| access_user                     | Y        | String     | Indicates a username. A username consists of 1 to 64 characters and supports only letters, digits, and hyphens (-).
+| vpc_id                          | Y        | String     | Indicates the ID of a VPC.
+| security_group_id               | Y        | String     | Indicates the ID of a security group.
+| subnet_id                       | Y        | String     | Indicates the ID of a subnet.
+| available_zones                 | N        | Array      | Indicates the ID of an AZ. The parameter value can be left blank or an empty array.
+| product_id                      | Y        | String     | Indicates a product ID.
+| maintain_begin                  | N        | String     | Indicates the time at which a maintenance time window starts. Format: HH:mm:ss. The start time and end time of a maintenance time window must indicate the time segment of a supported maintenance time window. For details, see section Querying Maintenance Time Windows. The start time must be set to 22:00:00, 02:00:00, 06:00:00, 10:00:00, 14:00:00, or 18:00:00. Parameters maintain_begin and maintain_end must be set in pairs. If parameter maintain_begin is left blank, parameter maintain_end is also blank. In this case, the system automatically allocates the default start time 02:00:00.
+| maintain_end                    | N        | String     | Indicates the time at which a maintenance time window ends. Format: HH:mm:ss. The start time and end time of a maintenance time window must indicate the time segment of a supported maintenance time window. For details, see section Querying Maintenance Time Windows. The end time is four hours later than the start time. For example, if the start time is 22:00:00, the end time is 02:00:00.
+Parameters maintain_begin and maintain_end must be set in pairs. If parameter maintain_end is left blank, parameter maintain_begin is also blank. In this case, the system automatically allocates the default end time 06:00:00.

@@ -15,11 +15,9 @@ func BuildBindingCredential(
 	sk string,
 	servicetype string) (BindingCredential, error) {
 
-	// TODO confirm url from different dms instance
 	if servicetype == models.DMSStandardServiceName ||
 		servicetype == models.DMSActiveMQServiceName ||
-		servicetype == models.DMSKafkaServiceName ||
-		servicetype == models.DMSRabbitMQServiceName {
+		servicetype == models.DMSKafkaServiceName {
 
 	} else {
 		return BindingCredential{}, fmt.Errorf("unknown service type: %s", servicetype)

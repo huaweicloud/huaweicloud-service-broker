@@ -34,43 +34,69 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create dms client failed. Error: %s", err)
 	}
 
-	// Init provisionOpts
-	provisionOpts := queues.CreateOps{}
-	if len(details.RawParameters) > 0 {
-		err := json.Unmarshal(details.RawParameters, &provisionOpts)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)
-		}
-	}
-
 	// Find service plan
 	servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("find service plan failed. Error: %s", err)
 	}
 
-	// Setting provisionOpts
-	if provisionOpts.Name == "" {
-		provisionOpts.Name = instanceID
+	// Get parameters from service plan metadata
+	metadataParameters := MetadataParameters{}
+	if servicePlan.Metadata != nil {
+		if len(servicePlan.Metadata.Parameters) > 0 {
+			err := json.Unmarshal(servicePlan.Metadata.Parameters, &metadataParameters)
+			if err != nil {
+				return brokerapi.ProvisionedServiceSpec{},
+					fmt.Errorf("Error unmarshalling Parameters from service plan: %s", err)
+			}
+		}
 	}
 
-	// TODO need to confirm different queue mode
+	// Get parameters from details
+	provisionParameters := ProvisionParameters{}
+	if len(details.RawParameters) > 0 {
+		err := json.Unmarshal(details.RawParameters, &provisionParameters)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{},
+				fmt.Errorf("Error unmarshalling rawParameters from details: %s", err)
+		}
+	}
+
+	// Init provisionOpts
+	provisionOpts := queues.CreateOps{}
+	// queue name
+	provisionOpts.Name = provisionParameters.QueueName
+	// queue description
+	provisionOpts.Description = provisionParameters.Description
+	// queue mode
+	provisionOpts.QueueMode = metadataParameters.QueueMode
+	// Queue Type: DMSStandardServiceName
 	if servicePlan.Name == models.DMSStandardServiceName {
-		// Queue Type: DMSStandardServiceName
 		// Queue Mode: NORMAL, FIFO
-		provisionOpts.QueueMode = "NORMAL"
-	} else if servicePlan.Name == models.DMSKafkaServiceName {
-		// Queue Type: DMSKafkaServiceName
+		if metadataParameters.RedrivePolicy != "" {
+			provisionOpts.RedrivePolicy = metadataParameters.RedrivePolicy
+		}
+		if metadataParameters.MaxConsumeCount > 0 {
+			provisionOpts.MaxConsumeCount = metadataParameters.MaxConsumeCount
+		}
+		// Override metadataParameters
+		if provisionParameters.RedrivePolicy != "" {
+			provisionOpts.RedrivePolicy = provisionParameters.RedrivePolicy
+		}
+		if provisionParameters.MaxConsumeCount > 0 {
+			provisionOpts.MaxConsumeCount = provisionParameters.MaxConsumeCount
+		}
+	}
+	// Queue Type: DMSKafkaServiceName
+	if servicePlan.Name == models.DMSKafkaServiceName {
 		// Queue Mode: KAFKA_HA, KAFKA_HT
-		provisionOpts.QueueMode = "KAFKA_HT"
-	} else if servicePlan.Name == models.DMSActiveMQServiceName {
-		// Queue Type: DMSActiveMQServiceName
-		// Queue Mode: AMQP
-		provisionOpts.QueueMode = "AMQP"
-	} else if servicePlan.Name == models.DMSRabbitMQServiceName {
-		// TODO need to invoke another instance interface
-	} else {
-		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("unknown service name: %s", servicePlan.Name)
+		if metadataParameters.RetentionHours > 0 {
+			provisionOpts.RetentionHours = metadataParameters.RetentionHours
+		}
+		// Override metadataParameters
+		if provisionParameters.RetentionHours > 0 {
+			provisionOpts.RetentionHours = provisionParameters.RetentionHours
+		}
 	}
 
 	// Log opts
@@ -87,17 +113,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Init provisionGroupOpts
 	provisionGroupOpts := groups.CreateOps{}
-	if len(details.RawParameters) > 0 {
-		err := json.Unmarshal(details.RawParameters, &provisionGroupOpts)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)
-		}
-	}
-
-	// Setting provisionGroupOpts
-	if len(provisionGroupOpts.Groups) == 0 {
-		provisionGroupOpts.Groups = []groups.GroupOps{{Name: instanceID}}
-	}
+	provisionGroupOpts.Groups = []groups.GroupOps{{Name: provisionParameters.GroupName}}
 
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("provision dms group opts: %v", provisionGroupOpts))

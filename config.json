@@ -549,6 +549,123 @@
                         }
                     }
                 ]
+            },
+            {
+                "id": "24e03f31-d44c-4591-b7ca-aff369528b9d",
+                "name": "dms-standard",
+                "description": "Standard Distributed Message Service",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "standard"
+                ],
+                "metadata": {
+                    "displayName": "Standard Distributed Message Service",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS supports common queues and ordered queues, providing high concurrency, low latency, stable and secure messaging middleware services.",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": false,
+                "plans": [
+                    {
+                        "id": "6d032bec-b332-418c-97cb-4caa05612d67",
+                        "name": "Partition-level FIFO",
+                        "description": "Standard queue. Messages might be retrieved in an order different from which they were sent.",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "NORMAL",
+                                "redrive_policy": "disable"
+                            }
+                        }
+                    },
+                    {
+                        "id": "c13a9563-ba87-49f6-ae3e-5ca59619ca8b",
+                        "name": "Global FIFO",
+                        "description": "FIFO delivery. Messages are retrieved in the order they were sent.",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "FIFO",
+                                "redrive_policy": "disable"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "a4dfcc2d-1c8d-42a2-9407-c1435948efab",
+                "name": "dms-activemq",
+                "description": "ActiveMQ Distributed Message Service",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "activemq"
+                ],
+                "metadata": {
+                    "displayName": "ActiveMQ Distributed Message Service",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS compatible ActiveMQ, easy to use, on-demand use, support level expansion, safe and reliable, worry free operation and maintenance.",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": false,
+                "plans": [
+                    {
+                        "id": "1a7a31ee-ab7f-456c-a307-9a861d5c69e0",
+                        "name": "ActiveMQ",
+                        "description": "Advanced Message Queuing Protocol (AMQP) queue. AMQP is an open standard application layer protocol for message-oriented middleware.",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "AMQP"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "9a0428f7-2dfe-490f-b2be-6cfe11c375a7",
+                "name": "dms-kafka",
+                "description": "Kafka Distributed Message Service",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "kafka"
+                ],
+                "metadata": {
+                    "displayName": "Kafka Distributed Message Service",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS compatible Kafka, that is, open and instant, safe and reliable, supporting high throughput, high reliability two application scenarios.",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": false,
+                "plans": [
+                    {
+                        "id": "baaa3c7c-e9aa-42a1-a71e-ece0dd71210c",
+                        "name": "High throughput",
+                        "description": "High-throughput Kafka queue. All message replicas are flushed to a disk asynchronously.",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "KAFKA_HT",
+                                "retention_hours": 72
+                            }
+                        }
+                    },
+                    {
+                        "id": "0196dd14-8e67-423e-8271-9c585d3e247f",
+                        "name": "High reliability",
+                        "description": "High-availability Kafka queue. All message replicas are flushed to a disk synchronously.",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "KAFKA_HA",
+                                "retention_hours": 72
+                            }
+                        }
+                    }
+                ]
             }
         ]
     }

@@ -17,7 +17,6 @@ func BuildBindingCredential(
 
 	var uri string
 
-	// TODO confirm different uri from different rds instance
 	if servicetype == models.RDSPostgresqlServiceName {
 		// Postgresql
 		uri = fmt.Sprintf("mysql://%s:%s@%s:%d/%s?reconnect=true", username, password, host, port, name)
