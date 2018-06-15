@@ -37,33 +37,47 @@ func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		defer obsClient.Close()
 	}
 
-	// Init provisionOpts
-	var params map[string]string
-	if len(details.RawParameters) > 0 {
-		err := json.Unmarshal(details.RawParameters, &params)
-		if err != nil {
-			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("Error unmarshalling rawParameters: %s", err)
+	// Find service plan
+	servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("find service plan failed. Error: %s", err)
+	}
+
+	// Get parameters from service plan metadata
+	metadataParameters := MetadataParameters{}
+	if servicePlan.Metadata != nil {
+		if len(servicePlan.Metadata.Parameters) > 0 {
+			err := json.Unmarshal(servicePlan.Metadata.Parameters, &metadataParameters)
+			if err != nil {
+				return brokerapi.ProvisionedServiceSpec{},
+					fmt.Errorf("Error unmarshalling Parameters from service plan: %s", err)
+			}
 		}
 	}
 
+	// Get parameters from details
+	provisionParameters := ProvisionParameters{}
+	if len(details.RawParameters) > 0 {
+		err := json.Unmarshal(details.RawParameters, &provisionParameters)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{},
+				fmt.Errorf("Error unmarshalling rawParameters from details: %s", err)
+		}
+	}
+
+	// Init provisionOpts
 	provisionOpts := &obs.CreateBucketInput{}
 	// Setting Bucket
-	provisionOpts.Bucket = params["bucket_name"]
-	if provisionOpts.Bucket == "" {
-		provisionOpts.Bucket = instanceID
-	}
-	// Setting StorageClass
-	provisionOpts.StorageClass = obs.StorageClassType(params["storage_class"])
-	if provisionOpts.StorageClass == "" {
-		provisionOpts.StorageClass = obs.StorageClassStandard
-	}
+	provisionOpts.Bucket = provisionParameters.BucketName
+	// Setting Default StorageClass
+	provisionOpts.StorageClass = obs.StorageClassType(metadataParameters.StorageClass)
 	// Setting ACL
-	provisionOpts.ACL = obs.AclType(params["acl"])
-	if provisionOpts.ACL == "" {
-		provisionOpts.ACL = obs.AclPrivate
+	provisionOpts.ACL = obs.AclType(metadataParameters.BucketPolicy)
+	if provisionParameters.BucketPolicy != "" {
+		provisionOpts.ACL = obs.AclType(provisionParameters.BucketPolicy)
 	}
 	// Setting Location
-	provisionOpts.Location = params["location"]
+	provisionOpts.Location = b.CloudCredentials.Region
 
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("provision obs bucket opts: %v", provisionOpts))
