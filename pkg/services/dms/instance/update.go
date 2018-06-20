@@ -1,10 +1,10 @@
-package dms
+package instance
 
 import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/huaweicloud/golangsdk/openstack/dms/v1/queues"
+	"github.com/huaweicloud/golangsdk/openstack/dms/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
@@ -45,20 +45,64 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("create dms client failed. Error: %s", err)
 	}
 
+	// Init updateParameters
+	updateParameters := UpdateParameters{}
+	if len(details.RawParameters) > 0 {
+		err := json.Unmarshal(details.RawParameters, &updateParameters)
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("Error unmarshalling parameters: %s", err)
+		}
+	}
+
+	// Log opts
+	b.Logger.Debug(fmt.Sprintf("update dms instance opts: %v", updateParameters))
+
+	// Init updateOpts
+	updateOpts := instances.UpdateOpts{}
+	// Name
+	if updateParameters.Name != "" {
+		updateOpts.Name = updateParameters.Name
+	}
+	// Description
+	if updateParameters.Description != "" {
+		updateOpts.Description = updateParameters.Description
+	}
+	// MaintainBegin
+	if updateParameters.MaintainBegin != "" {
+		updateOpts.MaintainBegin = updateParameters.MaintainBegin
+	}
+	// MaintainEnd
+	if updateParameters.MaintainEnd != "" {
+		updateOpts.MaintainEnd = updateParameters.MaintainEnd
+	}
+	if updateParameters.SecurityGroupID != "" {
+		updateOpts.SecurityGroupID = updateParameters.SecurityGroupID
+	}
+
+	// Invoke sdk update
+	updateResult := instances.Update(dmsClient, ids.TargetID, updateOpts)
+	if updateResult.Err != nil {
+		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dms instance failed. Error: %s", err)
+	}
+
+	// Log result
+	b.Logger.Debug(fmt.Sprintf("update dms instance result: %v", updateResult))
+
 	// Invoke sdk get
-	freshQueue, err := queues.Get(dmsClient, ids.TargetID, false).Extract()
+	freshInstance, err := instances.Get(dmsClient, ids.TargetID).Extract()
 	if err != nil {
-		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("get dms queue failed. Error: %s", err)
+		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("get dms instance failed. Error: %s", err)
 	}
 
 	// Marshal queue
-	targetinfo, err := json.Marshal(freshQueue)
+	targetinfo, err := json.Marshal(freshInstance)
 	if err != nil {
 		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("marshal dms queue failed. Error: %s", err)
 	}
 
-	ids.TargetID = freshQueue.ID
-	ids.TargetName = freshQueue.Name
+	ids.TargetID = freshInstance.InstanceID
+	ids.TargetName = freshInstance.Name
+	ids.TargetStatus = freshInstance.Status
 	ids.TargetInfo = string(targetinfo)
 
 	// log InstanceDetails opts

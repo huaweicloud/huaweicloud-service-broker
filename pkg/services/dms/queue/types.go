@@ -1,4 +1,4 @@
-package dms
+package queue
 
 import (
 	"code.cloudfoundry.org/lager"

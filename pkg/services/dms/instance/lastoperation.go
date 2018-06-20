@@ -1,10 +1,10 @@
-package dms
+package instance
 
 import (
 	"fmt"
 
 	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/dms/v1/queues"
+	"github.com/huaweicloud/golangsdk/openstack/dms/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
@@ -22,7 +22,7 @@ func (b *DMSBroker) LastOperation(instanceID string, operationData models.Operat
 	}
 
 	// Invoke sdk get
-	queue, err := queues.Get(dmsClient, operationData.TargetID, false).Extract()
+	instance, err := instances.Get(dmsClient, operationData.TargetID).Extract()
 
 	// Handle different cases
 	if (operationData.OperationType == models.OperationProvisioning) ||
@@ -33,10 +33,30 @@ func (b *DMSBroker) LastOperation(instanceID string, operationData models.Operat
 				State:       brokerapi.Failed,
 				Description: fmt.Sprintf("get dms instance failed. Error: %s", err),
 			}, nil
-		} else {
+		}
+		// ErrorCode
+		if instance.ErrorCode != "" {
+			return brokerapi.LastOperation{
+				State:       brokerapi.Failed,
+				Description: fmt.Sprintf("ErrorCode: %s", instance.ErrorCode),
+			}, nil
+		}
+		// Status
+		if instance.Status == "RUNNING" {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Succeeded,
-				Description: fmt.Sprintf("Name: %s", queue.Name),
+				Description: fmt.Sprintf("Status: %s", instance.Status),
+			}, nil
+		} else if (instance.Status == "CREATEFAILED") ||
+			(instance.Status == "ERROR") {
+			return brokerapi.LastOperation{
+				State:       brokerapi.Failed,
+				Description: fmt.Sprintf("ErrorCode: %s", instance.ErrorCode),
+			}, nil
+		} else {
+			return brokerapi.LastOperation{
+				State:       brokerapi.InProgress,
+				Description: fmt.Sprintf("Status: %s", instance.Status),
 			}, nil
 		}
 	} else if operationData.OperationType == models.OperationDeprovisioning {
@@ -57,7 +77,7 @@ func (b *DMSBroker) LastOperation(instanceID string, operationData models.Operat
 		} else {
 			return brokerapi.LastOperation{
 				State:       brokerapi.InProgress,
-				Description: fmt.Sprintf("Name: %s", queue.Name),
+				Description: fmt.Sprintf("Name: %s", instance.Name),
 			}, nil
 		}
 	} else {

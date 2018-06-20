@@ -9,7 +9,8 @@ import (
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dcs"
-	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dms"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dms/instance"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dms/queue"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/obs"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/rds"
 	"github.com/pivotal-cf/brokerapi"
@@ -50,22 +51,22 @@ func New(logger lager.Logger, config config.Config) (*CloudServiceBroker, error)
 			Logger:           self.Logger,
 		},
 		//DMS
-		models.DMSStandardServiceName: &dms.DMSBroker{
+		models.DMSStandardServiceName: &queue.DMSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
 		},
-		models.DMSKafkaServiceName: &dms.DMSBroker{
+		models.DMSKafkaServiceName: &queue.DMSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
 		},
-		models.DMSActiveMQServiceName: &dms.DMSBroker{
+		models.DMSActiveMQServiceName: &queue.DMSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
 		},
-		models.DMSRabbitMQServiceName: &dms.DMSBroker{
+		models.DMSRabbitMQServiceName: &instance.DMSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,

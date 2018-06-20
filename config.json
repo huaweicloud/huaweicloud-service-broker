@@ -666,6 +666,57 @@
                         }
                     }
                 ]
+            },
+            {
+                "id": "fc0c6ad1-ff5a-499a-8598-fda9fb414fcb",
+                "name": "dms-rabbitmq",
+                "description": "RabbitMQ Distributed Message Service",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "rabbitmq"
+                ],
+                "metadata": {
+                    "displayName": "RabbitMQ Distributed Message Service",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS is compatible with RabbitMQ, providing exclusive resources to ensure high performance of queues.",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "d0c150cb-6a2a-47aa-8937-9c55d4615e14",
+                        "name": "Single-node",
+                        "description": "RabbitMQ Single-node",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "rabbitmq",
+                                "speccode": "dms.instance.rabbitmq.single.2u4g",
+                                "charging_type": "Hourly",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b"
+                            }
+                        }
+                    },
+                    {
+                        "id": "be887e97-c70e-4abe-8424-b66f9b1a1984",
+                        "name": "Cluster",
+                        "description": "RabbitMQ Cluster",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "rabbitmq",
+                                "speccode": "dms.instance.rabbitmq.cluster.2u4g.2",
+                                "charging_type": "Hourly",
+                                "vpc_id": "bf693499-6d9e-49b7-83b1-b2e5e156c7f0",
+                                "subnet_id": "1ea3b3a0-9689-4f9e-88b0-7a82fc538d4d",
+                                "security_group_id": "dc3ec145-9029-4b39-b5a3-ace5a01f772b"
+                            }
+                        }
+                    }
+                ]
             }
         ]
     }

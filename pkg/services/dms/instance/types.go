@@ -1,0 +1,61 @@
+package instance
+
+import (
+	"code.cloudfoundry.org/lager"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+)
+
+// DMSBroker define
+type DMSBroker struct {
+	CloudCredentials config.CloudCredentials
+	Catalog          config.Catalog
+	Logger           lager.Logger
+}
+
+// BindingCredential represent dms binding credential
+type BindingCredential struct {
+	Host     string `json:"host,omitempty"`
+	Port     int    `json:"port,omitempty"`
+	UserName string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
+	URI      string `json:"uri,omitempty"`
+	Type     string `json:"type,omitempty"`
+}
+
+// MetadataParameters represent plan metadata parameters in config
+type MetadataParameters struct {
+	Engine          string `json:"engine,omitempty"`
+	SpecCode        string `json:"speccode,omitempty"`
+	ChargingType    string `json:"charging_type,omitempty"`
+	VPCID           string `json:"vpc_id,omitempty"`
+	SubnetID        string `json:"subnet_id,omitempty"`
+	SecurityGroupID string `json:"security_group_id,omitempty"`
+}
+
+// ProvisionParameters represent provision parameters
+type ProvisionParameters struct {
+	VPCID             string   `json:"vpc_id,omitempty"`
+	SubnetID          string   `json:"subnet_id,omitempty"`
+	SecurityGroupID   string   `json:"security_group_id,omitempty"`
+	AvailabilityZones []string `json:"availability_zones,omitempty"`
+	AccessUser        string   `json:"access_user,omitempty"`
+	Password          string   `json:"password,omitempty"`
+	Name              string   `json:"name,omitempty"`
+	Description       string   `json:"description,omitempty"`
+	MaintainBegin     string   `json:"maintain_begin,omitempty"`
+	MaintainEnd       string   `json:"maintain_end,omitempty"`
+}
+
+// UpdateParameters represent update parameters
+type UpdateParameters struct {
+	Name            string `json:"name,omitempty"`
+	Description     string `json:"description,omitempty"`
+	MaintainBegin   string `json:"maintain_begin,omitempty"`
+	MaintainEnd     string `json:"maintain_end,omitempty"`
+	SecurityGroupID string `json:"security_group_id,omitempty"`
+}
+
+const (
+	// AddtionalParamPassword for password
+	AddtionalParamPassword string = "password"
+)
