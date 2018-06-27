@@ -36,7 +36,7 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("dcs instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("dcs instance in back database: %v", models.ToJson(ids)))
 
 	// Init dcs client
 	dcsClient, err := b.CloudCredentials.DCSV1Client()

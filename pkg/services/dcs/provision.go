@@ -157,7 +157,7 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("provision dcs instance opts: %v", provisionOpts))
+	b.Logger.Debug(fmt.Sprintf("provision dcs instance opts: %v", models.ToJson(provisionOpts)))
 
 	// Invoke sdk
 	dcsInstance, err := instances.Create(dcsClient, provisionOpts).Extract()
@@ -166,7 +166,7 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("provision dcs instance result: %v", dcsInstance))
+	b.Logger.Debug(fmt.Sprintf("provision dcs instance result: %v", models.ToJson(dcsInstance)))
 
 	// Invoke sdk get
 	freshInstance, err := instances.Get(dcsClient, dcsInstance.InstanceID).Extract()
@@ -203,7 +203,7 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("create dcs instance in back database opts: %v", idsOpts))
+	b.Logger.Debug(fmt.Sprintf("create dcs instance in back database opts: %v", models.ToJson(idsOpts)))
 
 	err = database.BackDBConnection.Create(&idsOpts).Error
 	if err != nil {

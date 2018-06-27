@@ -38,6 +38,9 @@ type CreateOps struct {
 	// 64, 128, 256, 512, or 1024 GB.
 	Capacity int `json:"capacity" required:"true"`
 
+	// Indicate if no password visit cache instance is allowed.
+	NoPasswordAccess bool `json:"no_password_access,omitempty"`
+
 	// Indicates the password of an instance.
 	// An instance password must meet the following complexity requirements:
 
@@ -51,6 +54,9 @@ type CreateOps struct {
 	// Digits
 	// Special characters, such as `~!@#$%^&*()-_=+\|[{}]:'",<.>/?
 	Password string `json:"password,omitempty"`
+
+	// When NoPasswordAccess is flase, the AccessUser is enabled.
+	AccessUser string `json:"access_user,omitempty"`
 
 	// Tenant's VPC ID.
 	VPCID string `json:"vpc_id" required:"true"`

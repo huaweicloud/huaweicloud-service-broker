@@ -22,16 +22,17 @@ var once sync.Once
 func New(logger lager.Logger, config config.Config) error {
 	once.Do(func() {
 		// Connect Data
-		BackDBConnection, err := ConnectBackDatabase(logger, config)
+		backDBConnection, err := ConnectBackDatabase(logger, config)
 		if err != nil {
 			logger.Error("Error connecting to back database", err)
 			panic(err)
 		}
-		err = UpgradeBackDatabase(logger, BackDBConnection)
+		err = UpgradeBackDatabase(logger, backDBConnection)
 		if err != nil {
 			logger.Error("Error upgrading back database", err)
 			panic(err)
 		}
+		BackDBConnection = backDBConnection
 	})
 	return nil
 }

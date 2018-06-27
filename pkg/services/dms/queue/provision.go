@@ -100,7 +100,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("provision dms queue opts: %v", provisionOpts))
+	b.Logger.Debug(fmt.Sprintf("provision dms queue opts: %v", models.ToJson(provisionOpts)))
 
 	// Invoke sdk
 	dmsQueue, err := queues.Create(dmsClient, provisionOpts).Extract()
@@ -109,14 +109,14 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("provision dms queue result: %v", dmsQueue))
+	b.Logger.Debug(fmt.Sprintf("provision dms queue result: %v", models.ToJson(dmsQueue)))
 
 	// Init provisionGroupOpts
 	provisionGroupOpts := groups.CreateOps{}
 	provisionGroupOpts.Groups = []groups.GroupOps{{Name: provisionParameters.GroupName}}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("provision dms group opts: %v", provisionGroupOpts))
+	b.Logger.Debug(fmt.Sprintf("provision dms group opts: %v", models.ToJson(provisionGroupOpts)))
 
 	// Invoke sdk
 	dmsGroups, err := groups.Create(dmsClient, dmsQueue.ID, provisionGroupOpts).Extract()
@@ -125,7 +125,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("provision dms group result: %v", dmsGroups))
+	b.Logger.Debug(fmt.Sprintf("provision dms group result: %v", models.ToJson(dmsGroups)))
 
 	// Invoke sdk get
 	freshQueue, err := queues.Get(dmsClient, dmsQueue.ID, false).Extract()
@@ -152,7 +152,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("create dms queue in back database opts: %v", idsOpts))
+	b.Logger.Debug(fmt.Sprintf("create dms queue in back database opts: %v", models.ToJson(idsOpts)))
 
 	err = database.BackDBConnection.Create(&idsOpts).Error
 	if err != nil {

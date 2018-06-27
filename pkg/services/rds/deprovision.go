@@ -36,7 +36,7 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", models.ToJson(ids)))
 
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()

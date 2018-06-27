@@ -37,7 +37,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("dcs instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("dcs instance in back database: %v", models.ToJson(ids)))
 
 	// Init dcs client
 	dcsClient, err := b.CloudCredentials.DCSV1Client()
@@ -55,7 +55,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("update dcs instance opts: %v", updateParameters))
+	b.Logger.Debug(fmt.Sprintf("update dcs instance opts: %v", models.ToJson(updateParameters)))
 
 	// Init updateOpts
 	updateOpts := instances.UpdateOpts{}
@@ -102,7 +102,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("update dcs instance result: %v", updateResult))
+	b.Logger.Debug(fmt.Sprintf("update dcs instance result: %v", models.ToJson(updateResult)))
 
 	// Extend capacity
 	if updateParameters.NewCapacity > 0 {
@@ -117,7 +117,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		}
 
 		// Log result
-		b.Logger.Debug(fmt.Sprintf("extend dcs instance result: %v", extendResult))
+		b.Logger.Debug(fmt.Sprintf("extend dcs instance result: %v", models.ToJson(extendResult)))
 	}
 
 	// Update password
@@ -153,7 +153,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		ids.AdditionalInfo = string(addtionalinfo)
 
 		// Log result
-		b.Logger.Debug(fmt.Sprintf("update dcs instance password result: %v", updatePasswordResult))
+		b.Logger.Debug(fmt.Sprintf("update dcs instance password result: %v", models.ToJson(updatePasswordResult)))
 
 	}
 
@@ -175,7 +175,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	ids.TargetInfo = string(targetinfo)
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("update dcs instance in back database opts: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("update dcs instance in back database opts: %v", models.ToJson(ids)))
 
 	err = database.BackDBConnection.Save(&ids).Error
 	if err != nil {

@@ -113,6 +113,8 @@ func New(logger lager.Logger, config config.Config) (*CloudServiceBroker, error)
 func (cloudBroker *CloudServiceBroker) Services(
 	ctx context.Context) ([]brokerapi.Service, error) {
 
+	cloudBroker.Logger.Debug("Services received.")
+
 	// reuturn service in catalog
 	return cloudBroker.Catalog.Services, nil
 }
@@ -123,6 +125,8 @@ func (cloudBroker *CloudServiceBroker) Provision(
 	instanceID string,
 	details brokerapi.ProvisionDetails,
 	asyncAllowed bool) (brokerapi.ProvisionedServiceSpec, error) {
+
+	cloudBroker.Logger.Debug(fmt.Sprintf("Provision received. instanceID: %s", instanceID))
 
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
@@ -147,6 +151,8 @@ func (cloudBroker *CloudServiceBroker) Deprovision(
 	details brokerapi.DeprovisionDetails,
 	asyncAllowed bool) (brokerapi.DeprovisionServiceSpec, error) {
 
+	cloudBroker.Logger.Debug(fmt.Sprintf("Deprovision received. instanceID: %s", instanceID))
+
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
@@ -169,6 +175,8 @@ func (cloudBroker *CloudServiceBroker) Bind(
 	instanceID string,
 	bindingID string,
 	details brokerapi.BindDetails) (brokerapi.Binding, error) {
+
+	cloudBroker.Logger.Debug(fmt.Sprintf("Bind received. instanceID: %s. bindingID: %s", instanceID, bindingID))
 
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
@@ -193,6 +201,8 @@ func (cloudBroker *CloudServiceBroker) Unbind(
 	bindingID string,
 	details brokerapi.UnbindDetails) error {
 
+	cloudBroker.Logger.Debug(fmt.Sprintf("Unbind received. instanceID: %s. bindingID: %s", instanceID, bindingID))
+
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
@@ -216,6 +226,8 @@ func (cloudBroker *CloudServiceBroker) Update(
 	details brokerapi.UpdateDetails,
 	asyncAllowed bool) (brokerapi.UpdateServiceSpec, error) {
 
+	cloudBroker.Logger.Debug(fmt.Sprintf("Update received. instanceID: %s", instanceID))
+
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
@@ -238,6 +250,8 @@ func (cloudBroker *CloudServiceBroker) LastOperation(
 	ctx context.Context,
 	instanceID string,
 	operationData string) (brokerapi.LastOperation, error) {
+
+	cloudBroker.Logger.Debug(fmt.Sprintf("LastOperation received. instanceID: %s", instanceID))
 
 	// operationData is existing
 	if operationData != "" {

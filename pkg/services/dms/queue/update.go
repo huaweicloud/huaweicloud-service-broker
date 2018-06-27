@@ -37,7 +37,7 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("dms instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("dms instance in back database: %v", models.ToJson(ids)))
 
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()
@@ -62,7 +62,7 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	ids.TargetInfo = string(targetinfo)
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("update dms instance in back database opts: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("update dms instance in back database opts: %v", models.ToJson(ids)))
 
 	err = database.BackDBConnection.Save(&ids).Error
 	if err != nil {

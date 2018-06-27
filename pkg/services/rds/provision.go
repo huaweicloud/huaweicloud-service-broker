@@ -68,13 +68,13 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	datastoresList, err := datastores.List(rdsClient, metadataParameters.DatastoreType).Extract()
 	if err != nil {
 		return brokerapi.ProvisionedServiceSpec{},
-			fmt.Errorf("Unable to retrieve datastores: %s ", err)
+			fmt.Errorf("Unable to retrieve datastores: %s", err)
 	}
 	if len(datastoresList) < 1 {
 		return brokerapi.ProvisionedServiceSpec{},
 			errors.New("Returned no datastore result")
 	}
-	b.Logger.Debug(fmt.Sprintf("provision rds instance opts: %v", datastoresList))
+	b.Logger.Debug(fmt.Sprintf("provision rds instance datastoresList: %v", models.ToJson(datastoresList)))
 
 	// Get datastoreID
 	var datastoreID string
@@ -100,6 +100,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{},
 			errors.New("Returned no flavor result")
 	}
+	b.Logger.Debug(fmt.Sprintf("provision rds instance flavorsList: %v", models.ToJson(flavorsList)))
 
 	// Get flavorID
 	var flavorID string
@@ -118,7 +119,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{},
 			errors.New("Returned no flavor Id")
 	}
-	b.Logger.Debug(fmt.Sprintf("Received datastore ID: %s", flavorID))
+	b.Logger.Debug(fmt.Sprintf("Received flavor ID: %s", flavorID))
 
 	// Init provisionOpts
 	provisionOpts := instances.CreateOps{}
@@ -189,7 +190,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("provision rds instance opts: %v", provisionOpts))
+	b.Logger.Debug(fmt.Sprintf("provision rds instance opts: %v", models.ToJson(provisionOpts)))
 
 	// Invoke sdk
 	rdsInstance, err := instances.Create(rdsClient, provisionOpts).Extract()
@@ -198,7 +199,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("provision rds instance result: %v", rdsInstance))
+	b.Logger.Debug(fmt.Sprintf("provision rds instance result: %v", models.ToJson(rdsInstance)))
 
 	// Invoke sdk get
 	freshInstance, err := instances.Get(rdsClient, rdsInstance.ID).Extract()
@@ -236,7 +237,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("create rds instance in back database opts: %v", idsOpts))
+	b.Logger.Debug(fmt.Sprintf("create rds instance in back database opts: %v", models.ToJson(idsOpts)))
 
 	err = database.BackDBConnection.Create(&idsOpts).Error
 	if err != nil {
