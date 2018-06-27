@@ -13,7 +13,7 @@ import (
 func (b *DCSBroker) LastOperation(instanceID string, operationData models.OperationDatas) (brokerapi.LastOperation, error) {
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("lastoperation dcs instance opts: instanceID: %s operationData: %v", instanceID, operationData))
+	b.Logger.Debug(fmt.Sprintf("lastoperation dcs instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
 	// Init dcs client
 	dcsClient, err := b.CloudCredentials.DCSV1Client()

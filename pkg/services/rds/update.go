@@ -40,7 +40,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", models.ToJson(ids)))
 
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()
@@ -58,7 +58,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", updateParameters))
+	b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", models.ToJson(updateParameters)))
 
 	// Invoke sdk
 	if updateParameters.VolumeSize > 0 {
@@ -76,7 +76,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		}
 
 		// Log result
-		b.Logger.Debug(fmt.Sprintf("update rds instance volume size result: %v", rdsInstance))
+		b.Logger.Debug(fmt.Sprintf("update rds instance volume size result: %v", models.ToJson(rdsInstance)))
 	}
 
 	// Invoke sdk
@@ -104,13 +104,13 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		datastoresList, err := datastores.List(rdsClient, metadataParameters.DatastoreType).Extract()
 		if err != nil {
 			return brokerapi.UpdateServiceSpec{},
-				fmt.Errorf("Unable to retrieve datastores: %s ", err)
+				fmt.Errorf("Unable to retrieve datastores: %s", err)
 		}
 		if len(datastoresList) < 1 {
 			return brokerapi.UpdateServiceSpec{},
 				errors.New("Returned no datastore result")
 		}
-		b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", datastoresList))
+		b.Logger.Debug(fmt.Sprintf("update rds datastores opts: %v", models.ToJson(datastoresList)))
 
 		// Get datastoreID
 		var datastoreID string
@@ -163,7 +163,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		}
 
 		// Log result
-		b.Logger.Debug(fmt.Sprintf("update rds instance flavor result: %v", rdsInstance))
+		b.Logger.Debug(fmt.Sprintf("update rds instance flavor result: %v", models.ToJson(rdsInstance)))
 	}
 
 	// Invoke sdk get
@@ -184,7 +184,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	ids.TargetInfo = string(targetinfo)
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("update rds instance in back database opts: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("update rds instance in back database opts: %s", models.ToJson(ids)))
 
 	err = database.BackDBConnection.Save(&ids).Error
 	if err != nil {

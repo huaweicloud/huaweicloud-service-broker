@@ -6,6 +6,7 @@ import (
 
 	"github.com/huaweicloud/golangsdk/openstack/obs"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
@@ -49,7 +50,7 @@ func (b *OBSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("obs instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("obs instance in back database: %v", models.ToJson(ids)))
 
 	// Init obs client
 	obsClient, err := b.CloudCredentials.OBSClient()
@@ -72,7 +73,7 @@ func (b *OBSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 		return brokerapi.Binding{}, fmt.Errorf("get obs bucket failed. Error: %s", err)
 	}
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("get obs bucket success: %v", obsResponse))
+	b.Logger.Debug(fmt.Sprintf("get obs bucket success: %v", models.ToJson(obsResponse)))
 
 	// Find service
 	service, err := b.Catalog.FindService(details.ServiceID)
@@ -93,7 +94,7 @@ func (b *OBSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("bind obs bucket success: %v", credential))
+	b.Logger.Debug(fmt.Sprintf("bind obs bucket success: %v", models.ToJson(credential)))
 
 	// Constuct result
 	result := brokerapi.Binding{Credentials: credential}
@@ -115,7 +116,7 @@ func (b *OBSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// log BindDetails opts
-	b.Logger.Debug(fmt.Sprintf("create obs bind in back database opts: %v", bdsOpts))
+	b.Logger.Debug(fmt.Sprintf("create obs bind in back database opts: %v", models.ToJson(bdsOpts)))
 
 	err = database.BackDBConnection.Create(&bdsOpts).Error
 	if err != nil {

@@ -36,7 +36,7 @@ func (b *DMSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("dms instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("dms instance in back database: %v", models.ToJson(ids)))
 
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()

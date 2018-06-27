@@ -35,7 +35,7 @@ func (b *OBSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("obs instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("obs instance in back database: %v", models.ToJson(ids)))
 
 	// Init obs client
 	obsClient, err := b.CloudCredentials.OBSClient()
@@ -63,7 +63,7 @@ func (b *OBSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("deprovision obs bucket %s success: %v", instanceID, obsResponse))
+	b.Logger.Debug(fmt.Sprintf("deprovision obs bucket %s success: %v", instanceID, models.ToJson(obsResponse)))
 
 	// Return result
 	if asyncAllowed && models.OperationAsyncOBS {

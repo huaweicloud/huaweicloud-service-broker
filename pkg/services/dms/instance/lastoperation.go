@@ -13,7 +13,7 @@ import (
 func (b *DMSBroker) LastOperation(instanceID string, operationData models.OperationDatas) (brokerapi.LastOperation, error) {
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("lastoperation dms instance opts: instanceID: %s operationData: %v", instanceID, operationData))
+	b.Logger.Debug(fmt.Sprintf("lastoperation dms instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()

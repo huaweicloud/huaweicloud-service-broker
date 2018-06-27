@@ -80,7 +80,7 @@ func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	provisionOpts.Location = b.CloudCredentials.Region
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("provision obs bucket opts: %v", provisionOpts))
+	b.Logger.Debug(fmt.Sprintf("provision obs bucket opts: %v", models.ToJson(provisionOpts)))
 
 	// Invoke sdk
 	obsResponse, err := obsClient.CreateBucket(provisionOpts)
@@ -89,7 +89,7 @@ func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("provision obs bucket result: %v", obsResponse))
+	b.Logger.Debug(fmt.Sprintf("provision obs bucket result: %v", models.ToJson(obsResponse)))
 
 	// Invoke sdk get
 	getOpts := &obs.GetBucketMetadataInput{}
@@ -118,7 +118,7 @@ func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("create obs bucket in back database opts: %v", idsOpts))
+	b.Logger.Debug(fmt.Sprintf("create obs bucket in back database opts: %v", models.ToJson(idsOpts)))
 
 	err = database.BackDBConnection.Create(&idsOpts).Error
 	if err != nil {

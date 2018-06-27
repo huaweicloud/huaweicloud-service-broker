@@ -6,6 +6,7 @@ import (
 
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
@@ -49,7 +50,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", models.ToJson(ids)))
 
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()
@@ -90,7 +91,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("bind rds instance success: %v", credential))
+	b.Logger.Debug(fmt.Sprintf("bind rds instance success: %v", models.ToJson(credential)))
 
 	// Constuct result
 	result := brokerapi.Binding{Credentials: credential}
@@ -112,7 +113,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// log BindDetails opts
-	b.Logger.Debug(fmt.Sprintf("create rds bind in back database opts: %v", bdsOpts))
+	b.Logger.Debug(fmt.Sprintf("create rds bind in back database opts: %v", models.ToJson(bdsOpts)))
 
 	err = database.BackDBConnection.Create(&bdsOpts).Error
 	if err != nil {

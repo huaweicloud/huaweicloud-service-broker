@@ -37,7 +37,7 @@ func (b *OBSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("obs bucket in back database: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("obs bucket in back database: %v", models.ToJson(ids)))
 
 	// Init obs client
 	obsClient, err := b.CloudCredentials.OBSClient()
@@ -59,7 +59,7 @@ func (b *OBSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("update obs bucket opts: %v", updateParameters))
+	b.Logger.Debug(fmt.Sprintf("update obs bucket opts: %v", models.ToJson(updateParameters)))
 
 	// Setting BucketAcl
 	if updateParameters.BucketPolicy != "" {
@@ -73,7 +73,7 @@ func (b *OBSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("set obs bucket acl failed. Error: %s", err)
 		}
 		// Log result
-		b.Logger.Debug(fmt.Sprintf("set obs bucket acl result: %v", aclResponse))
+		b.Logger.Debug(fmt.Sprintf("set obs bucket acl result: %v", models.ToJson(aclResponse)))
 	}
 
 	// Setting BucketVersioning
@@ -89,7 +89,7 @@ func (b *OBSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("set obs bucket versioning failed. Error: %s", err)
 		}
 		// Log result
-		b.Logger.Debug(fmt.Sprintf("set obs bucket versioning result: %v", versioningResponse))
+		b.Logger.Debug(fmt.Sprintf("set obs bucket versioning result: %v", models.ToJson(versioningResponse)))
 	}
 
 	// Invoke sdk get
@@ -109,7 +109,7 @@ func (b *OBSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	ids.TargetInfo = string(targetinfo)
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("update obs bucket in back database opts: %v", ids))
+	b.Logger.Debug(fmt.Sprintf("update obs bucket in back database opts: %v", models.ToJson(ids)))
 
 	err = database.BackDBConnection.Save(&ids).Error
 	if err != nil {

@@ -13,7 +13,7 @@ import (
 func (b *RDSBroker) LastOperation(instanceID string, operationData models.OperationDatas) (brokerapi.LastOperation, error) {
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("lastoperation rds instance opts: instanceID: %s operationData: %v", instanceID, operationData))
+	b.Logger.Debug(fmt.Sprintf("lastoperation rds instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()

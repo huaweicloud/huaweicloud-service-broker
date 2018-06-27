@@ -162,7 +162,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("provision dms instance opts: %v", provisionOpts))
+	b.Logger.Debug(fmt.Sprintf("provision dms instance opts: %v", models.ToJson(provisionOpts)))
 
 	// Invoke sdk
 	dmsInstance, err := instances.Create(dmsClient, provisionOpts).Extract()
@@ -172,7 +172,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// Log result
-	b.Logger.Debug(fmt.Sprintf("provision dms instance result: %v", dmsInstance))
+	b.Logger.Debug(fmt.Sprintf("provision dms instance result: %v", models.ToJson(dmsInstance)))
 
 	// Invoke sdk get
 	freshInstance, err := instances.Get(dmsClient, dmsInstance.InstanceID).Extract()
@@ -209,7 +209,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// log InstanceDetails opts
-	b.Logger.Debug(fmt.Sprintf("create dms instance in back database opts: %v", idsOpts))
+	b.Logger.Debug(fmt.Sprintf("create dms instance in back database opts: %v", models.ToJson(idsOpts)))
 
 	err = database.BackDBConnection.Create(&idsOpts).Error
 	if err != nil {

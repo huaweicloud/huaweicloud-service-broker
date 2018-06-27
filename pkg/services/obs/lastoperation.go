@@ -13,7 +13,7 @@ import (
 func (b *OBSBroker) LastOperation(instanceID string, operationData models.OperationDatas) (brokerapi.LastOperation, error) {
 
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("lastoperation obs bucket opts: instanceID: %s operationData: %v", instanceID, operationData))
+	b.Logger.Debug(fmt.Sprintf("lastoperation obs bucket opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
 	// Init obs client
 	obsClient, err := b.CloudCredentials.OBSClient()
