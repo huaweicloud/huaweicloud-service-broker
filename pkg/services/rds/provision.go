@@ -181,6 +181,10 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		if provisionParameters.BackupStrategyKeepdays > 0 {
 			provisionOpts.BackupStrategy.KeepDays = provisionParameters.BackupStrategyKeepdays
 		}
+	} else {
+		// Default Value
+		provisionOpts.BackupStrategy.StartTime = "00:00:00"
+		provisionOpts.BackupStrategy.KeepDays = 0
 	}
 	provisionOpts.DbRtPd = provisionParameters.DatabasePassword
 	provisionOpts.Ha = instances.HaOps{}

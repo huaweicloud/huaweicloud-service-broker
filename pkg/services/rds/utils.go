@@ -19,10 +19,10 @@ func BuildBindingCredential(
 
 	if servicetype == models.RDSPostgresqlServiceName {
 		// Postgresql
-		uri = fmt.Sprintf("mysql://%s:%s@%s:%d/%s?reconnect=true", username, password, host, port, name)
+		uri = fmt.Sprintf("postgres://%s:%s@%s:%d/%s?reconnect=true", username, password, host, port, name)
 	} else if servicetype == models.RDSMysqlServiceName {
 		// Mysql
-		uri = fmt.Sprintf("postgres://%s:%s@%s:%d/%s?reconnect=true", username, password, host, port, name)
+		uri = fmt.Sprintf("mysql://%s:%s@%s:%d/%s?reconnect=true", username, password, host, port, name)
 	} else if servicetype == models.RDSSqlserverServiceName {
 		// Sqlserver
 		uri = fmt.Sprintf("sqlserver://%s:%s@%s:%d/%s?reconnect=true", username, password, host, port, name)

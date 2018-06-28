@@ -62,7 +62,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	b.Logger.Debug(fmt.Sprintf("bind rds instance opts: instanceID: %s bindingID: %s", instanceID, bindingID))
 
 	// Invoke sdk
-	instance, err := instances.Get(rdsClient, instanceID).Extract()
+	instance, err := instances.Get(rdsClient, ids.TargetID).Extract()
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("get rds instance failed. Error: %s", err)
 	}
