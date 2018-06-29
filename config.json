@@ -18,7 +18,9 @@
         "password": "******",
         "domain_name": "******",
         "tenant_name": "cn-north-1",
-        "region": "cn-north-1"
+        "region": "cn-north-1",
+        "access_key": "******",
+        "secret_key": "******"
     },
     "catalog": {
         "services": [
@@ -721,3 +723,4 @@
         ]
     }
 }
+
