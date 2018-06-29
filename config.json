@@ -343,6 +343,7 @@
                         "metadata": {
                             "parameters": {
                                 "engine": "Redis",
+                                "engine_version": "3.0.7",
                                 "speccode":"dcs.single_node",
                                 "charging_type": "Hourly",
                                 "capacity": 2,
@@ -360,6 +361,7 @@
                         "metadata": {
                             "parameters": {
                                 "engine": "Redis",
+                                "engine_version": "3.0.7",
                                 "speccode":"dcs.master_standby",
                                 "charging_type": "Hourly",
                                 "capacity": 2,
@@ -377,6 +379,7 @@
                         "metadata": {
                             "parameters": {
                                 "engine": "Redis",
+                                "engine_version": "3.0.7",
                                 "speccode":"dcs.cluster",
                                 "charging_type": "Hourly",
                                 "capacity": 64,

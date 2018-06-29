@@ -35,6 +35,12 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create dcs client failed. Error: %s", err)
 	}
 
+	// Find service
+	service, err := b.Catalog.FindService(details.ServiceID)
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("find dcs service failed. Error: %s", err)
+	}
+
 	// Find service plan
 	servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
@@ -86,10 +92,25 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		provisionOpts.Description = provisionParameters.Description
 	}
 	provisionOpts.Engine = metadataParameters.Engine
+	if (metadataParameters.EngineVersion != "") &&
+		(service.Name == models.DCSRedisServiceName) {
+		provisionOpts.EngineVersion = metadataParameters.EngineVersion
+	} else {
+		provisionOpts.EngineVersion = ""
+	}
+
 	// Default Capacity
 	provisionOpts.Capacity = metadataParameters.Capacity
 	if provisionParameters.Capacity > 0 {
 		provisionOpts.Capacity = provisionParameters.Capacity
+	}
+	// Username
+	if provisionParameters.Username != "" {
+		if (service.Name == models.DCSMemcachedServiceName) ||
+			(service.Name == models.DCSIMDGServiceName) {
+			provisionOpts.AccessUser = provisionParameters.Username
+			provisionOpts.NoPasswordAccess = "false"
+		}
 	}
 	provisionOpts.Password = provisionParameters.Password
 	// Default VPCID
@@ -131,13 +152,13 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		provisionOpts.AvailableZones = azIDs
 	}
 	provisionOpts.ProductID = productID
-	// BackupStrategy
+	// BackupStrategy only supported in Master/standby
 	if (provisionParameters.BackupStrategySavedays > 0) &&
 		(provisionParameters.BackupStrategyBackupType != "") &&
 		(provisionParameters.BackupStrategyBeginAt != "") &&
 		(provisionParameters.BackupStrategyPeriodType != "") &&
 		(len(provisionParameters.BackupStrategyBackupAt) > 0) {
-		provisionOpts.InstanceBackupPolicy = instances.InstanceBackupPolicy{
+		provisionOpts.InstanceBackupPolicy = &instances.InstanceBackupPolicy{
 			SaveDays:   provisionParameters.BackupStrategySavedays,
 			BackupType: provisionParameters.BackupStrategyBackupType,
 			PeriodicalBackupPlan: instances.PeriodicalBackupPlan{
