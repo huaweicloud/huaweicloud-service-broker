@@ -64,7 +64,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		updateOpts.Name = updateParameters.Name
 	}
 	// Description
-	if updateParameters.Description != "" {
+	if updateParameters.Description != nil {
 		updateOpts.Description = updateParameters.Description
 	}
 	// BackupStrategy
@@ -73,7 +73,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		(updateParameters.BackupStrategyBeginAt != "") &&
 		(updateParameters.BackupStrategyPeriodType != "") &&
 		(len(updateParameters.BackupStrategyBackupAt) > 0) {
-		updateOpts.InstanceBackupPolicy = instances.InstanceBackupPolicy{
+		updateOpts.InstanceBackupPolicy = &instances.InstanceBackupPolicy{
 			SaveDays:   updateParameters.BackupStrategySavedays,
 			BackupType: updateParameters.BackupStrategyBackupType,
 			PeriodicalBackupPlan: instances.PeriodicalBackupPlan{
@@ -104,30 +104,14 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Log result
 	b.Logger.Debug(fmt.Sprintf("update dcs instance result: %v", models.ToJson(updateResult)))
 
-	// Extend capacity
-	if updateParameters.NewCapacity > 0 {
-		extendResult := instances.Extend(
-			dcsClient,
-			ids.TargetID,
-			instances.ExtendOpts{
-				NewCapacity: updateParameters.NewCapacity,
-			})
-		if extendResult.Err != nil {
-			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("extend dcs instance failed. Error: %s", err)
-		}
-
-		// Log result
-		b.Logger.Debug(fmt.Sprintf("extend dcs instance result: %v", models.ToJson(extendResult)))
-	}
-
 	// Update password
-	if updateParameters.NewPassword != "" {
+	if updateParameters.NewPassword != nil {
 		updatePasswordResult := instances.UpdatePassword(
 			dcsClient,
 			ids.TargetID,
 			instances.UpdatePasswordOpts{
-				OldPassword: updateParameters.OldPassword,
-				NewPassword: updateParameters.NewPassword,
+				OldPassword: *updateParameters.OldPassword,
+				NewPassword: *updateParameters.NewPassword,
 			})
 		if updatePasswordResult.Err != nil {
 			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dcs instance password failed. Error: %s", err)
@@ -143,7 +127,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 			}
 		}
 		// Reset addtional info
-		addtionalparam[AddtionalParamPassword] = updateParameters.NewPassword
+		addtionalparam[AddtionalParamPassword] = *updateParameters.NewPassword
 		// Marshal addtional info
 		addtionalinfo, err := json.Marshal(addtionalparam)
 		if err != nil {
@@ -155,6 +139,22 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		// Log result
 		b.Logger.Debug(fmt.Sprintf("update dcs instance password result: %v", models.ToJson(updatePasswordResult)))
 
+	}
+
+	// Extend capacity
+	if updateParameters.NewCapacity > 0 {
+		extendResult := instances.Extend(
+			dcsClient,
+			ids.TargetID,
+			instances.ExtendOpts{
+				NewCapacity: updateParameters.NewCapacity,
+			})
+		if extendResult.Err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("extend dcs instance failed. Error: %s", err)
+		}
+
+		// Log result
+		b.Logger.Debug(fmt.Sprintf("extend dcs instance result: %v", models.ToJson(extendResult)))
 	}
 
 	// Invoke sdk get
