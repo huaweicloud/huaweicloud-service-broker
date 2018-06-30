@@ -81,13 +81,14 @@ func (b *DMSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// Get specified parameters
+	username := addtionalparam[AddtionalParamUsername]
 	password := addtionalparam[AddtionalParamPassword]
 
 	// Build Binding Credential
 	credential, err := BuildBindingCredential(
 		instance.ConnectAddress,
 		instance.Port,
-		instance.UserName,
+		username,
 		password,
 		service.Name)
 	if err != nil {

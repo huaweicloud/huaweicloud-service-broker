@@ -65,7 +65,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 
 	// List all the products
-	ps, err := products.Get(dmsClient).Extract()
+	ps, err := products.Get(dmsClient, metadataParameters.Engine).Extract()
 	if err != nil {
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get dms products failed. Error: %s", err)
 	}
@@ -83,17 +83,29 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	for _, p := range productParams {
 		for _, v := range p.Values {
 			for _, d := range v.Details {
+				// Single
 				if d.SpecCode == metadataParameters.SpecCode {
 					productID = d.ProductID
 					storageSpace, err = strconv.Atoi(d.Storage)
 					if err != nil {
-						// Log result
-						b.Logger.Debug(fmt.Sprintf("get dms storage space failed. Error: %s", err))
-					} else {
 						// Default 100
 						storageSpace = 100
+						// Log result
+						b.Logger.Debug(fmt.Sprintf("get dms storage space failed. Error: %s", err))
 					}
 					break
+				}
+				// Cluster
+				for _, pi := range d.ProductInfos {
+					if pi.SpecCode == metadataParameters.SpecCode {
+						productID = pi.ProductID
+						storageSpace, err = strconv.Atoi(pi.Storage)
+						if err != nil {
+							// Default 200
+							storageSpace = 200
+							b.Logger.Debug(fmt.Sprintf("get dms storage space failed. Error: %s", err))
+						}
+					}
 				}
 			}
 		}
@@ -108,13 +120,13 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	// instance engine
 	provisionOpts.Engine = metadataParameters.Engine
 	// Default 3.7.0
-	provisionOpts.EngineVersion = "3.7.0"
+	provisionOpts.EngineVersion = metadataParameters.EngineVersion
 	// Default 100
 	provisionOpts.StorageSpace = storageSpace
 	// Password
 	provisionOpts.Password = provisionParameters.Password
 	// AccessUser
-	provisionOpts.AccessUser = provisionParameters.AccessUser
+	provisionOpts.AccessUser = provisionParameters.Username
 	// Default VPCID
 	provisionOpts.VPCID = metadataParameters.VPCID
 	if provisionParameters.VPCID != "" {
@@ -131,7 +143,10 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		provisionOpts.SecurityGroupID = provisionParameters.SecurityGroupID
 	}
 	// Default AvailabilityZones
-	provisionOpts.AvailableZones = provisionParameters.AvailabilityZones
+	provisionOpts.AvailableZones = metadataParameters.AvailabilityZones
+	if len(provisionParameters.AvailabilityZones) > 0 {
+		provisionOpts.AvailableZones = provisionParameters.AvailabilityZones
+	}
 	// Convert AvailabilityZones from code to id
 	if len(provisionOpts.AvailableZones) > 0 {
 		// List all the azs in this region
@@ -188,6 +203,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Constuct addtional info
 	addtionalparam := map[string]string{}
+	addtionalparam[AddtionalParamUsername] = provisionOpts.AccessUser
 	addtionalparam[AddtionalParamPassword] = provisionOpts.Password
 
 	// Marshal addtional info
@@ -220,7 +236,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	b.Logger.Debug(fmt.Sprintf("create dms instance in back database succeed: %s", instanceID))
 
 	// Return result
-	if asyncAllowed && models.OperationAsyncDMS {
+	if asyncAllowed && models.OperationAsyncDMSInstance {
 		// OperationDatas for OperationProvisioning
 		ods := models.OperationDatas{
 			OperationType:  models.OperationProvisioning,

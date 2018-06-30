@@ -498,7 +498,7 @@ func NewAntiDDoSV2(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) 
 func NewDMSServiceV1(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
 	sc, err := initClientOpts(client, eo, "network")
 	sc.Endpoint = strings.Replace(sc.Endpoint, "vpc", "dms", 1)
-	sc.ResourceBase = sc.Endpoint + "v1.0/" + "dms/" + client.ProjectID + "/"
+	sc.ResourceBase = sc.Endpoint + "v1.0/" + client.ProjectID + "/"
 	return sc, err
 }
 

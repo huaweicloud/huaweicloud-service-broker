@@ -63,7 +63,7 @@ func (b *DMSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	b.Logger.Debug(fmt.Sprintf("deprovision dms instance success: %s", instanceID))
 
 	// Return result
-	if asyncAllowed && models.OperationAsyncDMS {
+	if asyncAllowed && models.OperationAsyncDMSQueue {
 		// OperationDatas for OperationDeprovisioning
 		ods := models.OperationDatas{
 			OperationType:  models.OperationDeprovisioning,

@@ -73,7 +73,7 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	b.Logger.Debug(fmt.Sprintf("update dms queue in back database succeed: %s", instanceID))
 
 	// Return result
-	if asyncAllowed && models.OperationAsyncDMS {
+	if asyncAllowed && models.OperationAsyncDMSQueue {
 		// OperationDatas for OperationUpdating
 		ods := models.OperationDatas{
 			OperationType:  models.OperationUpdating,

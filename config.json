@@ -704,11 +704,13 @@
                         "metadata": {
                             "parameters": {
                                 "engine": "rabbitmq",
+                                "engine_version": "3.7.0",
                                 "speccode": "dms.instance.rabbitmq.single.2u4g",
                                 "charging_type": "Hourly",
                                 "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
                                 "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5"
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
                             }
                         }
                     },
@@ -719,11 +721,13 @@
                         "metadata": {
                             "parameters": {
                                 "engine": "rabbitmq",
+                                "engine_version": "3.7.0",
                                 "speccode": "dms.instance.rabbitmq.cluster.2u4g.2",
                                 "charging_type": "Hourly",
                                 "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
                                 "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5"
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
                             }
                         }
                     }
