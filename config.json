@@ -623,7 +623,9 @@
                         "description": "Advanced Message Queuing Protocol (AMQP) queue. AMQP is an open standard application layer protocol for message-oriented middleware.",
                         "metadata": {
                             "parameters": {
-                                "queue_mode": "AMQP"
+                                "queue_mode": "AMQP",
+                                "endpoint_name": "dms-amqp",
+                                "endpoint_port": "60020"
                             }
                         }
                     }
@@ -655,6 +657,8 @@
                         "metadata": {
                             "parameters": {
                                 "queue_mode": "KAFKA_HT",
+                                "endpoint_name": "dms-kafka",
+                                "endpoint_port": "37000",
                                 "retention_hours": 72
                             }
                         }
@@ -666,6 +670,8 @@
                         "metadata": {
                             "parameters": {
                                 "queue_mode": "KAFKA_HA",
+                                "endpoint_name": "dms-kafka",
+                                "endpoint_port": "37000",
                                 "retention_hours": 72
                             }
                         }
@@ -726,4 +732,3 @@
         ]
     }
 }
-

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/huaweicloud/golangsdk/openstack/dms/v1/groups"
 	"github.com/huaweicloud/golangsdk/openstack/dms/v1/queues"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
@@ -62,7 +63,7 @@ func (b *DMSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	b.Logger.Debug(fmt.Sprintf("bind dms instance opts: instanceID: %s bindingID: %s", instanceID, bindingID))
 
 	// Invoke sdk: the default includeDeadLetter value is false
-	_, err = queues.Get(dmsClient, ids.TargetID, false).Extract()
+	queue, err := queues.Get(dmsClient, ids.TargetID, false).Extract()
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("get dms instance failed. Error: %s", err)
 	}
@@ -73,13 +74,49 @@ func (b *DMSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 		return brokerapi.Binding{}, fmt.Errorf("find dms service failed. Error: %s", err)
 	}
 
+	// Invoke sdk: the default includeDeadLetter value is false
+	pages, err := groups.List(dmsClient, ids.TargetID, false).AllPages()
+	if err != nil {
+		return brokerapi.Binding{}, fmt.Errorf("list dms group failed. Error: %s", err)
+	}
+	grouplist, err := groups.ExtractGroups(pages)
+	if err != nil {
+		return brokerapi.Binding{}, fmt.Errorf("extract dms group failed. Error: %s", err)
+	}
+	var groupid string
+	if len(grouplist) > 0 {
+		groupid = grouplist[0].ID
+	}
+
+	// Find service plan
+	servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
+	if err != nil {
+		return brokerapi.Binding{}, fmt.Errorf("find service plan failed. Error: %s", err)
+	}
+
+	// Get parameters from service plan metadata
+	metadataParameters := MetadataParameters{}
+	if servicePlan.Metadata != nil {
+		if len(servicePlan.Metadata.Parameters) > 0 {
+			err := json.Unmarshal(servicePlan.Metadata.Parameters, &metadataParameters)
+			if err != nil {
+				return brokerapi.Binding{},
+					fmt.Errorf("Error unmarshalling Parameters from service plan: %s", err)
+			}
+		}
+	}
+
 	// Build Binding Credential
 	credential, err := BuildBindingCredential(
+		metadataParameters.EndpointName,
+		metadataParameters.EndpointPort,
 		b.CloudCredentials.Region,
+		dmsClient.ProjectID,
 		dmsClient.Endpoint,
-		b.CloudCredentials.TenantID,
 		b.CloudCredentials.AccessKey,
 		b.CloudCredentials.SecretKey,
+		queue.ID,
+		groupid,
 		service.Name)
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("build dms instance binding credential failed. Error: %s", err)
