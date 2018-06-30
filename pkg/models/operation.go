@@ -20,8 +20,11 @@ const (
 	// OperationAsyncDCS for default way
 	OperationAsyncDCS bool = true
 
-	// OperationAsyncDMS for default way
-	OperationAsyncDMS bool = false
+	// OperationAsyncDMSQueue for default way
+	OperationAsyncDMSQueue bool = false
+
+	// OperationAsyncDMSInstance for default way
+	OperationAsyncDMSInstance bool = true
 
 	// OperationAsyncOBS for default way
 	OperationAsyncOBS bool = false

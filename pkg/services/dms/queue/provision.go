@@ -163,7 +163,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	b.Logger.Debug(fmt.Sprintf("create dms queue in back database succeed: %s", instanceID))
 
 	// Return result
-	if asyncAllowed && models.OperationAsyncDMS {
+	if asyncAllowed && models.OperationAsyncDMSQueue {
 		// OperationDatas for OperationProvisioning
 		ods := models.OperationDatas{
 			OperationType:  models.OperationProvisioning,
