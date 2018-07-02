@@ -49,7 +49,7 @@ $ huaweicloud-service-broker -config=config.json -port=3000
 
 ### Usage
 
-Application Developers can start to test the services locally. The [lifecycle.sh]((https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/scripts/lifecycle.sh)) can guide you to test by scripts.
+Application Developers can start to test the services locally. The [lifecycle.sh](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/scripts/lifecycle.sh) can guide you to test by scripts.
 
 ## Getting Started on Cloud Foundry
 
