@@ -20,7 +20,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configFilePath, "config", "", "Location of Service Broker config file")
+	flag.StringVar(&configFilePath, "config", "config.json", "Location of Service Broker config file")
 	flag.StringVar(&port, "port", "3000", "Service Broker listen port")
 }
 
