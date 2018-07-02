@@ -4,7 +4,11 @@
 [![LICENSE](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/LICENSE)
 
 This is a [Cloud Foundry Service Broker](https://docs.cloudfoundry.org/services/overview.html) for Huawei Cloud.
-Currently it includes [Huawei Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html) supporting [PostgreSQL](http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html) RDS Databases.
+Currently it includes the following services support:
+* [Distributed Cache Service (DCS)](http://www.huaweicloud.com/en-us/product/dcs.html) 
+* [Distributed Message Service (DMS)](http://www.huaweicloud.com/en-us/product/dms.html) 
+* [Object Storage Service (OBS)](http://www.huaweicloud.com/en-us/product/obs.html) 
+* [Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html) 
 
 ## Installation
 
