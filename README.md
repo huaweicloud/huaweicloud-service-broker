@@ -3,27 +3,57 @@
 [![Build Status](https://travis-ci.org/huaweicloud/huaweicloud-service-broker.svg?branch=master)](https://travis-ci.org/huaweicloud/huaweicloud-service-broker)
 [![LICENSE](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/LICENSE)
 
-This is a [Cloud Foundry Service Broker](https://docs.cloudfoundry.org/services/overview.html) for Huawei Cloud.
+This is a [Service Broker](https://docs.cloudfoundry.org/services/overview.html) for Huawei Cloud.
 Currently it includes the following services support:
-* [Distributed Cache Service (DCS)](http://www.huaweicloud.com/en-us/product/dcs.html) 
-* [Distributed Message Service (DMS)](http://www.huaweicloud.com/en-us/product/dms.html) 
-* [Object Storage Service (OBS)](http://www.huaweicloud.com/en-us/product/obs.html) 
-* [Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html) 
+* [Distributed Cache Service (DCS)](http://www.huaweicloud.com/en-us/product/dcs.html)
+* [Distributed Message Service (DMS)](http://www.huaweicloud.com/en-us/product/dms.html)
+* [Object Storage Service (OBS)](http://www.huaweicloud.com/en-us/product/obs.html)
+* [Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html)
 
-## Installation
+## Prerequisites
 
-### Locally
+You'll need a few prerequisites before you are getting started.
+
+### Setup a Backing MySQL Database
+
+* Setup a MySQL Server and make sure that the database can be accessed by service broker
+* Login in MySQL with your account and password
+* Create database instance by running the following command
+    ```
+    CREATE DATABASE broker;
+    ```
+* Create database user by running the following command
+    ```
+    CREATE USER '<username>'@'%' IDENTIFIED BY '<password>';
+    ```
+* Grant privileges to the user by running the following command
+    ```
+    GRANT ALL PRIVILEGES ON broker.* TO '<username>'@'%' WITH GRANT OPTION;
+    ```
+The information of database instance will be used in the following Installation.
+
+## Getting Started on Locally
+
+### Installation
 
 Download the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json)
-and modify the configuration file to include your own configurations.
+and modify the configuration file to include your own configurations. See [configuration.md] (https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
+
+
 Using the standard `go install` (you must have [Go](https://golang.org/) already installed in your local machine):
 
 ```
 $ go install github.com/huaweicloud/huaweicloud-service-broker
-$ huaweicloud-service-broker -config=config.json -port=3000 
+$ huaweicloud-service-broker -config=config.json -port=3000
 ```
 
-### Cloud Foundry
+### Usage
+
+Application Developers can start to test the services locally. The [lifecycle.sh]((https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/scripts/lifecycle.sh)) can guide you to test by scripts.
+
+## Getting Started on Cloud Foundry
+
+### Installation
 
 The broker can be deployed to an already existing [Cloud Foundry](https://www.cloudfoundry.org/) installation:
 
@@ -32,27 +62,42 @@ $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
 $ cd huaweicloud-service-broker
 ```
 
-Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json) to include your own configurations. Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
+Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json) to include your own configurations. See [configuration.md] (https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
+
+Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
 
 ```
 $ cf push huaweicloud-service-broker
 ```
 
-## Usage
+[Register the broker](https://docs.cloudfoundry.org/services/managing-service-brokers.html#register-broker) within your Cloud Foundry installation. For example:
 
-### Managing Service Broker
+```
+$ cf create-service-broker huaweicloud-service-broker username password https://huaweicloud-service-broker.apps.example.com
+```
 
-Configure and deploy the broker. Then:
+Make sure that the service broker is registered successfully:
 
-1. Check that your Cloud Foundry installation supports [Service Broker API](https://docs.cloudfoundry.org/services/api.html)
-2. [Register the broker](https://docs.cloudfoundry.org/services/managing-service-brokers.html#register-broker) within your Cloud Foundry installation;
-3. [Make Services and Plans public](https://docs.cloudfoundry.org/services/access-control.html#enable-access);
-4. Depending on your Cloud Foundry settings, you might also need to create/bind an [Application Security Group](https://docs.cloudfoundry.org/adminguide/app-sec-groups.html) to allow access to the Service Instances.
+```
+$ cf service-brokers
+```
 
-### Integrating Service Instances with Applications
+Display access to service:
 
-Application Developers can start to consume the services using the standard [CF CLI commands](https://docs.cloudfoundry.org/devguide/services/managing-services.html).
+```
+$ cf service-access
+```
 
+[Make Services and Plans public](https://docs.cloudfoundry.org/services/access-control.html#enable-access).
+ For example, enable rds-mysql service:
+
+```
+$ cf enable-service-access rds-mysql
+```
+
+### Usage
+
+Application Developers can start to consume the services using the standard [CF CLI commands](https://docs.cloudfoundry.org/devguide/services/managing-services.html). See [usage.md] (https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/usage.md) for instructions.
 
 ## Contributing
 

@@ -27,7 +27,7 @@
             {
                 "id": "275f3e0b-86fd-4303-946c-171374d29150",
                 "name": "rds-mysql",
-                "description": "RDS MySQL service",
+                "description": "RDS MySQL Service",
                 "bindable": true,
                 "tags": [
                     "mysql",
@@ -36,7 +36,7 @@
                 "metadata": {
                     "displayName": "RDS MySQL",
                     "imageUrl": "data:image/png;",
-                    "longDescription": "RDS MySQL service",
+                    "longDescription": "RDS MySQL Service",
                     "providerDisplayName": "Huawei Cloud Services",
                     "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262671.html",
                     "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
@@ -86,7 +86,7 @@
             {
                 "id": "3beb990b-841b-40ee-a65d-8b9d1f61b38e",
                 "name": "rds-sqlserver",
-                "description": "RDS SQLServer service",
+                "description": "RDS SQLServer Service",
                 "bindable": true,
                 "tags": [
                     "sqlserver",
@@ -95,7 +95,7 @@
                 "metadata": {
                     "displayName": "RDS SQLServer",
                     "imageUrl": "data:image/png;",
-                    "longDescription": "RDS SQLServer service",
+                    "longDescription": "RDS SQLServer Service",
                     "providerDisplayName": "Huawei Cloud Services",
                     "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0053089719.html",
                     "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
@@ -202,7 +202,7 @@
             {
                 "id": "a2c9adda-6511-462c-9934-b3fd8236e9f0",
                 "name": "rds-postgresql",
-                "description": "RDS PostgreSQL service",
+                "description": "RDS PostgreSQL Service",
                 "bindable": true,
                 "tags": [
                     "postgres",
@@ -211,7 +211,7 @@
                 "metadata": {
                     "displayName": "RDS PostgreSQL",
                     "imageUrl": "data:image/png;",
-                    "longDescription": "RDS PostgreSQL service",
+                    "longDescription": "RDS PostgreSQL Service",
                     "providerDisplayName": "Huawei Cloud Services",
                     "documentationUrl": "http://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262672.html",
                     "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
@@ -280,7 +280,7 @@
             {
                 "id": "1f3e38e8-4563-417f-8506-ec1ac61ea3a6",
                 "name": "rds-hwsql",
-                "description": "RDS HWSQL service",
+                "description": "RDS HWSQL Service",
                 "bindable": true,
                 "tags": [
                     "hwsql",
@@ -289,7 +289,7 @@
                 "metadata": {
                     "displayName": "RDS HWSQL",
                     "imageUrl": "data:image/png;",
-                    "longDescription": "RDS HWSQL service",
+                    "longDescription": "RDS HWSQL Service",
                     "providerDisplayName": "Huawei Cloud Services",
                     "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262773.html",
                     "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
@@ -558,14 +558,14 @@
             {
                 "id": "24e03f31-d44c-4591-b7ca-aff369528b9d",
                 "name": "dms-standard",
-                "description": "Standard Distributed Message Service",
+                "description": "Distributed Message Service for Standard",
                 "bindable": true,
                 "tags": [
                     "distributed message service",
                     "standard"
                 ],
                 "metadata": {
-                    "displayName": "Standard Distributed Message Service",
+                    "displayName": "Distributed Message Service for Standard",
                     "imageUrl": "data:image/png;",
                     "longDescription": "DMS supports common queues and ordered queues, providing high concurrency, low latency, stable and secure messaging middleware services.",
                     "providerDisplayName": "Huawei Cloud Services",
@@ -601,14 +601,14 @@
             {
                 "id": "a4dfcc2d-1c8d-42a2-9407-c1435948efab",
                 "name": "dms-activemq",
-                "description": "ActiveMQ Distributed Message Service",
+                "description": "Distributed Message Service for ActiveMQ",
                 "bindable": true,
                 "tags": [
                     "distributed message service",
                     "activemq"
                 ],
                 "metadata": {
-                    "displayName": "ActiveMQ Distributed Message Service",
+                    "displayName": "Distributed Message Service for ActiveMQ",
                     "imageUrl": "data:image/png;",
                     "longDescription": "DMS compatible ActiveMQ, easy to use, on-demand use, support level expansion, safe and reliable, worry free operation and maintenance.",
                     "providerDisplayName": "Huawei Cloud Services",
@@ -634,14 +634,14 @@
             {
                 "id": "9a0428f7-2dfe-490f-b2be-6cfe11c375a7",
                 "name": "dms-kafka",
-                "description": "Kafka Distributed Message Service",
+                "description": "Distributed Message Service for Kafka",
                 "bindable": true,
                 "tags": [
                     "distributed message service",
                     "kafka"
                 ],
                 "metadata": {
-                    "displayName": "Kafka Distributed Message Service",
+                    "displayName": "Distributed Message Service for Kafka",
                     "imageUrl": "data:image/png;",
                     "longDescription": "DMS compatible Kafka, that is, open and instant, safe and reliable, supporting high throughput, high reliability two application scenarios.",
                     "providerDisplayName": "Huawei Cloud Services",
@@ -681,14 +681,14 @@
             {
                 "id": "fc0c6ad1-ff5a-499a-8598-fda9fb414fcb",
                 "name": "dms-rabbitmq",
-                "description": "RabbitMQ Distributed Message Service",
+                "description": "Distributed Message Service for RabbitMQ",
                 "bindable": true,
                 "tags": [
                     "distributed message service",
                     "rabbitmq"
                 ],
                 "metadata": {
-                    "displayName": "RabbitMQ Distributed Message Service",
+                    "displayName": "Distributed Message Service for RabbitMQ",
                     "imageUrl": "data:image/png;",
                     "longDescription": "DMS is compatible with RabbitMQ, providing exclusive resources to ensure high performance of queues.",
                     "providerDisplayName": "Huawei Cloud Services",
