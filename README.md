@@ -14,11 +14,13 @@ Currently it includes the following services support:
 
 ### Locally
 
+Download the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json)
+and modify the configuration file to include your own configurations.
 Using the standard `go install` (you must have [Go](https://golang.org/) already installed in your local machine):
 
 ```
 $ go install github.com/huaweicloud/huaweicloud-service-broker
-$ huaweicloud-service-broker -port=3000 -config=<path-to-your-config-file>
+$ huaweicloud-service-broker -config=config.json -port=3000 
 ```
 
 ### Cloud Foundry
@@ -30,7 +32,7 @@ $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
 $ cd huaweicloud-service-broker
 ```
 
-Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json) to include your RDS authentication configurations and some parameters or configurations for providing the DB Instances in the [sample configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json). Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
+Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json) to include your own configurations. Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
 
 ```
 $ cf push huaweicloud-service-broker
@@ -45,14 +47,11 @@ Configure and deploy the broker. Then:
 1. Check that your Cloud Foundry installation supports [Service Broker API](https://docs.cloudfoundry.org/services/api.html)
 2. [Register the broker](https://docs.cloudfoundry.org/services/managing-service-brokers.html#register-broker) within your Cloud Foundry installation;
 3. [Make Services and Plans public](https://docs.cloudfoundry.org/services/access-control.html#enable-access);
-4. Depending on your Cloud Foundry settings, you might also need to create/bind an [Application Security Group](https://docs.cloudfoundry.org/adminguide/app-sec-groups.html) to allow access to the RDS DB Instances.
+4. Depending on your Cloud Foundry settings, you might also need to create/bind an [Application Security Group](https://docs.cloudfoundry.org/adminguide/app-sec-groups.html) to allow access to the Service Instances.
 
 ### Integrating Service Instances with Applications
 
 Application Developers can start to consume the services using the standard [CF CLI commands](https://docs.cloudfoundry.org/devguide/services/managing-services.html).
-
-Depending on the [broker configuration](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/CONFIGURATION.md#rds-broker-configuration), Application Developers can use the Credentials information from the
-response of broker Bind call for accessing DB Instances from RDS.
 
 
 ## Contributing
