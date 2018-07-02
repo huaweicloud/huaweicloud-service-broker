@@ -5,12 +5,13 @@ import (
 
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/openstack/obs"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
 )
 
 // LastOperation implematation
-func (b *OBSBroker) LastOperation(instanceID string, operationData models.OperationDatas) (brokerapi.LastOperation, error) {
+func (b *OBSBroker) LastOperation(instanceID string, operationData database.OperationDetails) (brokerapi.LastOperation, error) {
 
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("lastoperation obs bucket opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))

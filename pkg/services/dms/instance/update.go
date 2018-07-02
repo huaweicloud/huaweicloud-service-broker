@@ -119,7 +119,7 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Return result
 	if asyncAllowed && models.OperationAsyncDMSInstance {
 		// OperationDatas for OperationUpdating
-		ods := models.OperationDatas{
+		ods := database.OperationDetails{
 			OperationType:  models.OperationUpdating,
 			ServiceID:      details.ServiceID,
 			PlanID:         details.PlanID,
@@ -139,7 +139,13 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		// log OperationDatas
 		b.Logger.Debug(fmt.Sprintf("create dms queue operation datas: %s", operationdata))
 
-		return brokerapi.UpdateServiceSpec{IsAsync: true, OperationData: operationdata}, nil
+		// Create OperationDetails
+		err = database.BackDBConnection.Create(&ods).Error
+		if err != nil {
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("create operation in back database failed. Error: %s", err)
+		}
+
+		return brokerapi.UpdateServiceSpec{IsAsync: true, OperationData: ""}, nil
 	}
 
 	return brokerapi.UpdateServiceSpec{IsAsync: false, OperationData: ""}, nil

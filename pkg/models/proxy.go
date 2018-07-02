@@ -2,6 +2,8 @@ package models
 
 import (
 	"github.com/pivotal-cf/brokerapi"
+
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 )
 
 // ServiceBrokerProxy is used to implement details
@@ -16,5 +18,5 @@ type ServiceBrokerProxy interface {
 
 	Update(instanceID string, details brokerapi.UpdateDetails, asyncAllowed bool) (brokerapi.UpdateServiceSpec, error)
 
-	LastOperation(instanceID string, operationData OperationDatas) (brokerapi.LastOperation, error)
+	LastOperation(instanceID string, operationData database.OperationDetails) (brokerapi.LastOperation, error)
 }
