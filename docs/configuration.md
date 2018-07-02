@@ -45,13 +45,13 @@ A sample configuration can be found at [config.json](https://github.com/huaweicl
 
 If the ca file is not needed for authentication, the value of ca can be set empty string.
 
-### Catalog
+### Catalog (catalog)
 
 | Option   | Required | Type      | Description
 |:---------|:--------:|:--------- |:-----------
 | services | N        | []Service | A list of Services in Service Broker
 
-### Service
+### Service (services)
 
 | Option                        | Required | Type          | Description
 |:------------------------------|:--------:|:------------- |:-----------
@@ -73,7 +73,7 @@ If the ca file is not needed for authentication, the value of ca can be set empt
 | dashboard_client.secret       | N        | String        | A secret for the dashboard client
 | dashboard_client.redirect_uri | N        | String        | A domain for the service dashboard that will be whitelisted by the UAA to enable SSO
 
-### Service Plan
+### Service Plan (plans)
 
 | Option               | Required | Type          | Description
 |:---------------------|:--------:|:------------- |:-----------
