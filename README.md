@@ -105,7 +105,7 @@ In the spirit of [free software](http://www.fsf.org/licensing/essays/free-sw.htm
 
 Here are some ways *you* can contribute:
 
-* by using prerelease versions or master branch.
+* by using prerelease versions or master branch
 * by reporting bugs
 * by suggesting new features
 * by writing or editing documentation
@@ -121,11 +121,11 @@ We use the [GitHub issue tracker](https://github.com/huaweicloud/huaweicloud-ser
 
 ### Submitting a Pull Request
 
-1. Fork the project.
-2. Create a topic branch.
-3. Implement your feature or bug fix.
-4. Commit and push your changes.
-5. Submit a pull request.
+1. Fork the project
+2. Create a topic branch
+3. Implement your feature or bug fix
+4. Commit and push your changes
+5. Submit a pull request
 
 ## License
 
