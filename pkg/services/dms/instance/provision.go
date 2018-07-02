@@ -238,7 +238,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	// Return result
 	if asyncAllowed && models.OperationAsyncDMSInstance {
 		// OperationDatas for OperationProvisioning
-		ods := models.OperationDatas{
+		ods := database.OperationDetails{
 			OperationType:  models.OperationProvisioning,
 			ServiceID:      details.ServiceID,
 			PlanID:         details.PlanID,
@@ -258,7 +258,13 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		// log OperationDatas
 		b.Logger.Debug(fmt.Sprintf("create dms instance operation datas: %s", operationdata))
 
-		return brokerapi.ProvisionedServiceSpec{IsAsync: true, DashboardURL: "", OperationData: operationdata}, nil
+		// Create OperationDetails
+		err = database.BackDBConnection.Create(&ods).Error
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create operation in back database failed. Error: %s", err)
+		}
+
+		return brokerapi.ProvisionedServiceSpec{IsAsync: true, DashboardURL: "", OperationData: ""}, nil
 	}
 
 	return brokerapi.ProvisionedServiceSpec{IsAsync: false, DashboardURL: "", OperationData: ""}, nil

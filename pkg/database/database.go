@@ -69,6 +69,10 @@ func UpgradeBackDatabase(logger lager.Logger, backdatabase *gorm.DB) error {
 		if err := backdatabase.Exec(BindDetailsTableSQL).Error; err != nil {
 			return err
 		}
+		// table operation_details
+		if err := backdatabase.Exec(OperationDetailsTableSQL).Error; err != nil {
+			return err
+		}
 		return nil
 	}
 

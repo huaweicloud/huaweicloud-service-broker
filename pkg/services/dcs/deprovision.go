@@ -65,7 +65,7 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	// Return result
 	if asyncAllowed && models.OperationAsyncDCS {
 		// OperationDatas for OperationDeprovisioning
-		ods := models.OperationDatas{
+		ods := database.OperationDetails{
 			OperationType:  models.OperationDeprovisioning,
 			ServiceID:      details.ServiceID,
 			PlanID:         details.PlanID,
@@ -85,7 +85,13 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		// log OperationDatas
 		b.Logger.Debug(fmt.Sprintf("create dcs instance operation datas: %s", operationdata))
 
-		return brokerapi.DeprovisionServiceSpec{IsAsync: true, OperationData: operationdata}, nil
+		// Create OperationDetails
+		err = database.BackDBConnection.Create(&ods).Error
+		if err != nil {
+			return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("create operation in back database failed. Error: %s", err)
+		}
+
+		return brokerapi.DeprovisionServiceSpec{IsAsync: true, OperationData: ""}, nil
 	}
 
 	return brokerapi.DeprovisionServiceSpec{IsAsync: false, OperationData: ""}, nil

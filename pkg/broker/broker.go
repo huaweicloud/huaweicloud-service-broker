@@ -7,6 +7,7 @@ import (
 
 	"code.cloudfoundry.org/lager"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dcs"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dms/instance"
@@ -253,14 +254,13 @@ func (cloudBroker *CloudServiceBroker) LastOperation(
 
 	cloudBroker.Logger.Debug(fmt.Sprintf("LastOperation received. instanceID: %s", instanceID))
 
-	// operationData is existing
 	if operationData != "" {
-		ods := models.OperationDatas{}
+		// operationData is existing
+		ods := database.OperationDetails{}
 		err := json.Unmarshal([]byte(operationData), &ods)
 		if err != nil {
 			return brokerapi.LastOperation{}, err
 		}
-
 		// find service plan
 		_, err = cloudBroker.Catalog.FindServicePlan(ods.ServiceID, ods.PlanID)
 		if err != nil {
@@ -275,6 +275,51 @@ func (cloudBroker *CloudServiceBroker) LastOperation(
 
 		// detail service broker proxy bind
 		return servicebrokerproxy.LastOperation(instanceID, ods)
+	} else {
+		// Check OperationDetails length in back database
+		var length int
+		err := database.BackDBConnection.
+			Model(&database.OperationDetails{}).
+			Where("instance_id = ?", instanceID).
+			Count(&length).Error
+		if err != nil {
+			return brokerapi.LastOperation{}, err
+		}
+
+		// last OperationDetails is exist
+		if length > 0 {
+			// get last OperationDetails in back database
+			ods := database.OperationDetails{}
+			err := database.BackDBConnection.
+				Where("instance_id = ?", instanceID).
+				Last(&ods).Error
+			if err != nil {
+				return brokerapi.LastOperation{}, err
+			}
+			// find service plan
+			_, err = cloudBroker.Catalog.FindServicePlan(ods.ServiceID, ods.PlanID)
+			if err != nil {
+				return brokerapi.LastOperation{}, err
+			}
+
+			// get detail service broker proxy from ServiceBrokerMap
+			servicebrokerproxy := cloudBroker.ServiceBrokerMap[ods.ServiceID]
+			if servicebrokerproxy == nil {
+				return brokerapi.LastOperation{}, fmt.Errorf("could not find service broker: %s", ods.ServiceID)
+			}
+
+			// detail service broker proxy bind
+			lo, err := servicebrokerproxy.LastOperation(instanceID, ods)
+			if (lo.State == brokerapi.Succeeded) || (lo.State == brokerapi.Failed) {
+				// Delete OperationDetails in back database
+				err = database.BackDBConnection.Delete(&ods).Error
+				if err != nil {
+					return brokerapi.LastOperation{}, err
+				}
+			}
+			return lo, err
+		}
 	}
+
 	return brokerapi.LastOperation{}, nil
 }
