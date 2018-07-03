@@ -4,7 +4,7 @@
         "username": "username",
         "password": "password"
     },
-    "back_database" :{
+    "back_database": {
         "database_type": "mysql",
         "database_host": "127.0.0.1",
         "database_port": "3306",
@@ -24,6 +24,422 @@
     },
     "catalog": {
         "services": [
+            {
+                "id": "45d162e1-cf1e-455c-beff-cc0765d9a377",
+                "name": "dcs-redis",
+                "description": "Distributed Cache Service for Redis",
+                "bindable": true,
+                "tags": [
+                    "redis",
+                    "cache"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Cache Service for Redis",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "Distributed Cache Service for Redis",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
+                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcs.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "d54d393b-f5ce-4eb7-86be-49da00606368",
+                        "name": "Single-node",
+                        "description": "Redis Single-node",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Redis",
+                                "engine_version": "3.0.7",
+                                "speccode":"dcs.single_node",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
+                            }
+                        }
+                    },
+                    {
+                        "id": "09f1e37a-55fa-4de5-bb3f-61faa9496e42",
+                        "name": "Master/standby",
+                        "description": "Redis Master/standby",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Redis",
+                                "engine_version": "3.0.7",
+                                "speccode":"dcs.master_standby",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a", "cn-north-1b"]
+                            }
+                        }
+                    },
+                    {
+                        "id": "19a1c9d7-fce3-4286-a34b-f4fcabb54eca",
+                        "name": "Cluster",
+                        "description": "Redis Cluster",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Redis",
+                                "engine_version": "3.0.7",
+                                "speccode":"dcs.cluster",
+                                "charging_type": "Hourly",
+                                "capacity": 64,
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a", "cn-north-1b"]
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "9fab4eaa-0c04-4de0-a4f1-bfee98bfa0e0",
+                "name": "dcs-memcached",
+                "description": "Distributed Cache Service for Memcached",
+                "bindable": true,
+                "tags": [
+                    "memcached",
+                    "cache"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Cache Service for Memcached",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "Distributed Cache Service for Memcached",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
+                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcsmem.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "1bac69fc-7790-42c2-bd7e-677f4eb00d01",
+                        "name": "Single-node",
+                        "description": "Memcached Single-node",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Memcached",
+                                "speccode":"dcs.memcached.single_node",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
+                            }
+                        }
+                    },
+                    {
+                        "id": "db76b318-4a13-4114-892e-b938c4ba21a4",
+                        "name": "Master/standby",
+                        "description": "Memcached Master/standby",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Memcached",
+                                "speccode":"dcs.memcached.master_standby",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a", "cn-north-1b"]
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "5d39f994-097b-49fb-a453-4ec572102411",
+                "name": "dcs-imdg",
+                "description": "Distributed Cache Service for IMDG",
+                "bindable": true,
+                "tags": [
+                    "imdg",
+                    "cache"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Cache Service for IMDG",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "Distributed Cache Service for IMDG",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
+                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcs.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "65dee800-c1e8-4918-90bb-3020ff321dd4",
+                        "name": "Single-node",
+                        "description": "IMDG Single-node",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "IMDG",
+                                "speccode":"dcs.imdg.single_node",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
+                            }
+                        }
+                    },
+                    {
+                        "id": "ce428fd5-cc58-4da4-bc28-15017d959a7d",
+                        "name": "Cluster",
+                        "description": "IMDG Cluster",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "IMDG",
+                                "speccode":"dcs.imdg.cluster",
+                                "charging_type": "Hourly",
+                                "capacity": 16,
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "24e03f31-d44c-4591-b7ca-aff369528b9d",
+                "name": "dms-standard",
+                "description": "Distributed Message Service for Standard",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "standard"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Message Service for Standard",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS supports common queues and ordered queues, providing high concurrency, low latency, stable and secure messaging middleware services",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": false,
+                "plans": [
+                    {
+                        "id": "6d032bec-b332-418c-97cb-4caa05612d67",
+                        "name": "Partition-level FIFO",
+                        "description": "Standard queue. Messages might be retrieved in an order different from which they were sent",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "NORMAL",
+                                "redrive_policy": "disable"
+                            }
+                        }
+                    },
+                    {
+                        "id": "c13a9563-ba87-49f6-ae3e-5ca59619ca8b",
+                        "name": "Global FIFO",
+                        "description": "FIFO delivery. Messages are retrieved in the order they were sent",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "FIFO",
+                                "redrive_policy": "disable"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "a4dfcc2d-1c8d-42a2-9407-c1435948efab",
+                "name": "dms-activemq",
+                "description": "Distributed Message Service for ActiveMQ",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "activemq"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Message Service for ActiveMQ",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS compatible ActiveMQ, easy to use, on-demand use, support level expansion, safe and reliable, worry free operation and maintenance",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": false,
+                "plans": [
+                    {
+                        "id": "1a7a31ee-ab7f-456c-a307-9a861d5c69e0",
+                        "name": "ActiveMQ",
+                        "description": "Advanced Message Queuing Protocol (AMQP) queue. AMQP is an open standard application layer protocol for message-oriented middleware",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "AMQP",
+                                "endpoint_name": "dms-amqp",
+                                "endpoint_port": "60020"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "9a0428f7-2dfe-490f-b2be-6cfe11c375a7",
+                "name": "dms-kafka",
+                "description": "Distributed Message Service for Kafka",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "kafka"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Message Service for Kafka",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS compatible Kafka, that is, open and instant, safe and reliable, supporting high throughput, high reliability two application scenarios",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": false,
+                "plans": [
+                    {
+                        "id": "baaa3c7c-e9aa-42a1-a71e-ece0dd71210c",
+                        "name": "High throughput",
+                        "description": "High-throughput Kafka queue. All message replicas are flushed to a disk asynchronously",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "KAFKA_HT",
+                                "endpoint_name": "dms-kafka",
+                                "endpoint_port": "37000",
+                                "retention_hours": 72
+                            }
+                        }
+                    },
+                    {
+                        "id": "0196dd14-8e67-423e-8271-9c585d3e247f",
+                        "name": "High reliability",
+                        "description": "High-availability Kafka queue. All message replicas are flushed to a disk synchronously",
+                        "metadata": {
+                            "parameters": {
+                                "queue_mode": "KAFKA_HA",
+                                "endpoint_name": "dms-kafka",
+                                "endpoint_port": "37000",
+                                "retention_hours": 72
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "fc0c6ad1-ff5a-499a-8598-fda9fb414fcb",
+                "name": "dms-rabbitmq",
+                "description": "Distributed Message Service for RabbitMQ",
+                "bindable": true,
+                "tags": [
+                    "distributed message service",
+                    "rabbitmq"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Message Service for RabbitMQ",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "DMS is compatible with RabbitMQ, providing exclusive resources to ensure high performance of queues",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
+                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "d0c150cb-6a2a-47aa-8937-9c55d4615e14",
+                        "name": "Single-node",
+                        "description": "RabbitMQ Single-node",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "rabbitmq",
+                                "engine_version": "3.7.0",
+                                "speccode": "dms.instance.rabbitmq.single.2u4g",
+                                "charging_type": "Hourly",
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
+                            }
+                        }
+                    },
+                    {
+                        "id": "be887e97-c70e-4abe-8424-b66f9b1a1984",
+                        "name": "Cluster",
+                        "description": "RabbitMQ Cluster",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "rabbitmq",
+                                "engine_version": "3.7.0",
+                                "speccode": "dms.instance.rabbitmq.cluster.2u4g.2",
+                                "charging_type": "Hourly",
+                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
+                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
+                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
+                                "availability_zones": ["cn-north-1a"]
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "94e8ffdf-bf9c-422f-b73c-776a3ca69f35",
+                "name": "obs",
+                "description": "Object Storage Service",
+                "bindable": true,
+                "tags": [
+                    "object storage service"
+                ],
+                "metadata": {
+                    "displayName": "Object Storage Service",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "Object Storage Service (OBS) is a stable, secure, efficient, and easy-to-use cloud storage service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-obs/en-us_topic_0073037542.html",
+                    "supportUrl": "https://www.huaweicloud.com/en-us/product/obs.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "df0312bf-8189-4482-826e-2370a7f4d805",
+                        "name": "Standard",
+                        "description": "OBS Standard features low access latency and high throughput",
+                        "metadata": {
+                            "parameters": {
+                                "storage_class": "STANDARD",
+                                "bucket_policy": "private"
+                            }
+                        }
+                    },
+                    {
+                        "id": "e78f512f-8dc1-4ce8-a90b-afc6dcde25a6",
+                        "name": "Infrequent Access",
+                        "description": "OBS Infrequent Access is applicable to storing semi-frequently accessed data requiring quick response",
+                        "metadata": {
+                            "parameters": {
+                                "storage_class": "STANDARD_IA",
+                                "bucket_policy": "private"
+                            }
+                        }
+                    },
+                    {
+                        "id": "f23e741c-580f-4d21-a8c0-caf5b74c2ee6",
+                        "name": "Archive",
+                        "description": "OBS Archive is applicable to archiving rarely-accessed data",
+                        "metadata": {
+                            "parameters": {
+                                "storage_class": "GLACIER",
+                                "bucket_policy": "private"
+                            }
+                        }
+                    }
+                ]
+            },
             {
                 "id": "275f3e0b-86fd-4303-946c-171374d29150",
                 "name": "rds-mysql",
@@ -312,422 +728,6 @@
                                 "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
                                 "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
                                 "database_username": "root"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "45d162e1-cf1e-455c-beff-cc0765d9a377",
-                "name": "dcs-redis",
-                "description": "Distributed Cache Service for Redis",
-                "bindable": true,
-                "tags": [
-                    "redis",
-                    "cache"
-                ],
-                "metadata": {
-                    "displayName": "Distributed Cache Service for Redis",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "Distributed Cache Service for Redis",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
-                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcs.html"
-                },
-                "plan_updateable": true,
-                "plans": [
-                    {
-                        "id": "d54d393b-f5ce-4eb7-86be-49da00606368",
-                        "name": "Single-node",
-                        "description": "Redis Single-node",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "Redis",
-                                "engine_version": "3.0.7",
-                                "speccode":"dcs.single_node",
-                                "charging_type": "Hourly",
-                                "capacity": 2,
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a"]
-                            }
-                        }
-                    },
-                    {
-                        "id": "09f1e37a-55fa-4de5-bb3f-61faa9496e42",
-                        "name": "Master/standby",
-                        "description": "Redis Master/standby",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "Redis",
-                                "engine_version": "3.0.7",
-                                "speccode":"dcs.master_standby",
-                                "charging_type": "Hourly",
-                                "capacity": 2,
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a", "cn-north-1b"]
-                            }
-                        }
-                    },
-                    {
-                        "id": "19a1c9d7-fce3-4286-a34b-f4fcabb54eca",
-                        "name": "Cluster",
-                        "description": "Redis Cluster",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "Redis",
-                                "engine_version": "3.0.7",
-                                "speccode":"dcs.cluster",
-                                "charging_type": "Hourly",
-                                "capacity": 64,
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a", "cn-north-1b"]
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "9fab4eaa-0c04-4de0-a4f1-bfee98bfa0e0",
-                "name": "dcs-memcached",
-                "description": "Distributed Cache Service for Memcached",
-                "bindable": true,
-                "tags": [
-                    "memcached",
-                    "cache"
-                ],
-                "metadata": {
-                    "displayName": "Distributed Cache Service for Memcached",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "Distributed Cache Service for Memcached",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
-                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcsmem.html"
-                },
-                "plan_updateable": true,
-                "plans": [
-                    {
-                        "id": "1bac69fc-7790-42c2-bd7e-677f4eb00d01",
-                        "name": "Single-node",
-                        "description": "Memcached Single-node",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "Memcached",
-                                "speccode":"dcs.memcached.single_node",
-                                "charging_type": "Hourly",
-                                "capacity": 2,
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a"]
-                            }
-                        }
-                    },
-                    {
-                        "id": "db76b318-4a13-4114-892e-b938c4ba21a4",
-                        "name": "Master/standby",
-                        "description": "Memcached Master/standby",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "Memcached",
-                                "speccode":"dcs.memcached.master_standby",
-                                "charging_type": "Hourly",
-                                "capacity": 2,
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a", "cn-north-1b"]
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "5d39f994-097b-49fb-a453-4ec572102411",
-                "name": "dcs-imdg",
-                "description": "Distributed Cache Service for IMDG",
-                "bindable": true,
-                "tags": [
-                    "imdg",
-                    "cache"
-                ],
-                "metadata": {
-                    "displayName": "Distributed Cache Service for IMDG",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "Distributed Cache Service for IMDG",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
-                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcs.html"
-                },
-                "plan_updateable": true,
-                "plans": [
-                    {
-                        "id": "65dee800-c1e8-4918-90bb-3020ff321dd4",
-                        "name": "Single-node",
-                        "description": "IMDG Single-node",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "IMDG",
-                                "speccode":"dcs.imdg.single_node",
-                                "charging_type": "Hourly",
-                                "capacity": 2,
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a"]
-                            }
-                        }
-                    },
-                    {
-                        "id": "ce428fd5-cc58-4da4-bc28-15017d959a7d",
-                        "name": "Cluster",
-                        "description": "IMDG Cluster",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "IMDG",
-                                "speccode":"dcs.imdg.cluster",
-                                "charging_type": "Hourly",
-                                "capacity": 16,
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a"]
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "94e8ffdf-bf9c-422f-b73c-776a3ca69f35",
-                "name": "obs",
-                "description": "Object Storage Service",
-                "bindable": true,
-                "tags": [
-                    "object storage service"
-                ],
-                "metadata": {
-                    "displayName": "Object Storage Service",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "Object Storage Service (OBS) is a stable, secure, efficient, and easy-to-use cloud storage service.",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-obs/en-us_topic_0073037542.html",
-                    "supportUrl": "https://www.huaweicloud.com/en-us/product/obs.html"
-                },
-                "plan_updateable": true,
-                "plans": [
-                    {
-                        "id": "df0312bf-8189-4482-826e-2370a7f4d805",
-                        "name": "Standard",
-                        "description": "OBS Standard features low access latency and high throughput.",
-                        "metadata": {
-                            "parameters": {
-                                "storage_class": "STANDARD",
-                                "bucket_policy": "private"
-                            }
-                        }
-                    },
-                    {
-                        "id": "e78f512f-8dc1-4ce8-a90b-afc6dcde25a6",
-                        "name": "Infrequent Access",
-                        "description": "OBS Infrequent Access is applicable to storing semi-frequently accessed data requiring quick response.",
-                        "metadata": {
-                            "parameters": {
-                                "storage_class": "STANDARD_IA",
-                                "bucket_policy": "private"
-                            }
-                        }
-                    },
-                    {
-                        "id": "f23e741c-580f-4d21-a8c0-caf5b74c2ee6",
-                        "name": "Archive",
-                        "description": "OBS Archive is applicable to archiving rarely-accessed data.",
-                        "metadata": {
-                            "parameters": {
-                                "storage_class": "GLACIER",
-                                "bucket_policy": "private"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "24e03f31-d44c-4591-b7ca-aff369528b9d",
-                "name": "dms-standard",
-                "description": "Distributed Message Service for Standard",
-                "bindable": true,
-                "tags": [
-                    "distributed message service",
-                    "standard"
-                ],
-                "metadata": {
-                    "displayName": "Distributed Message Service for Standard",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "DMS supports common queues and ordered queues, providing high concurrency, low latency, stable and secure messaging middleware services.",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
-                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
-                },
-                "plan_updateable": false,
-                "plans": [
-                    {
-                        "id": "6d032bec-b332-418c-97cb-4caa05612d67",
-                        "name": "Partition-level FIFO",
-                        "description": "Standard queue. Messages might be retrieved in an order different from which they were sent.",
-                        "metadata": {
-                            "parameters": {
-                                "queue_mode": "NORMAL",
-                                "redrive_policy": "disable"
-                            }
-                        }
-                    },
-                    {
-                        "id": "c13a9563-ba87-49f6-ae3e-5ca59619ca8b",
-                        "name": "Global FIFO",
-                        "description": "FIFO delivery. Messages are retrieved in the order they were sent.",
-                        "metadata": {
-                            "parameters": {
-                                "queue_mode": "FIFO",
-                                "redrive_policy": "disable"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "a4dfcc2d-1c8d-42a2-9407-c1435948efab",
-                "name": "dms-activemq",
-                "description": "Distributed Message Service for ActiveMQ",
-                "bindable": true,
-                "tags": [
-                    "distributed message service",
-                    "activemq"
-                ],
-                "metadata": {
-                    "displayName": "Distributed Message Service for ActiveMQ",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "DMS compatible ActiveMQ, easy to use, on-demand use, support level expansion, safe and reliable, worry free operation and maintenance.",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
-                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
-                },
-                "plan_updateable": false,
-                "plans": [
-                    {
-                        "id": "1a7a31ee-ab7f-456c-a307-9a861d5c69e0",
-                        "name": "ActiveMQ",
-                        "description": "Advanced Message Queuing Protocol (AMQP) queue. AMQP is an open standard application layer protocol for message-oriented middleware.",
-                        "metadata": {
-                            "parameters": {
-                                "queue_mode": "AMQP",
-                                "endpoint_name": "dms-amqp",
-                                "endpoint_port": "60020"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "9a0428f7-2dfe-490f-b2be-6cfe11c375a7",
-                "name": "dms-kafka",
-                "description": "Distributed Message Service for Kafka",
-                "bindable": true,
-                "tags": [
-                    "distributed message service",
-                    "kafka"
-                ],
-                "metadata": {
-                    "displayName": "Distributed Message Service for Kafka",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "DMS compatible Kafka, that is, open and instant, safe and reliable, supporting high throughput, high reliability two application scenarios.",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
-                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
-                },
-                "plan_updateable": false,
-                "plans": [
-                    {
-                        "id": "baaa3c7c-e9aa-42a1-a71e-ece0dd71210c",
-                        "name": "High throughput",
-                        "description": "High-throughput Kafka queue. All message replicas are flushed to a disk asynchronously.",
-                        "metadata": {
-                            "parameters": {
-                                "queue_mode": "KAFKA_HT",
-                                "endpoint_name": "dms-kafka",
-                                "endpoint_port": "37000",
-                                "retention_hours": 72
-                            }
-                        }
-                    },
-                    {
-                        "id": "0196dd14-8e67-423e-8271-9c585d3e247f",
-                        "name": "High reliability",
-                        "description": "High-availability Kafka queue. All message replicas are flushed to a disk synchronously.",
-                        "metadata": {
-                            "parameters": {
-                                "queue_mode": "KAFKA_HA",
-                                "endpoint_name": "dms-kafka",
-                                "endpoint_port": "37000",
-                                "retention_hours": 72
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "fc0c6ad1-ff5a-499a-8598-fda9fb414fcb",
-                "name": "dms-rabbitmq",
-                "description": "Distributed Message Service for RabbitMQ",
-                "bindable": true,
-                "tags": [
-                    "distributed message service",
-                    "rabbitmq"
-                ],
-                "metadata": {
-                    "displayName": "Distributed Message Service for RabbitMQ",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "DMS is compatible with RabbitMQ, providing exclusive resources to ensure high performance of queues.",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dms/en-us_topic_0044827386.html",
-                    "supportUrl": "https://www.huaweicloud.com/product/dms.html"
-                },
-                "plan_updateable": true,
-                "plans": [
-                    {
-                        "id": "d0c150cb-6a2a-47aa-8937-9c55d4615e14",
-                        "name": "Single-node",
-                        "description": "RabbitMQ Single-node",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "rabbitmq",
-                                "engine_version": "3.7.0",
-                                "speccode": "dms.instance.rabbitmq.single.2u4g",
-                                "charging_type": "Hourly",
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a"]
-                            }
-                        }
-                    },
-                    {
-                        "id": "be887e97-c70e-4abe-8424-b66f9b1a1984",
-                        "name": "Cluster",
-                        "description": "RabbitMQ Cluster",
-                        "metadata": {
-                            "parameters": {
-                                "engine": "rabbitmq",
-                                "engine_version": "3.7.0",
-                                "speccode": "dms.instance.rabbitmq.cluster.2u4g.2",
-                                "charging_type": "Hourly",
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "availability_zones": ["cn-north-1a"]
                             }
                         }
                     }
