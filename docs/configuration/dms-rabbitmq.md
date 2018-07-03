@@ -10,7 +10,7 @@
 
 | Plan Name                      | Description
 |:-------------------------------|:-----------
-| Single-node                    | RabbitMQ Single-node
+| SingleNode                     | RabbitMQ Single Node
 | Cluster                        | RabbitMQ Cluster
 
 ## Plan Metadata Parameters Configuration

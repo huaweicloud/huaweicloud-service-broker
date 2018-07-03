@@ -11,7 +11,7 @@
 | Plan Name                      | Description
 |:-------------------------------|:-----------
 | Standard                       | OBS Standard features low access latency and high throughput
-| Infrequent Access              | OBS Infrequent Access is applicable to storing semi-frequently accessed data requiring quick response
+| InfrequentAccess               | OBS Infrequent Access is applicable to storing semi-frequently accessed data requiring quick response
 | Archive                        | OBS Archive is applicable to archiving rarely-accessed data
 
 ## Plan Metadata Parameters Configuration

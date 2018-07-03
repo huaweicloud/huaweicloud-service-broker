@@ -10,8 +10,8 @@
 
 | Plan Name                      | Description
 |:-------------------------------|:-----------
-| High throughput                | High-throughput Kafka queue. All message replicas are flushed to a disk asynchronously
-| High reliability               | High-availability Kafka queue. All message replicas are flushed to a disk synchronously
+| HighThroughput                 | High-throughput Kafka queue. All message replicas are flushed to a disk asynchronously
+| HighReliability                | High-availability Kafka queue. All message replicas are flushed to a disk synchronously
 
 ## Plan Metadata Parameters Configuration
 

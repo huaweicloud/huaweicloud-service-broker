@@ -10,8 +10,8 @@
 
 | Plan Name                      | Description
 |:-------------------------------|:-----------
-| Partition-level FIFO           | Standard queue. Messages might be retrieved in an order different from which they were sent
-| Global FIFO                    | FIFO delivery. Messages are retrieved in the order they were sent
+| PartitionLevelFIFO             | Standard queue. Messages might be retrieved in an order different from which they were sent
+| GlobalFIFO                     | FIFO delivery. Messages are retrieved in the order they were sent
 
 ## Plan Metadata Parameters Configuration
 
