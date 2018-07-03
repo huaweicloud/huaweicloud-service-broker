@@ -98,4 +98,4 @@ The Application Developers can find how to configure the each service plan by th
 * RDS MySQL Service: [rds-mysql](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration/rds-mysql.md)
 * RDS SQLServer Service: [rds-sqlserver](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration/rds-sqlserver.md)
 * RDS PostgreSQL Service: [rds-postgresql](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration/rds-postgresql.md)
-* RDS MySQL Service: [rds-hwsql](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration/rds-hwsql.md)
+* RDS HWSQL Service: [rds-hwsql](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration/rds-hwsql.md)
