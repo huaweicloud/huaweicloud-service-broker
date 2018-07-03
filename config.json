@@ -45,8 +45,8 @@
                 "plans": [
                     {
                         "id": "d54d393b-f5ce-4eb7-86be-49da00606368",
-                        "name": "Single-node",
-                        "description": "Redis Single-node",
+                        "name": "SingleNode",
+                        "description": "Redis Single Node",
                         "metadata": {
                             "parameters": {
                                 "engine": "Redis",
@@ -63,8 +63,8 @@
                     },
                     {
                         "id": "09f1e37a-55fa-4de5-bb3f-61faa9496e42",
-                        "name": "Master/standby",
-                        "description": "Redis Master/standby",
+                        "name": "MasterStandby",
+                        "description": "Redis Master Standby",
                         "metadata": {
                             "parameters": {
                                 "engine": "Redis",
@@ -120,8 +120,8 @@
                 "plans": [
                     {
                         "id": "1bac69fc-7790-42c2-bd7e-677f4eb00d01",
-                        "name": "Single-node",
-                        "description": "Memcached Single-node",
+                        "name": "SingleNode",
+                        "description": "Memcached Single Node",
                         "metadata": {
                             "parameters": {
                                 "engine": "Memcached",
@@ -137,8 +137,8 @@
                     },
                     {
                         "id": "db76b318-4a13-4114-892e-b938c4ba21a4",
-                        "name": "Master/standby",
-                        "description": "Memcached Master/standby",
+                        "name": "MasterStandby",
+                        "description": "Memcached Master Standby",
                         "metadata": {
                             "parameters": {
                                 "engine": "Memcached",
@@ -175,8 +175,8 @@
                 "plans": [
                     {
                         "id": "65dee800-c1e8-4918-90bb-3020ff321dd4",
-                        "name": "Single-node",
-                        "description": "IMDG Single-node",
+                        "name": "SingleNode",
+                        "description": "IMDG Single Node",
                         "metadata": {
                             "parameters": {
                                 "engine": "IMDG",
@@ -230,7 +230,7 @@
                 "plans": [
                     {
                         "id": "6d032bec-b332-418c-97cb-4caa05612d67",
-                        "name": "Partition-level FIFO",
+                        "name": "PartitionLevelFIFO",
                         "description": "Standard queue. Messages might be retrieved in an order different from which they were sent",
                         "metadata": {
                             "parameters": {
@@ -241,7 +241,7 @@
                     },
                     {
                         "id": "c13a9563-ba87-49f6-ae3e-5ca59619ca8b",
-                        "name": "Global FIFO",
+                        "name": "GlobalFIFO",
                         "description": "FIFO delivery. Messages are retrieved in the order they were sent",
                         "metadata": {
                             "parameters": {
@@ -306,7 +306,7 @@
                 "plans": [
                     {
                         "id": "baaa3c7c-e9aa-42a1-a71e-ece0dd71210c",
-                        "name": "High throughput",
+                        "name": "HighThroughput",
                         "description": "High-throughput Kafka queue. All message replicas are flushed to a disk asynchronously",
                         "metadata": {
                             "parameters": {
@@ -319,7 +319,7 @@
                     },
                     {
                         "id": "0196dd14-8e67-423e-8271-9c585d3e247f",
-                        "name": "High reliability",
+                        "name": "HighReliability",
                         "description": "High-availability Kafka queue. All message replicas are flushed to a disk synchronously",
                         "metadata": {
                             "parameters": {
@@ -353,8 +353,8 @@
                 "plans": [
                     {
                         "id": "d0c150cb-6a2a-47aa-8937-9c55d4615e14",
-                        "name": "Single-node",
-                        "description": "RabbitMQ Single-node",
+                        "name": "SingleNode",
+                        "description": "RabbitMQ Single Node",
                         "metadata": {
                             "parameters": {
                                 "engine": "rabbitmq",
@@ -418,7 +418,7 @@
                     },
                     {
                         "id": "e78f512f-8dc1-4ce8-a90b-afc6dcde25a6",
-                        "name": "Infrequent Access",
+                        "name": "InfrequentAccess",
                         "description": "OBS Infrequent Access is applicable to storing semi-frequently accessed data requiring quick response",
                         "metadata": {
                             "parameters": {

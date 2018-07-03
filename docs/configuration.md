@@ -41,7 +41,7 @@ A sample configuration can be found at [config.json](https://github.com/huaweicl
 | tenant_name                    | Y        | string  | IAM Auth tenant name
 | token                          | N        | string  | IAM Auth token
 | user_name                      | Y        | string  | IAM Auth username
-| UserID                         | N        | string  | IAM Auth userid
+| user_id                        | N        | string  | IAM Auth userid
 
 ### Catalog (catalog)
 
@@ -84,7 +84,7 @@ A sample configuration can be found at [config.json](https://github.com/huaweicl
 | metadata.parameters  | N        | map[string]inferface{} | Parameters of the plan to be set for each Service Plan
 | free                 | N        | bool                   | This field allows the plan to be limited by the non_basic_services_allowed field
 
-metadata.parameters are key value field for each Service Plan.
+metadata.parameters are key-value fields for each Service Plan.
 The Application Developers can find how to configure the each service plan by the following instructions.
 
 * Distributed Cache Service for Redis: [dcs-redis](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration/dcs-redis.md)
