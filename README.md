@@ -24,11 +24,11 @@ You'll need a few prerequisites before you are getting started.
     ```
 * Create database user by running the following command
     ```
-    CREATE USER '<username>'@'%' IDENTIFIED BY '<password>';
+    CREATE USER 'username'@'%' IDENTIFIED BY 'password';
     ```
 * Grant privileges to the user by running the following command
     ```
-    GRANT ALL PRIVILEGES ON broker.* TO '<username>'@'%' WITH GRANT OPTION;
+    GRANT ALL PRIVILEGES ON broker.* TO 'username'@'%' WITH GRANT OPTION;
     FLUSH PRIVILEGES;
     ```
 * Make sure MySQL can be connected remotely
