@@ -526,7 +526,7 @@
                             "parameters": {
                                 "datastore_type": "SQLServer",
                                 "datastore_version": "2008_R2_SP3_SE",
-                                "speccode": "rds.dec.mssql.s1.xlarge",
+                                "speccode": "rds.mssql.2014.se.c3.xlarge.4",
                                 "volume_type": "COMMON",
                                 "volume_size": 100,
                                 "availability_zone": "cn-north-1a",
@@ -545,7 +545,7 @@
                             "parameters": {
                                 "datastore_type": "SQLServer",
                                 "datastore_version": "2014_SP2_SE",
-                                "speccode": "rds.dec.mssql.s1.xlarge",
+                                "speccode": "rds.mssql.2014.se.c3.xlarge.4",
                                 "volume_type": "COMMON",
                                 "volume_size": 100,
                                 "availability_zone": "cn-north-1a",
@@ -564,7 +564,7 @@
                             "parameters": {
                                 "datastore_type": "SQLServer",
                                 "datastore_version": "2014_SP2_EE",
-                                "speccode": "rds.dec.mssql.s1.xlarge",
+                                "speccode": "rds.mssql.ee.c3.xlarge.4",
                                 "volume_type": "COMMON",
                                 "volume_size": 100,
                                 "availability_zone": "cn-north-1a",
@@ -583,7 +583,7 @@
                             "parameters": {
                                 "datastore_type": "SQLServer",
                                 "datastore_version": "2016_SP1_SE",
-                                "speccode": "rds.mssql.se.m3.xlarge.8",
+                                "speccode": "rds.mssql.se.c3.xlarge.4",
                                 "volume_type": "COMMON",
                                 "volume_size": 100,
                                 "availability_zone": "cn-north-1a",
@@ -602,7 +602,7 @@
                             "parameters": {
                                 "datastore_type": "SQLServer",
                                 "datastore_version": "2016_SP1_EE",
-                                "speccode": "rds.mssql.ee.m3.xlarge.8",
+                                "speccode": "rds.mssql.ee.c3.xlarge.4",
                                 "volume_type": "COMMON",
                                 "volume_size": 100,
                                 "availability_zone": "cn-north-1a",
