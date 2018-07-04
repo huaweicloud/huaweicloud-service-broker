@@ -29,7 +29,15 @@ You'll need a few prerequisites before you are getting started.
 * Grant privileges to the user by running the following command
     ```
     GRANT ALL PRIVILEGES ON broker.* TO '<username>'@'%' WITH GRANT OPTION;
+    FLUSH PRIVILEGES;
     ```
+* Make sure MySQL can be connected remotely
+    ```
+    vi /etc/mysql/mysql.conf.d/mysqld.cnf
+    #bind-address           = 127.0.0.1
+    ```
+* Restart MySQL service
+
 The information of database instance will be used in the following Installation.
 
 ## Getting Started on Locally
