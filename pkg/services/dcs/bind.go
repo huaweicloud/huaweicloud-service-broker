@@ -81,10 +81,11 @@ func (b *DCSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	}
 
 	// Get specified parameters
+	username := addtionalparam[AddtionalParamUsername]
 	password := addtionalparam[AddtionalParamPassword]
 
 	// Build Binding Credential
-	credential, err := BuildBindingCredential(instance.IP, instance.Port, instance.AccessUser, password, instance.Name, service.Name)
+	credential, err := BuildBindingCredential(instance.IP, instance.Port, username, password, instance.Name, service.Name)
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("build dcs instance binding credential failed. Error: %s", err)
 	}

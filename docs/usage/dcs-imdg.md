@@ -76,10 +76,6 @@ Update a previously provisioned instance.
 | maintain_begin               | string     | N         | Time at which the maintenance time window starts.
 | maintain_end                 | string     | N         | Time at which the maintenance time window ends.
 | security_group_id            | string     | N         | Subnet ID.
-| new_capacity                 | int        | N         | New cache capacity. Unit: GB. For a IMDG instance in single node, the cache capacity can be 2 GB, 4 GB, 8 GB. For a IMDG instance in cluster mode, the cache capacity can be 64 GB.
-| old_password                 | string     | N         | The previous password of IMDG instance.
-| new_password                 | string     | N         | The new password of IMDG instance.
-
 
 ## Deprovision
 
@@ -142,10 +138,7 @@ To update a service, use the `cf update-service` command.
 ```
 cf update-service myimdg -c '{
     "name": "IMDGSingleNode1",
-    "description": "IMDG Single Node Test1",
-    "new_capacity": 8,
-    "old_password": "Password1234!",
-    "new_password": "Password1234$"
+    "description": "IMDG Single Node Test1"
 }'
 ```
 

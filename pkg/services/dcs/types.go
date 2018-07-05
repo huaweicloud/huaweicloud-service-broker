@@ -73,6 +73,8 @@ type UpdateParameters struct {
 }
 
 const (
+	// AddtionalParamUsername for username
+	AddtionalParamUsername string = "username"
 	// AddtionalParamPassword for password
 	AddtionalParamPassword string = "password"
 )
