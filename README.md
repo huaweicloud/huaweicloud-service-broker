@@ -81,7 +81,7 @@ $ cf push huaweicloud-service-broker
 [Register the broker](https://docs.cloudfoundry.org/services/managing-service-brokers.html#register-broker) within your Cloud Foundry installation. For example:
 
 ```
-$ cf create-service-broker huaweicloud-service-broker username password https://huaweicloud-service-broker.apps.example.com
+$ cf create-service-broker huaweicloud-service-broker username password https://huaweicloud-service-broker.example.com
 ```
 
 Make sure that the service broker is registered successfully:

@@ -3,4 +3,5 @@ applications:
     memory: 256M
     disk_quota: 256M
     buildpack: go_buildpack
-
+    env:
+      GOPACKAGENAME: github.com/huaweicloud/huaweicloud-service-broker

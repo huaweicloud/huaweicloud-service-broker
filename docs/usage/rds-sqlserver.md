@@ -84,7 +84,7 @@ The following command will create a service.
 ```
 cf create-service rds-sqlserver 2008_R2_SP3_SE myrdssqlserver -c '{
     "name": "RDSSQLServer",
-    "database_password": "password"
+    "database_password": "Password1234!"
 }'
 ```
 
@@ -101,6 +101,12 @@ Once the service has been successfully provisioned, you can bind to it by using
 
 ```
 cf bind-service myapp myrdssqlserver
+```
+
+Use `cf restage` command to ensure your env variable changes take effect.
+
+```
+cf restage myapp
 ```
 
 Once bound, you can view the environment variables for a given application using the `cf env` command.

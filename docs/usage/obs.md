@@ -88,6 +88,12 @@ Once the service has been successfully provisioned, you can bind to it by using
 cf bind-service myapp myobs
 ```
 
+Use `cf restage` command to ensure your env variable changes take effect.
+
+```
+cf restage myapp
+```
+
 Once bound, you can view the environment variables for a given application using the `cf env` command.
 
 ```

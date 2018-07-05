@@ -95,7 +95,7 @@ The following command will create a service.
 ```
 cf create-service dcs-redis SingleNode myredis -c '{
     "username": "username",
-    "password": "password",
+    "password": "Password1234!",
     "name": "RedisSingleNode",
     "description": "Redis Single Node Test"
 }'
@@ -114,6 +114,12 @@ Once the service has been successfully provisioned, you can bind to it by using
 
 ```
 cf bind-service myapp myredis
+```
+
+Use `cf restage` command to ensure your env variable changes take effect.
+
+```
+cf restage myapp
 ```
 
 Once bound, you can view the environment variables for a given application using the `cf env` command.
@@ -139,8 +145,8 @@ cf update-service myredis -c '{
     "name": "RedisSingleNode1",
     "description": "Redis Single Node Test1",
     "new_capacity": 8,
-    "old_password": "oldpassword",
-    "new_password": "newpassword"
+    "old_password": "Password1234!",
+    "new_password": "Password1234$"
 }'
 ```
 
