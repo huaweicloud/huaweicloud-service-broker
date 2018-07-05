@@ -15,10 +15,12 @@ func BuildBindingCredential(
 	name string,
 	servicetype string) (BindingCredential, error) {
 
-	if servicetype == models.DCSRedisServiceName ||
-		servicetype == models.DCSMemcachedServiceName ||
-		servicetype == models.DCSIMDGServiceName {
+	if servicetype == models.DCSRedisServiceName {
+		username = ""
+	} else if servicetype == models.DCSMemcachedServiceName {
 
+	} else if servicetype == models.DCSIMDGServiceName {
+		port = 0
 	} else {
 		return BindingCredential{}, fmt.Errorf("unknown service type: %s", servicetype)
 	}

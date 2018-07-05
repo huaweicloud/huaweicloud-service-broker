@@ -77,7 +77,7 @@ Update a previously provisioned instance.
 | maintain_begin               | string     | N         | Time at which the maintenance time window starts.
 | maintain_end                 | string     | N         | Time at which the maintenance time window ends.
 | security_group_id            | string     | N         | Subnet ID.
-| new_capacity                 | int        | N         | New cache capacity. Unit: GB. For a Redis instance in single node or master standby mode, the cache capacity can be 2 GB, 4 GB, 8 GB, 16 GB, 32 GB, or 64 GB. For a Redis instance in cluster mode, the cache capacity can be 64, 128, 256, 512, or 1024 GB.
+| new_capacity                 | int        | N         | New cache capacity. Unit: GB. For a Redis instance in single node or master standby mode, the cache capacity can be 2 GB, 4 GB, 8 GB, 16 GB, 32 GB, or 64 GB. **For a Redis instance in cluster mode, it does not support extend the cache capacity.**
 | old_password                 | string     | N         | The previous password of Redis instance.
 | new_password                 | string     | N         | The new password of Redis instance.
 
@@ -144,7 +144,6 @@ To update a service, use the `cf update-service` command.
 cf update-service myredis -c '{
     "name": "RedisSingleNode1",
     "description": "Redis Single Node Test1",
-    "new_capacity": 8,
     "old_password": "Password1234!",
     "new_password": "Password1234$"
 }'

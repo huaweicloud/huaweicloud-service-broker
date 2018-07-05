@@ -203,6 +203,7 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 
 	// Constuct addtional info
 	addtionalparam := map[string]string{}
+	addtionalparam[AddtionalParamUsername] = provisionOpts.AccessUser
 	addtionalparam[AddtionalParamPassword] = provisionOpts.Password
 
 	// Marshal addtional info
