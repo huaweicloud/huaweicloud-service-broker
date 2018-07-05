@@ -673,7 +673,7 @@
                         }
                     },
                     {
-                        "id": "8f2d40ac-50d5-43eb-8458-013b9cf85239",
+                        "id": "1e6dcdef-c3b3-4ce5-9937-49f0fc545862",
                         "name": "10.0.3",
                         "description": "RDS PostgreSQL 10.0.3",
                         "metadata": {
@@ -681,46 +681,6 @@
                                 "datastore_type": "PostgreSQL",
                                 "datastore_version": "10.0.3",
                                 "speccode": "rds.pg.s1.xlarge",
-                                "volume_type": "COMMON",
-                                "volume_size": 100,
-                                "availability_zone": "cn-north-1a",
-                                "vpc_id": "2c1fe4bd-ebad-44ca-ae9d-e94e63847b75",
-                                "subnet_id": "dc8632e2-d9ff-41b1-aa0c-d455557314a0",
-                                "security_group_id": "c6f05de2-9534-493a-ae83-444792ce9ab5",
-                                "database_username": "root"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "1f3e38e8-4563-417f-8506-ec1ac61ea3a6",
-                "name": "rds-hwsql",
-                "description": "RDS HWSQL Service",
-                "bindable": true,
-                "tags": [
-                    "hwsql",
-                    "relational"
-                ],
-                "metadata": {
-                    "displayName": "RDS HWSQL",
-                    "imageUrl": "data:image/png;",
-                    "longDescription": "RDS HWSQL Service",
-                    "providerDisplayName": "Huawei Cloud Services",
-                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262773.html",
-                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
-                },
-                "plan_updateable": true,
-                "plans": [
-                    {
-                        "id": "4ee06ed1-64f4-42e5-b8b2-d7adb1a20635",
-                        "name": "5.6.39H1",
-                        "description": "RDS HWSQL 5.6.39H1",
-                        "metadata": {
-                            "parameters": {
-                                "datastore_type": "HWSQL",
-                                "datastore_version": "5.6.39H1",
-                                "speccode": "rds.hwsql.sn2.xlarge.2",
                                 "volume_type": "COMMON",
                                 "volume_size": 100,
                                 "availability_zone": "cn-north-1a",

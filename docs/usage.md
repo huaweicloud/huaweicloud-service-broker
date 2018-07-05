@@ -14,4 +14,3 @@ The users can find how to use the each service plan by the following instruction
 * RDS MySQL Service: [rds-mysql](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/usage/rds-mysql.md)
 * RDS SQLServer Service: [rds-sqlserver](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/usage/rds-sqlserver.md)
 * RDS PostgreSQL Service: [rds-postgresql](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/usage/rds-postgresql.md)
-* RDS HWSQL Service: [rds-hwsql](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/usage/rds-hwsql.md)

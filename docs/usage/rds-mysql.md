@@ -81,7 +81,7 @@ The following command will create a service.
 ```
 cf create-service rds-mysql 5.6.39 myrdsmysql -c '{
     "name": "RDSMySQL",
-    "database_password": "password"
+    "database_password": "Password1234!"
 }'
 ```
 
@@ -98,6 +98,12 @@ Once the service has been successfully provisioned, you can bind to it by using
 
 ```
 cf bind-service myapp myrdsmysql
+```
+
+Use `cf restage` command to ensure your env variable changes take effect.
+
+```
+cf restage myapp
 ```
 
 Once bound, you can view the environment variables for a given application using the `cf env` command.

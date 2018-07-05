@@ -94,7 +94,7 @@ The following command will create a service.
 ```
 cf create-service dcs-memcached SingleNode mymemcached -c '{
     "username": "username",
-    "password": "password",
+    "password": "Password1234!",
     "name": "MemcachedSingleNode",
     "description": "Memcached Single Node Test"
 }'
@@ -113,6 +113,12 @@ Once the service has been successfully provisioned, you can bind to it by using
 
 ```
 cf bind-service myapp mymemcached
+```
+
+Use `cf restage` command to ensure your env variable changes take effect.
+
+```
+cf restage myapp
 ```
 
 Once bound, you can view the environment variables for a given application using the `cf env` command.
@@ -138,8 +144,8 @@ cf update-service mymemcached -c '{
     "name": "MemcachedSingleNode1",
     "description": "Memcached Single Node Test1",
     "new_capacity": 8,
-    "old_password": "oldpassword",
-    "new_password": "newpassword"
+    "old_password": "Password1234!",
+    "new_password": "Password1234$"
 }'
 ```
 
