@@ -85,7 +85,7 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	dbpassword := addtionalparam[AddtionalParamDBPassword]
 
 	// Build Binding Credential: Default database user name is root/rdsuser
-	credential, err := BuildBindingCredential(instance.HostName, instance.DbPort, "", dbusername, dbpassword, service.Name)
+	credential, err := BuildBindingCredential(instance.HostName, instance.DbPort, "", dbusername, dbpassword, service.Name, b.Logger)
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("build rds instance binding credential failed. Error: %s", err)
 	}
