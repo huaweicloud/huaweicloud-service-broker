@@ -80,6 +80,8 @@ func (c *CloudCredentials) newOpenStackClient() error {
 		TokenID:          c.Token,
 		Username:         c.Username,
 		UserID:           c.UserID,
+		// allow to renew tokens
+		AllowReauth: true,
 	}
 
 	client, err := nativeopenstack.NewClient(ao.IdentityEndpoint)
@@ -158,6 +160,8 @@ func (c *CloudCredentials) newCloudClient() error {
 		TokenID:          c.Token,
 		Username:         c.Username,
 		UserID:           c.UserID,
+		// allow to renew tokens
+		AllowReauth: true,
 	}
 
 	client, err := openstack.NewClient(ao.IdentityEndpoint)

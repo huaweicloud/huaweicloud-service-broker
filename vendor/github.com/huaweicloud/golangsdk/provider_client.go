@@ -301,6 +301,52 @@ func (client *ProviderClient) Request(method, url string, options *RequestOpts) 
 			if error401er, ok := errType.(Err401er); ok {
 				err = error401er.Error401(respErr)
 			}
+		case http.StatusForbidden:
+			if client.ReauthFunc != nil {
+				if client.mut != nil {
+					client.mut.Lock()
+					client.reauthmut.Lock()
+					client.reauthmut.reauthing = true
+					client.reauthmut.Unlock()
+					if curtok := client.TokenID; curtok == prereqtok {
+						err = client.ReauthFunc()
+					}
+					client.reauthmut.Lock()
+					client.reauthmut.reauthing = false
+					client.reauthmut.Unlock()
+					client.mut.Unlock()
+				} else {
+					err = client.ReauthFunc()
+				}
+				if err != nil {
+					e := &ErrUnableToReauthenticate{}
+					e.ErrOriginal = respErr
+					return nil, e
+				}
+				if options.RawBody != nil {
+					if seeker, ok := options.RawBody.(io.Seeker); ok {
+						seeker.Seek(0, 0)
+					}
+				}
+				resp, err = client.Request(method, url, options)
+				if err != nil {
+					switch err.(type) {
+					case *ErrUnexpectedResponseCode:
+						e := &ErrErrorAfterReauthentication{}
+						e.ErrOriginal = err.(*ErrUnexpectedResponseCode)
+						return nil, e
+					default:
+						e := &ErrErrorAfterReauthentication{}
+						e.ErrOriginal = err
+						return nil, e
+					}
+				}
+				return resp, nil
+			}
+			err = ErrDefault403{respErr}
+			if error403er, ok := errType.(Err403er); ok {
+				err = error403er.Error403(respErr)
+			}
 		case http.StatusNotFound:
 			err = ErrDefault404{respErr}
 			if error404er, ok := errType.(Err404er); ok {
