@@ -14,6 +14,8 @@ Currently it includes the following services support:
 
 You'll need a few prerequisites before you are getting started.
 
+Test OpenLab CI
+
 ### Setup a Backing MySQL Database
 
 * Setup a MySQL Server and make sure that the database can be accessed by service broker
