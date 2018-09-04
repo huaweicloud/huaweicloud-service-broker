@@ -1,8 +1,11 @@
 package dcs
 
 import (
+	"encoding/json"
+
 	"code.cloudfoundry.org/lager"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // DCSBroker define
@@ -37,22 +40,31 @@ type MetadataParameters struct {
 
 // ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
-	Capacity                 int      `json:"capacity,omitempty"`
-	VPCID                    string   `json:"vpc_id,omitempty"`
-	SubnetID                 string   `json:"subnet_id,omitempty"`
-	SecurityGroupID          string   `json:"security_group_id,omitempty"`
-	AvailabilityZones        []string `json:"availability_zones,omitempty"`
-	Username                 string   `json:"username,omitempty"`
-	Password                 string   `json:"password,omitempty"`
-	Name                     string   `json:"name,omitempty"`
-	Description              string   `json:"description,omitempty"`
-	BackupStrategySavedays   int      `json:"backup_strategy_savedays,omitempty"`
-	BackupStrategyBackupType string   `json:"backup_strategy_backup_type,omitempty"`
-	BackupStrategyBackupAt   []int    `json:"backup_strategy_backup_at,omitempty"`
-	BackupStrategyBeginAt    string   `json:"backup_strategy_begin_at,omitempty"`
-	BackupStrategyPeriodType string   `json:"backup_strategy_period_type,omitempty"`
-	MaintainBegin            string   `json:"maintain_begin,omitempty"`
-	MaintainEnd              string   `json:"maintain_end,omitempty"`
+	Capacity                 int                    `json:"capacity,omitempty"`
+	VPCID                    string                 `json:"vpc_id,omitempty"`
+	SubnetID                 string                 `json:"subnet_id,omitempty"`
+	SecurityGroupID          string                 `json:"security_group_id,omitempty"`
+	AvailabilityZones        []string               `json:"availability_zones,omitempty"`
+	Username                 string                 `json:"username,omitempty"`
+	Password                 string                 `json:"password,omitempty"`
+	Name                     string                 `json:"name,omitempty"`
+	Description              string                 `json:"description,omitempty"`
+	BackupStrategySavedays   int                    `json:"backup_strategy_savedays,omitempty"`
+	BackupStrategyBackupType string                 `json:"backup_strategy_backup_type,omitempty"`
+	BackupStrategyBackupAt   []int                  `json:"backup_strategy_backup_at,omitempty"`
+	BackupStrategyBeginAt    string                 `json:"backup_strategy_begin_at,omitempty"`
+	BackupStrategyPeriodType string                 `json:"backup_strategy_period_type,omitempty"`
+	MaintainBegin            string                 `json:"maintain_begin,omitempty"`
+	MaintainEnd              string                 `json:"maintain_end,omitempty"`
+	UnknownFields            map[string]interface{} `json:"-" bson:",inline"`
+}
+
+// Collect unknown fields into "UnknownFields"
+func (f *ProvisionParameters) UnmarshalJSON(b []byte) error {
+	var j map[string]interface{}
+	json.Unmarshal(b, &j)
+	b, _ = bson.Marshal(&j)
+	return bson.Unmarshal(b, f)
 }
 
 // UpdateParameters represent update parameters
