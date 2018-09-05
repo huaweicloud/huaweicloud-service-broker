@@ -341,5 +341,5 @@ func (cloudBroker *CloudServiceBroker) LastOperation(
 		}
 	}
 
-	return brokerapi.LastOperation{}, nil
+	return brokerapi.LastOperation{State: brokerapi.Succeeded}, nil
 }
