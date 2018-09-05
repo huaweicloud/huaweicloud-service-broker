@@ -136,3 +136,14 @@ func (c Catalog) ValidateOrgSpecGUID(organization_guid string, space_guid string
 	}
 	return nil
 }
+
+// We get asyncAllowed in api.go of pivotal-cf/brokerapi like this:
+// asyncAllowed := req.FormValue("accepts_incomplete") == "true"
+func (c Catalog) ValidateAcceptsIncomplete(asyncAllowed bool) (error) {
+	// Validate about parameters
+	if ! asyncAllowed {
+		return brokerapi.NewFailureResponse(errors.New("request doesn't have the accepts_incomplete parameter or it is false"),
+			http.StatusUnprocessableEntity, "request doesn't have the accepts_incomplete parameter or it is false")
+	}
+	return nil
+}
