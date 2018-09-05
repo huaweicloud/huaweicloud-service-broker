@@ -30,7 +30,7 @@ type MetadataParameters struct {
 
 // ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
-	BucketName   string `json:"bucket_name,omitempty"`
+	BucketName   string `json:"bucket_name" required:"true"`
 	BucketPolicy string `json:"bucket_policy,omitempty"`
 }
 
