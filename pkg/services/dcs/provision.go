@@ -3,6 +3,7 @@ package dcs
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/availablezones"
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
@@ -65,7 +66,14 @@ func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		err := json.Unmarshal(details.RawParameters, &provisionParameters)
 		if err != nil {
 			return brokerapi.ProvisionedServiceSpec{},
-				fmt.Errorf("Error unmarshalling rawParameters from details: %s", err)
+				brokerapi.NewFailureResponse(fmt.Errorf("Error unmarshalling rawParameters from details: %s", err),
+					http.StatusBadRequest, "Error unmarshalling rawParameters")
+		}
+		// Exist other unknown fields,
+		if len(provisionParameters.UnknownFields) > 0 {
+			return brokerapi.ProvisionedServiceSpec{},
+				brokerapi.NewFailureResponse(fmt.Errorf("Parameters are not following schema"),
+					http.StatusBadRequest, "Parameters are not following schema")
 		}
 	}
 

@@ -129,6 +129,11 @@ func (cloudBroker *CloudServiceBroker) Provision(
 
 	cloudBroker.Logger.Debug(fmt.Sprintf("Provision received. instanceID: %s", instanceID))
 
+	error := cloudBroker.Catalog.ValidateOrgSpecGUID(details.OrganizationGUID, details.SpaceGUID)
+	if error != nil {
+		return brokerapi.ProvisionedServiceSpec{}, error
+	}
+
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {

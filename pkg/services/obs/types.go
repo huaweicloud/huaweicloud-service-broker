@@ -1,8 +1,11 @@
 package obs
 
 import (
+	"encoding/json"
+
 	"code.cloudfoundry.org/lager"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // OBSBroker define
@@ -30,8 +33,17 @@ type MetadataParameters struct {
 
 // ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
-	BucketName   string `json:"bucket_name,omitempty"`
-	BucketPolicy string `json:"bucket_policy,omitempty"`
+	BucketName    string                 `json:"bucket_name,omitempty"`
+	BucketPolicy  string                 `json:"bucket_policy,omitempty"`
+	UnknownFields map[string]interface{} `json:"-" bson:",inline"`
+}
+
+// Collect unknown fields into "UnknownFields"
+func (f *ProvisionParameters) UnmarshalJSON(b []byte) error {
+	var j map[string]interface{}
+	json.Unmarshal(b, &j)
+	b, _ = bson.Marshal(&j)
+	return bson.Unmarshal(b, f)
 }
 
 // UpdateParameters represent update parameters

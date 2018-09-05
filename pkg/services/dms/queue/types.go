@@ -1,8 +1,11 @@
 package queue
 
 import (
+	"encoding/json"
+
 	"code.cloudfoundry.org/lager"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // DMSBroker define
@@ -37,12 +40,21 @@ type MetadataParameters struct {
 
 // ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
-	RedrivePolicy   string `json:"redrive_policy,omitempty"`
-	MaxConsumeCount int    `json:"max_consume_count,omitempty"`
-	RetentionHours  int    `json:"retention_hours,omitempty"`
-	QueueName       string `json:"queue_name,omitempty"`
-	GroupName       string `json:"group_name,omitempty"`
-	Description     string `json:"description,omitempty"`
+	RedrivePolicy   string                 `json:"redrive_policy,omitempty"`
+	MaxConsumeCount int                    `json:"max_consume_count,omitempty"`
+	RetentionHours  int                    `json:"retention_hours,omitempty"`
+	QueueName       string                 `json:"queue_name,omitempty"`
+	GroupName       string                 `json:"group_name,omitempty"`
+	Description     string                 `json:"description,omitempty"`
+	UnknownFields   map[string]interface{} `json:"-" bson:",inline"`
+}
+
+// Collect unknown fields into "UnknownFields"
+func (f *ProvisionParameters) UnmarshalJSON(b []byte) error {
+	var j map[string]interface{}
+	json.Unmarshal(b, &j)
+	b, _ = bson.Marshal(&j)
+	return bson.Unmarshal(b, f)
 }
 
 const (
