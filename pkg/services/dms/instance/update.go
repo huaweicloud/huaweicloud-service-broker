@@ -82,7 +82,7 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Invoke sdk update
 	updateResult := instances.Update(dmsClient, ids.TargetID, updateOpts)
 	if updateResult.Err != nil {
-		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dms instance failed. Error: %s", err)
+		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dms instance failed. Error: %s", updateResult.Err)
 	}
 
 	// Log result

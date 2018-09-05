@@ -114,7 +114,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 				NewPassword: *updateParameters.NewPassword,
 			})
 		if updatePasswordResult.Err != nil {
-			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dcs instance password failed. Error: %s", err)
+			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update dcs instance password failed. Error: %s", updatePasswordResult.Err)
 		}
 
 		// Update back database
