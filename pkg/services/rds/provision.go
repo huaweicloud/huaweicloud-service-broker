@@ -68,7 +68,8 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		// Exist other unknown fields,
 		if len(provisionParameters.UnknownFields) > 0 {
 			return brokerapi.ProvisionedServiceSpec{},
-				brokerapi.NewFailureResponse(fmt.Errorf("Parameters are not following schema"),
+				brokerapi.NewFailureResponse(
+					fmt.Errorf("Parameters are not following schema: %+v", provisionParameters.UnknownFields),
 					http.StatusBadRequest, "Parameters are not following schema")
 		}
 	}
