@@ -40,13 +40,20 @@ type MetadataParameters struct {
 
 // ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
-	RedrivePolicy   string                 `json:"redrive_policy,omitempty"`
-	MaxConsumeCount int                    `json:"max_consume_count,omitempty"`
-	RetentionHours  int                    `json:"retention_hours,omitempty"`
-	QueueName       string                 `json:"queue_name,omitempty"`
-	GroupName       string                 `json:"group_name,omitempty"`
-	Description     string                 `json:"description,omitempty"`
+	RedrivePolicy   string                 `json:"redrive_policy,omitempty" bson:"redrive_policy,omitempty"`
+	MaxConsumeCount int                    `json:"max_consume_count,omitempty" bson:"max_consume_count,omitempty"`
+	RetentionHours  int                    `json:"retention_hours,omitempty" bson:"retention_hours,omitempty"`
+	QueueName       string                 `json:"queue_name,omitempty" bson:"queue_name,omitempty"`
+	GroupName       string                 `json:"group_name,omitempty" bson:"group_name,omitempty"`
+	Description     string                 `json:"description,omitempty" bson:"description,omitempty"`
 	UnknownFields   map[string]interface{} `json:"-" bson:",inline"`
+}
+
+func (f *ProvisionParameters) MarshalJSON() ([]byte, error) {
+	var j interface{}
+	b, _ := bson.Marshal(f)
+	bson.Unmarshal(b, &j)
+	return json.Marshal(&j)
 }
 
 // Collect unknown fields into "UnknownFields"

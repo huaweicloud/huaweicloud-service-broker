@@ -33,9 +33,16 @@ type MetadataParameters struct {
 
 // ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
-	BucketName    string                 `json:"bucket_name,omitempty"`
-	BucketPolicy  string                 `json:"bucket_policy,omitempty"`
+	BucketName    string                 `json:"bucket_name,omitempty" bson:"bucket_name,omitempty"`
+	BucketPolicy  string                 `json:"bucket_policy,omitempty" bson:"bucket_policy,omitempty"`
 	UnknownFields map[string]interface{} `json:"-" bson:",inline"`
+}
+
+func (f *ProvisionParameters) MarshalJSON() ([]byte, error) {
+	var j interface{}
+	b, _ := bson.Marshal(f)
+	bson.Unmarshal(b, &j)
+	return json.Marshal(&j)
 }
 
 // Collect unknown fields into "UnknownFields"
