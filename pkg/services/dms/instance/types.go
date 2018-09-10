@@ -1,8 +1,11 @@
 package instance
 
 import (
+	"encoding/json"
+
 	"code.cloudfoundry.org/lager"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // DMSBroker define
@@ -36,16 +39,32 @@ type MetadataParameters struct {
 
 // ProvisionParameters represent provision parameters
 type ProvisionParameters struct {
-	VPCID             string   `json:"vpc_id,omitempty"`
-	SubnetID          string   `json:"subnet_id,omitempty"`
-	SecurityGroupID   string   `json:"security_group_id,omitempty"`
-	AvailabilityZones []string `json:"availability_zones,omitempty"`
-	Username          string   `json:"username,omitempty"`
-	Password          string   `json:"password,omitempty"`
-	Name              string   `json:"name,omitempty"`
-	Description       string   `json:"description,omitempty"`
-	MaintainBegin     string   `json:"maintain_begin,omitempty"`
-	MaintainEnd       string   `json:"maintain_end,omitempty"`
+	VPCID             string                 `json:"vpc_id,omitempty" bson:"vpc_id,omitempty"`
+	SubnetID          string                 `json:"subnet_id,omitempty" bson:"subnet_id,omitempty"`
+	SecurityGroupID   string                 `json:"security_group_id,omitempty" bson:"security_group_id,omitempty"`
+	AvailabilityZones []string               `json:"availability_zones,omitempty" bson:"availability_zones,omitempty"`
+	Username          string                 `json:"username,omitempty" bson:"username,omitempty"`
+	Password          string                 `json:"password,omitempty" bson:"password,omitempty"`
+	Name              string                 `json:"name,omitempty" bson:"name,omitempty"`
+	Description       string                 `json:"description,omitempty" bson:"description,omitempty"`
+	MaintainBegin     string                 `json:"maintain_begin,omitempty" bson:"maintain_begin,omitempty"`
+	MaintainEnd       string                 `json:"maintain_end,omitempty" bson:"maintain_end,omitempty"`
+	UnknownFields     map[string]interface{} `json:"-" bson:",inline"`
+}
+
+func (f *ProvisionParameters) MarshalJSON() ([]byte, error) {
+	var j interface{}
+	b, _ := bson.Marshal(f)
+	bson.Unmarshal(b, &j)
+	return json.Marshal(&j)
+}
+
+// Collect unknown fields into "UnknownFields"
+func (f *ProvisionParameters) UnmarshalJSON(b []byte) error {
+	var j map[string]interface{}
+	json.Unmarshal(b, &j)
+	b, _ = bson.Marshal(&j)
+	return bson.Unmarshal(b, f)
 }
 
 // UpdateParameters represent update parameters

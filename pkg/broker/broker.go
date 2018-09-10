@@ -129,6 +129,16 @@ func (cloudBroker *CloudServiceBroker) Provision(
 
 	cloudBroker.Logger.Debug(fmt.Sprintf("Provision received. instanceID: %s", instanceID))
 
+	error := cloudBroker.Catalog.ValidateOrgSpecGUID(details.OrganizationGUID, details.SpaceGUID)
+	if error != nil {
+		return brokerapi.ProvisionedServiceSpec{}, error
+	}
+
+	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+	if e != nil{
+		return brokerapi.ProvisionedServiceSpec{}, e
+	}
+
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
@@ -153,6 +163,11 @@ func (cloudBroker *CloudServiceBroker) Deprovision(
 	asyncAllowed bool) (brokerapi.DeprovisionServiceSpec, error) {
 
 	cloudBroker.Logger.Debug(fmt.Sprintf("Deprovision received. instanceID: %s", instanceID))
+
+	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+	if e != nil{
+		return brokerapi.DeprovisionServiceSpec{}, e
+	}
 
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
@@ -228,6 +243,11 @@ func (cloudBroker *CloudServiceBroker) Update(
 	asyncAllowed bool) (brokerapi.UpdateServiceSpec, error) {
 
 	cloudBroker.Logger.Debug(fmt.Sprintf("Update received. instanceID: %s", instanceID))
+
+	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+	if e != nil{
+		return brokerapi.UpdateServiceSpec{}, e
+	}
 
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
@@ -321,5 +341,5 @@ func (cloudBroker *CloudServiceBroker) LastOperation(
 		}
 	}
 
-	return brokerapi.LastOperation{}, nil
+	return brokerapi.LastOperation{State: brokerapi.Succeeded}, nil
 }

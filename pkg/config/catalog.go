@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/pivotal-cf/brokerapi"
 )
@@ -121,4 +122,28 @@ func (c Catalog) FindServicePlan(serviceid string, planid string) (brokerapi.Ser
 		return brokerapi.ServicePlan{}, fmt.Errorf("service plan is not existing. serviceid: %s planid: %s", serviceid, planid)
 	}
 	return serviceplan, nil
+}
+
+func (c Catalog) ValidateOrgSpecGUID(organization_guid string, space_guid string) (error) {
+	// Validate about parameters
+	if organization_guid == "" {
+		return brokerapi.NewFailureResponse(errors.New("organization_guid is empty"),
+			http.StatusBadRequest, "organization_guid is empty")
+	}
+	if space_guid == "" {
+		return brokerapi.NewFailureResponse(errors.New("space_guid is empty"),
+			http.StatusBadRequest, "space_guid is empty")
+	}
+	return nil
+}
+
+// We get asyncAllowed in api.go of pivotal-cf/brokerapi like this:
+// asyncAllowed := req.FormValue("accepts_incomplete") == "true"
+func (c Catalog) ValidateAcceptsIncomplete(asyncAllowed bool) (error) {
+	// Validate about parameters
+	if ! asyncAllowed {
+		return brokerapi.NewFailureResponse(errors.New("request doesn't have the accepts_incomplete parameter or it is false"),
+			http.StatusUnprocessableEntity, "request doesn't have the accepts_incomplete parameter or it is false")
+	}
+	return nil
 }

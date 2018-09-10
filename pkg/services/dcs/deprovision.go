@@ -50,7 +50,7 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	// Invoke sdk
 	result := instances.Delete(dcsClient, ids.TargetID)
 	if result.Err != nil {
-		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("deprovision dcs instance failed. Error: %s", err)
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("deprovision dcs instance failed. Error: %s", result.Err)
 	}
 
 	// Delete InstanceDetails in back database

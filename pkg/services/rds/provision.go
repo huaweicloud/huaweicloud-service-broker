@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/datastores"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/flavors"
@@ -11,6 +12,7 @@ import (
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
+
 )
 
 // Provision implematation
@@ -60,7 +62,15 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		err := json.Unmarshal(details.RawParameters, &provisionParameters)
 		if err != nil {
 			return brokerapi.ProvisionedServiceSpec{},
-				fmt.Errorf("Error unmarshalling rawParameters from details: %s", err)
+				brokerapi.NewFailureResponse(fmt.Errorf("Error unmarshalling rawParameters from details: %s", err),
+					http.StatusBadRequest, "Error unmarshalling rawParameters")
+		}
+		// Exist other unknown fields,
+		if len(provisionParameters.UnknownFields) > 0 {
+			return brokerapi.ProvisionedServiceSpec{},
+				brokerapi.NewFailureResponse(
+					fmt.Errorf("Parameters are not following schema: %+v", provisionParameters.UnknownFields),
+					http.StatusBadRequest, "Parameters are not following schema")
 		}
 	}
 
