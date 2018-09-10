@@ -14,7 +14,7 @@ func (b *RDSBroker) LastOperation(instanceID string, operationData database.Oper
 
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("lastoperation rds instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
-	ids, err, getRealErr := SyncStatusWithReal(b, instanceID, operationData.ServiceID,
+	dbInstance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
 		operationData.PlanID, operationData.TargetID)
 
 	if err != nil {
@@ -25,33 +25,33 @@ func (b *RDSBroker) LastOperation(instanceID string, operationData database.Oper
 	if (operationData.OperationType == models.OperationProvisioning) ||
 		(operationData.OperationType == models.OperationUpdating) {
 		// OperationProvisioning || OperationUpdating
-		if getRealErr != nil {
+		if serviceErr != nil {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Failed,
-				Description: fmt.Sprintf("get rds instance failed. Error: %s", getRealErr),
+				Description: fmt.Sprintf("get rds instance failed. Error: %s", serviceErr),
 			}, nil
 		}
 		// Status
-		if ids.TargetStatus == "ACTIVE" {
+		if dbInstance.TargetStatus == "ACTIVE" {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Succeeded,
-				Description: fmt.Sprintf("Status: %s", ids.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
 			}, nil
-		} else if ids.TargetStatus == "FAILED" {
+		} else if dbInstance.TargetStatus == "FAILED" {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Failed,
-				Description: fmt.Sprintf("Status: %s", ids.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
 			}, nil
 		} else {
 			return brokerapi.LastOperation{
 				State:       brokerapi.InProgress,
-				Description: fmt.Sprintf("Status: %s", ids.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
 			}, nil
 		}
 	} else if operationData.OperationType == models.OperationDeprovisioning {
 		// OperationDeprovisioning
-		if getRealErr != nil {
-			e, ok := getRealErr.(golangsdk.ErrDefault404)
+		if serviceErr != nil {
+			e, ok := serviceErr.(golangsdk.ErrDefault404)
 			if ok {
 				return brokerapi.LastOperation{
 					State:       brokerapi.Succeeded,
@@ -60,13 +60,13 @@ func (b *RDSBroker) LastOperation(instanceID string, operationData database.Oper
 			} else {
 				return brokerapi.LastOperation{
 					State:       brokerapi.Failed,
-					Description: fmt.Sprintf("get rds instance failed. Error: %s", getRealErr),
+					Description: fmt.Sprintf("get rds instance failed. Error: %s", serviceErr),
 				}, nil
 			}
 		} else {
 			return brokerapi.LastOperation{
 				State:       brokerapi.InProgress,
-				Description: fmt.Sprintf("Status: %s", ids.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
 			}, nil
 		}
 	} else {

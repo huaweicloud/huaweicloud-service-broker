@@ -49,51 +49,51 @@ func BuildBindingCredential(
 	return bc, nil
 }
 
-func SyncStatusWithReal(b *RDSBroker, instanceID string, serviceID string, planID string,
+func SyncStatusWithService(b *RDSBroker, instanceID string, serviceID string, planID string,
 	targetID string) (database.InstanceDetails, error, error) {
-	ids := database.InstanceDetails{}
+	dbInstance := database.InstanceDetails{}
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("SyncStatusWithReal rds instance opts: instanceID: %s serviceID: %s " +
+	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService rds instance opts: instanceID: %s serviceID: %s " +
 		"planID: %s targetID: %s", instanceID, serviceID, planID, targetID))
 
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()
 	if err != nil {
-		return ids, fmt.Errorf("SyncStatusWithReal create rds client failed. Error: %s", err), nil
+		return dbInstance, fmt.Errorf("SyncStatusWithService create rds client failed. Error: %s", err), nil
 	}
 	// Invoke sdk get
-	instance, err := instances.Get(rdsClient, targetID).Extract()
-	if err != nil {
-		return ids, nil, err
+	instance, serviceErr := instances.Get(rdsClient, targetID).Extract()
+	if serviceErr != nil {
+		return dbInstance, nil, serviceErr
 	}
 	// get InstanceDetails in back database
-	findErr := database.BackDBConnection.
+	err = database.BackDBConnection.
 		Where("instance_id = ? and service_id = ? and plan_id = ?", instanceID, serviceID, planID).
-		First(&ids).Error
-	if findErr != nil {
-		b.Logger.Debug(fmt.Sprintf("SyncStatusWithReal get rds instance in back database failed. Error: %s", findErr))
-		return ids, fmt.Errorf("SyncStatusWithReal get rds instance failed. Error: %s", findErr), nil
+		First(&dbInstance).Error
+	if err != nil {
+		b.Logger.Debug(fmt.Sprintf("SyncStatusWithService get rds instance in back database failed. Error: %s", err))
+		return dbInstance, fmt.Errorf("SyncStatusWithService get rds instance failed. Error: %s", err), nil
 	}
 	// Log InstanceDetails
-	b.Logger.Debug(fmt.Sprintf("SyncStatusWithReal rds instance in back database: %v", models.ToJson(ids)))
+	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService rds instance in back database: %v", models.ToJson(dbInstance)))
 	// update target info in back database
-	targetinfo, err := json.Marshal(instance)
+	targetInfo, err := json.Marshal(instance)
 	if err != nil {
-		return ids, fmt.Errorf("SyncStatusWithReal marshal rds instance failed. Error: %s", err), nil
+		return dbInstance, fmt.Errorf("SyncStatusWithService marshal rds instance failed. Error: %s", err), nil
 	}
 
-	ids.TargetID = instance.ID
-	ids.TargetName = instance.Name
-	ids.TargetStatus = instance.Status
-	ids.TargetInfo = string(targetinfo)
+	dbInstance.TargetID = instance.ID
+	dbInstance.TargetName = instance.Name
+	dbInstance.TargetStatus = instance.Status
+	dbInstance.TargetInfo = string(targetInfo)
 
-	updateErr := database.BackDBConnection.Save(&ids).Error
-	if updateErr != nil {
-		b.Logger.Debug(fmt.Sprintf("SyncStatusWithReal update rds instance target status in back database failed. " +
-			"Error: %s", updateErr))
-		return ids, fmt.Errorf("SyncStatusWithReal update rds instance target status failed. Error: %s", updateErr), nil
+	err = database.BackDBConnection.Save(&dbInstance).Error
+	if err != nil {
+		b.Logger.Debug(fmt.Sprintf("SyncStatusWithService update rds instance target status in back database failed. " +
+			"Error: %s", err))
+		return dbInstance, fmt.Errorf("SyncStatusWithService update rds instance target status failed. Error: %s", err), nil
 	}
 	// Sync target status success
-	b.Logger.Debug(fmt.Sprintf("SyncStatusWithReal update rds instance target status succeed: %s", instanceID))
-	return ids, nil, nil
+	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService update rds instance target status succeed: %s", instanceID))
+	return dbInstance, nil, nil
 }
