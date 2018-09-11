@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
@@ -16,23 +15,20 @@ func (b *DCSBroker) LastOperation(instanceID string, operationData database.Oper
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("lastoperation dcs instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
-	// Init dcs client
-	dcsClient, err := b.CloudCredentials.DCSV1Client()
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
+		operationData.PlanID, operationData.TargetID)
 	if err != nil {
-		return brokerapi.LastOperation{}, fmt.Errorf("create dcs client failed. Error: %s", err)
+		return brokerapi.LastOperation{}, err
 	}
-
-	// Invoke sdk get
-	instance, err := instances.Get(dcsClient, operationData.TargetID).Extract()
 
 	// Handle different cases
 	if (operationData.OperationType == models.OperationProvisioning) ||
 		(operationData.OperationType == models.OperationUpdating) {
 		// OperationProvisioning || OperationUpdating
-		if err != nil {
+		if serviceErr != nil {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Failed,
-				Description: fmt.Sprintf("get dcs instance failed. Error: %s", err),
+				Description: fmt.Sprintf("get dcs instance failed. Error: %s", serviceErr),
 			}, nil
 		}
 		// ErrorCode
@@ -62,8 +58,8 @@ func (b *DCSBroker) LastOperation(instanceID string, operationData database.Oper
 		}
 	} else if operationData.OperationType == models.OperationDeprovisioning {
 		// OperationDeprovisioning
-		if err != nil {
-			e, ok := err.(golangsdk.ErrDefault404)
+		if serviceErr != nil {
+			e, ok := serviceErr.(golangsdk.ErrDefault404)
 			if ok {
 				return brokerapi.LastOperation{
 					State:       brokerapi.Succeeded,
@@ -72,7 +68,7 @@ func (b *DCSBroker) LastOperation(instanceID string, operationData database.Oper
 			} else {
 				return brokerapi.LastOperation{
 					State:       brokerapi.Failed,
-					Description: fmt.Sprintf("get dcs instance failed. Error: %s", err),
+					Description: fmt.Sprintf("get dcs instance failed. Error: %s", serviceErr),
 				}, nil
 			}
 		} else {
