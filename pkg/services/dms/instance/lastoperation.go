@@ -17,7 +17,6 @@ func (b *DMSBroker) LastOperation(instanceID string, operationData database.Oper
 
 	instance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
 		operationData.PlanID, operationData.TargetID)
-
 	if err != nil {
 		return brokerapi.LastOperation{}, err
 	}
