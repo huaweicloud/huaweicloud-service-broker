@@ -38,7 +38,7 @@ func BuildBindingCredential(
 }
 
 func SyncStatusWithService(b *DMSBroker, instanceID string, serviceID string, planID string,
-	targetID string) (instances.Instance, error, error) {
+	targetID string) (*instances.Instance, error, error) {
 	dbInstance := database.InstanceDetails{}
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService dms instance opts: instanceID: %s serviceID: %s " +
@@ -47,12 +47,12 @@ func SyncStatusWithService(b *DMSBroker, instanceID string, serviceID string, pl
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()
 	if err != nil {
-		return instances.Instance{}, fmt.Errorf("SyncStatusWithService create dms client failed. Error: %s", err), nil
+		return nil, fmt.Errorf("SyncStatusWithService create dms client failed. Error: %s", err), nil
 	}
 	// Invoke sdk get
 	instance, serviceErr := instances.Get(dmsClient, targetID).Extract()
 	if serviceErr != nil {
-		return instances.Instance{}, nil, serviceErr
+		return nil, nil, serviceErr
 	}
 	// get InstanceDetails in back database
 	err = database.BackDBConnection.
