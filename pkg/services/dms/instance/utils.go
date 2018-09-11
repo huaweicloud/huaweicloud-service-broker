@@ -70,7 +70,7 @@ func SyncStatusWithService(b *DMSBroker, instanceID string, serviceID string, pl
 		return dbInstance, fmt.Errorf("SyncStatusWithService marshal dms instance failed. Error: %s", err), nil
 	}
 
-	dbInstance.TargetID = instance.ID
+	dbInstance.TargetID = instance.InstanceID
 	dbInstance.TargetName = instance.Name
 	dbInstance.TargetStatus = instance.Status
 	dbInstance.TargetInfo = string(targetInfo)
