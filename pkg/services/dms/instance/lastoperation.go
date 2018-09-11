@@ -16,23 +16,21 @@ func (b *DMSBroker) LastOperation(instanceID string, operationData database.Oper
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("lastoperation dms instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
-	// Init dms client
-	dmsClient, err := b.CloudCredentials.DMSV1Client()
-	if err != nil {
-		return brokerapi.LastOperation{}, fmt.Errorf("create dms client failed. Error: %s", err)
-	}
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
+		operationData.PlanID, operationData.TargetID)
 
-	// Invoke sdk get
-	instance, err := instances.Get(dmsClient, operationData.TargetID).Extract()
+	if err != nil {
+		return brokerapi.LastOperation{}, err
+	}
 
 	// Handle different cases
 	if (operationData.OperationType == models.OperationProvisioning) ||
 		(operationData.OperationType == models.OperationUpdating) {
 		// OperationProvisioning || OperationUpdating
-		if err != nil {
+		if serviceErr != nil {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Failed,
-				Description: fmt.Sprintf("get dms instance failed. Error: %s", err),
+				Description: fmt.Sprintf("get dms instance failed. Error: %s", serviceErr),
 			}, nil
 		}
 		// ErrorCode
@@ -62,8 +60,8 @@ func (b *DMSBroker) LastOperation(instanceID string, operationData database.Oper
 		}
 	} else if operationData.OperationType == models.OperationDeprovisioning {
 		// OperationDeprovisioning
-		if err != nil {
-			e, ok := err.(golangsdk.ErrDefault404)
+		if serviceErr != nil {
+			e, ok := serviceErr.(golangsdk.ErrDefault404)
 			if ok {
 				return brokerapi.LastOperation{
 					State:       brokerapi.Succeeded,
@@ -72,7 +70,7 @@ func (b *DMSBroker) LastOperation(instanceID string, operationData database.Oper
 			} else {
 				return brokerapi.LastOperation{
 					State:       brokerapi.Failed,
-					Description: fmt.Sprintf("get dms instance failed. Error: %s", err),
+					Description: fmt.Sprintf("get dms instance failed. Error: %s", serviceErr),
 				}, nil
 			}
 		} else {

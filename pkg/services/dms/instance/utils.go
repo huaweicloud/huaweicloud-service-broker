@@ -38,7 +38,7 @@ func BuildBindingCredential(
 }
 
 func SyncStatusWithService(b *DMSBroker, instanceID string, serviceID string, planID string,
-	targetID string) (database.InstanceDetails, error, error) {
+	targetID string) (instances.Instance, error, error) {
 	dbInstance := database.InstanceDetails{}
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService dms instance opts: instanceID: %s serviceID: %s " +
@@ -47,12 +47,12 @@ func SyncStatusWithService(b *DMSBroker, instanceID string, serviceID string, pl
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()
 	if err != nil {
-		return dbInstance, fmt.Errorf("SyncStatusWithService create dms client failed. Error: %s", err), nil
+		return instances.Instance{}, fmt.Errorf("SyncStatusWithService create dms client failed. Error: %s", err), nil
 	}
 	// Invoke sdk get
 	instance, serviceErr := instances.Get(dmsClient, targetID).Extract()
 	if serviceErr != nil {
-		return dbInstance, nil, serviceErr
+		return instances.Instance{}, nil, serviceErr
 	}
 	// get InstanceDetails in back database
 	err = database.BackDBConnection.
@@ -60,14 +60,14 @@ func SyncStatusWithService(b *DMSBroker, instanceID string, serviceID string, pl
 		First(&dbInstance).Error
 	if err != nil {
 		b.Logger.Debug(fmt.Sprintf("SyncStatusWithService get dms instance in back database failed. Error: %s", err))
-		return dbInstance, fmt.Errorf("SyncStatusWithService get dms instance failed. Error: %s", err), nil
+		return instance, fmt.Errorf("SyncStatusWithService get dms instance failed. Error: %s", err), nil
 	}
 	// Log InstanceDetails
 	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService dms instance in back database: %v", models.ToJson(dbInstance)))
 	// update target info in back database
 	targetInfo, err := json.Marshal(instance)
 	if err != nil {
-		return dbInstance, fmt.Errorf("SyncStatusWithService marshal dms instance failed. Error: %s", err), nil
+		return instance, fmt.Errorf("SyncStatusWithService marshal dms instance failed. Error: %s", err), nil
 	}
 
 	dbInstance.TargetID = instance.InstanceID
@@ -79,9 +79,9 @@ func SyncStatusWithService(b *DMSBroker, instanceID string, serviceID string, pl
 	if err != nil {
 		b.Logger.Debug(fmt.Sprintf("SyncStatusWithService update dms instance target status in back database failed. " +
 			"Error: %s", err))
-		return dbInstance, fmt.Errorf("SyncStatusWithService update dms instance target status failed. Error: %s", err), nil
+		return instance, fmt.Errorf("SyncStatusWithService update dms instance target status failed. Error: %s", err), nil
 	}
 	// Sync target status success
 	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService update dms instance target status succeed: %s", instanceID))
-	return dbInstance, nil, nil
+	return instance, nil, nil
 }
