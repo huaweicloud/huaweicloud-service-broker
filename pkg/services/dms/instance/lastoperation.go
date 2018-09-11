@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/huaweicloud/golangsdk"
-	"github.com/huaweicloud/golangsdk/openstack/dms/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
