@@ -2,6 +2,7 @@ package rds
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
@@ -48,9 +49,9 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		return brokerapi.DeprovisionServiceSpec{},
 			brokerapi.NewFailureResponse(
 				fmt.Errorf("Can only delete rds instance in ACTIVE or FAILED, but in: %s", instance.Status),
-				422, "Can only delete rds instance in ACTIVE or FAILED")
+				http.StatusUnprocessableEntity, "Can only delete rds instance in ACTIVE or FAILED")
 	}
-	
+
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()
 	if err != nil {

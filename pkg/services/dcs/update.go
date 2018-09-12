@@ -3,6 +3,7 @@ package dcs
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
@@ -49,7 +50,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		return brokerapi.UpdateServiceSpec{},
 			brokerapi.NewFailureResponse(
 				fmt.Errorf("Can only update dcs instance in RUNNING, but in: %s", instance.Status),
-				422, "Can only update dcs instance in RUNNING")
+				http.StatusUnprocessableEntity, "Can only update dcs instance in RUNNING")
 	}
 
 	// Init dcs client

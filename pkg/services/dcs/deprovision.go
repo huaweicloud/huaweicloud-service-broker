@@ -2,6 +2,7 @@ package dcs
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
@@ -48,7 +49,7 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		return brokerapi.DeprovisionServiceSpec{},
 			brokerapi.NewFailureResponse(
 				fmt.Errorf("Can only delete dcs instance in ACTIVE or FAILED or CREATEFAILED, but in: %s", instance.Status),
-				422, "Can only delete dcs instance in ACTIVE or FAILED or CREATEFAILED")
+				http.StatusUnprocessableEntity, "Can only delete dcs instance in ACTIVE or FAILED or CREATEFAILED")
 	}
 
 	// Init dcs client

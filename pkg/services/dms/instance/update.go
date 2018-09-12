@@ -3,6 +3,7 @@ package instance
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/dms/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
@@ -49,7 +50,7 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		return brokerapi.UpdateServiceSpec{},
 			brokerapi.NewFailureResponse(
 				fmt.Errorf("Can only update dms instance in RUNNING, but in: %s", instance.Status),
-				422, "Can only update dms instance in RUNNING")
+				http.StatusUnprocessableEntity, "Can only update dms instance in RUNNING")
 	}
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()

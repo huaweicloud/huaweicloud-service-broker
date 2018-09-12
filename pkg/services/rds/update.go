@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/datastores"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/flavors"
@@ -52,7 +53,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		return brokerapi.UpdateServiceSpec{},
 			brokerapi.NewFailureResponse(
 				fmt.Errorf("Can only update rds instance in ACTIVE, but in: %s", instance.Status),
-				422, "Can only update rds instance in ACTIVE")
+				http.StatusUnprocessableEntity, "Can only update rds instance in ACTIVE")
 	}
 
 	// Init rds client

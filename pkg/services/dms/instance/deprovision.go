@@ -2,6 +2,7 @@ package instance
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/dms/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
@@ -48,7 +49,7 @@ func (b *DMSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 		return brokerapi.DeprovisionServiceSpec{},
 			brokerapi.NewFailureResponse(
 				fmt.Errorf("Can only delete dms instance in RUNNING or ERROR, but in: %s", instance.Status),
-				422, "Can only delete dms instance in RUNNING or ERROR")
+				http.StatusUnprocessableEntity, "Can only delete dms instance in RUNNING or ERROR")
 	}
 
 	// Init dms client
