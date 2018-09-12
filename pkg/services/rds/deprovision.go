@@ -38,6 +38,19 @@ func (b *RDSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	// Log InstanceDetails
 	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", models.ToJson(ids)))
 
+	// sync and check status whether allowed to update
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, details.ServiceID, details.PlanID, ids.TargetID)
+
+	if err != nil || serviceErr != nil {
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("sync status failed. error: %s, service error: %s", err, serviceErr)
+	}
+	if instance.Status != "ACTIVE" && instance.Status != "FAILED" {
+		return brokerapi.DeprovisionServiceSpec{},
+			brokerapi.NewFailureResponse(
+				fmt.Errorf("Can only delete rds instance in ACTIVE or FAILED, but in: %s", instance.Status),
+				422, "Can only delete rds instance in ACTIVE or FAILED")
+	}
+	
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()
 	if err != nil {
