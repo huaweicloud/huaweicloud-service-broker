@@ -39,6 +39,18 @@ func (b *DMSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Log InstanceDetails
 	b.Logger.Debug(fmt.Sprintf("dms instance in back database: %v", models.ToJson(ids)))
 
+	// sync and check status whether allowed to update
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, details.ServiceID, details.PlanID, ids.TargetID)
+
+	if err != nil || serviceErr != nil {
+		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("sync status failed. error: %s, service error: %s", err, serviceErr)
+	}
+	if instance.Status != "RUNNING" {
+		return brokerapi.UpdateServiceSpec{},
+			brokerapi.NewFailureResponse(
+				fmt.Errorf("Can only update dms instance in RUNNING, but in: %s", instance.Status),
+				422, "Can only update dms instance in RUNNING")
+	}
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()
 	if err != nil {
