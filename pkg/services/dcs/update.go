@@ -49,7 +49,7 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		return brokerapi.UpdateServiceSpec{},
 			brokerapi.NewFailureResponse(
 				fmt.Errorf("Can only update dcs instance in RUNNING, but in: %s", instance.Status),
-				http.StatusUnprocessableEntity, "Can only update dcs instance in RUNNING")
+				422, "Can only update dcs instance in RUNNING")
 	}
 
 	// Init dcs client
