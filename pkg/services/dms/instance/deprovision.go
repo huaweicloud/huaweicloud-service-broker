@@ -38,6 +38,19 @@ func (b *DMSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 	// Log InstanceDetails
 	b.Logger.Debug(fmt.Sprintf("dms instance in back database: %v", models.ToJson(ids)))
 
+	// sync and check status whether allowed to update
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, details.ServiceID, details.PlanID, ids.TargetID)
+
+	if err != nil || serviceErr != nil {
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("sync status failed. error: %s, service error: %s", err, serviceErr)
+	}
+	if instance.Status != "RUNNING" && instance.Status != "ERROR" && instance.Status != "CREATEFAILED" {
+		return brokerapi.DeprovisionServiceSpec{},
+			brokerapi.NewFailureResponse(
+				fmt.Errorf("Can only delete dms instance in RUNNING or ERROR, but in: %s", instance.Status),
+				422, "Can only delete dms instance in RUNNING or ERROR")
+	}
+
 	// Init dms client
 	dmsClient, err := b.CloudCredentials.DMSV1Client()
 	if err != nil {
