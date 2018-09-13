@@ -2,6 +2,7 @@ package dcs
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
@@ -37,6 +38,19 @@ func (b *DCSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 
 	// Log InstanceDetails
 	b.Logger.Debug(fmt.Sprintf("dcs instance in back database: %v", models.ToJson(ids)))
+
+	// sync and check status whether allowed to update
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, details.ServiceID, details.PlanID, ids.TargetID)
+
+	if err != nil || serviceErr != nil {
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("sync status failed. error: %s, service error: %s", err, serviceErr)
+	}
+	if instance.Status != "RUNNING" && instance.Status != "ERROR" && instance.Status != "CREATEFAILED" {
+		return brokerapi.DeprovisionServiceSpec{},
+			brokerapi.NewFailureResponse(
+				fmt.Errorf("Can only delete dcs instance in ACTIVE or FAILED or CREATEFAILED, but in: %s", instance.Status),
+				http.StatusUnprocessableEntity, "Can only delete dcs instance in ACTIVE or FAILED or CREATEFAILED")
+	}
 
 	// Init dcs client
 	dcsClient, err := b.CloudCredentials.DCSV1Client()

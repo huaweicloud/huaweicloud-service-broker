@@ -14,7 +14,7 @@ func (b *RDSBroker) LastOperation(instanceID string, operationData database.Oper
 
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("lastoperation rds instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
-	dbInstance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
 		operationData.PlanID, operationData.TargetID)
 
 	if err != nil {
@@ -32,20 +32,20 @@ func (b *RDSBroker) LastOperation(instanceID string, operationData database.Oper
 			}, nil
 		}
 		// Status
-		if dbInstance.TargetStatus == "ACTIVE" {
+		if instance.Status == "ACTIVE" {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Succeeded,
-				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", instance.Status),
 			}, nil
-		} else if dbInstance.TargetStatus == "FAILED" {
+		} else if instance.Status == "FAILED" {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Failed,
-				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", instance.Status),
 			}, nil
 		} else {
 			return brokerapi.LastOperation{
 				State:       brokerapi.InProgress,
-				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", instance.Status),
 			}, nil
 		}
 	} else if operationData.OperationType == models.OperationDeprovisioning {
@@ -66,7 +66,7 @@ func (b *RDSBroker) LastOperation(instanceID string, operationData database.Oper
 		} else {
 			return brokerapi.LastOperation{
 				State:       brokerapi.InProgress,
-				Description: fmt.Sprintf("Status: %s", dbInstance.TargetStatus),
+				Description: fmt.Sprintf("Status: %s", instance.Status),
 			}, nil
 		}
 	} else {

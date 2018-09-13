@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/datastores"
 	"github.com/huaweicloud/golangsdk/openstack/rds/v1/flavors"
@@ -41,6 +42,19 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 
 	// Log InstanceDetails
 	b.Logger.Debug(fmt.Sprintf("rds instance in back database: %v", models.ToJson(ids)))
+
+	// sync and check status whether allowed to update
+	instance, err, serviceErr := SyncStatusWithService(b, instanceID, details.ServiceID, details.PlanID, ids.TargetID)
+
+	if err != nil || serviceErr != nil {
+		return brokerapi.UpdateServiceSpec{}, fmt.Errorf("sync status failed. error: %s, service error: %s", err, serviceErr)
+	}
+	if instance.Status != "ACTIVE" {
+		return brokerapi.UpdateServiceSpec{},
+			brokerapi.NewFailureResponse(
+				fmt.Errorf("Can only update rds instance in ACTIVE, but in: %s", instance.Status),
+				http.StatusUnprocessableEntity, "Can only update rds instance in ACTIVE")
+	}
 
 	// Init rds client
 	rdsClient, err := b.CloudCredentials.RDSV1Client()
