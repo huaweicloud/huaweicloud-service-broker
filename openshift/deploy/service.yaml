@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: service-broker
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: service-broker-runner
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "get", "delete"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: service-broker-role
+subjects:
+  - kind: ServiceAccount
+    name: service-broker
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: service-broker-runner
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+kind: StatefulSet
+apiVersion: apps/v1beta1
+metadata:
+  name: service-broker
+spec:
+  serviceName: "service-broker"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-broker
+    spec:
+      serviceAccount: service-broker
+      containers:
+        - name: huaweicloud-service-broker
+          image: quay.io/huaweicloud/huaweicloud-service-broker:latest
+          imagePullPolicy: Always
+          args:
+            - "--config=$(CONFIG_JSON)"
+            - "--port=3000"
+          env:
+            - name: CONFIG_JSON
+              value: /etc/config/config.json
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: config-secret-dir
+              mountPath: /etc/config
+      volumes:
+        - name: config-secret-dir
+          secret:
+            secretName: service-broker-config-secret
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-broker
+  labels:
+    app: service-broker
+spec:
+  selector:
+    app: service-broker
+  ports:
+    - name: http
+      port: 12345
+      targetPort: 3000

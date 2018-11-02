@@ -1,0 +1,185 @@
+{
+    "broker_config": {
+        "log_level": "DEBUG",
+        "username": "username",
+        "password": "password"
+    },
+    "back_database": {
+        "database_type": "mysql",
+        "database_host": "127.0.0.1",
+        "database_port": "3306",
+        "database_name": "broker",
+        "database_username": "******",
+        "database_password": "******"
+    },
+    "cloud_credentials": {
+        "auth_url": "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3",
+        "user_name": "******",
+        "password": "******",
+        "domain_name": "******",
+        "tenant_name": "eu-west-0",
+        "region": "eu-west-0",
+        "access_key": "******",
+        "secret_key": "******"
+    },
+    "catalog": {
+        "services": [
+            {
+                "id": "a05f3e0b-86fd-4303-946c-171374d29150",
+                "name": "rds-mysql",
+                "description": "RDS MySQL Service",
+                "bindable": true,
+                "tags": [
+                    "mysql",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS MySQL",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS MySQL Service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262671.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "a15f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-7-17",
+                        "description": "RDS MySQL 5.7.17",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.7.17",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "eu-west-0a",
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a25f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-35",
+                        "description": "RDS MySQL 5.6.35",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.35",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "eu-west-0a",
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a35f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-34",
+                        "description": "RDS MySQL 5.6.34",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.34",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "eu-west-0a",
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a45f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-33",
+                        "description": "RDS MySQL 5.6.33",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.33",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "eu-west-0a",
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a55f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-30",
+                        "description": "RDS MySQL 5.6.30",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.30",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "eu-west-0a",
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "database_username": "root"
+                            }
+                        }
+                    }        
+                ]
+            },
+            {
+                "id": "b05f3e0b-86fd-4303-946c-171374d29150",
+                "name": "rds-sqlserver",
+                "description": "RDS SQLServer Service",
+                "bindable": true,
+                "tags": [
+                    "sqlserver",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS SQLServer",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS SQLServer Service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0053089719.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "b15f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "2014-SP2-SE",
+                        "description": "RDS SQLServer 2014 SP2 SE",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "SQLServer",
+                                "datastore_version": "2014 SP2 SE",
+                                "speccode": "rds.mssql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "eu-west-0a",
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "database_username": "rdsuser"
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ClusterServiceBroker
+metadata:
+  name: cluster-service-broker
+spec:
+  # Points to the endpoint of a service broker
+  url: http://172.30.221.93:12345
+  authInfo:
+    basic:
+      secretRef:
+        name: "service-broker-auth-secret"
+        namespace: default

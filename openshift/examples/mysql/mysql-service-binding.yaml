@@ -1,0 +1,11 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: mysql-service-binding
+  namespace: default
+spec:
+  # References service instance name
+  instanceRef:
+    name: mysql-service-instance
+  # Binding credentials result in this secret
+  secretName: mysql-service-secret
