@@ -79,6 +79,7 @@ Application Developers can start to test the services locally. The [lifecycle.sh
 
 The broker can be deployed to an already existing [OpenShift](https://www.openshift.com/) Cluster
 which has enabled [Service Catalog](https://github.com/kubernetes-incubator/service-catalog/).
+
 We recommend to finish the following installation in the OpenShift Cluster Master Node.
 
 ```
@@ -86,7 +87,9 @@ $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
 $ cd huaweicloud-service-broker/openshift/deploy/
 $ vi config.json
 ```
-modify the file ```config.json``` to include your own configurations. See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions. The [default authorization](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/config.json#L4-L5) for visiting huaweicloud service broker is as following:
+Modify the file ```config.json``` to include your own configurations. See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
+
+The [default authorization](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/config.json#L4-L5) for visiting huaweicloud service broker is as following:
 
 ```
     "broker_config": {
@@ -102,9 +105,6 @@ Encode the authorization ```username``` and ```password``` by using base64.
 
 ```
 $ echo -n "username" | base64
-```
-
-```
 $ echo -n "password" | base64
 ```
 
@@ -137,7 +137,7 @@ $ oc create -f serivce.yaml
 
 #### 4. Creating service broker in OpenShift Cluster
 
-Firstly you need to get the service ```ClusterIP``` and ```Port``` which is created by Step 3.
+Firstly you need to get the service ```ClusterIP``` and ```Port``` which are created by Step 3.
 
 ```
 $ oc get svc | grep service-broker
@@ -145,7 +145,7 @@ $ vi service-broker.yaml
 ```
 
 Update the key ```url``` value in [service-broker.yaml](
-https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service-broker.yaml#L7) file by the service ```ClusterIP``` and ```Port```. If it is possible, you can register ```ClusterIP``` and ```Port``` in the DNS Server so that you can use the domain name as the key ```url``` value. Then you can run the following command to create ```service-broker.yaml```.
+https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service-broker.yaml#L7) file by the service ```ClusterIP``` and ```Port```. If it is possible, you can register ```ClusterIP``` and ```Port``` into the DNS Server so that you can use the domain name as the key ```url``` value. Then you can run the following command to create ```service-broker.yaml```.
 
 ```
 $ oc create -f service-broker.yaml
@@ -157,6 +157,13 @@ by running the following command.
 
 ```
 $ oc get clusterservicebrokers
+```
+
+You can also find the lastest Services ```clusterserviceclasses``` and Service Plans ```clusterserviceplans``` by running the following command.
+
+```
+$ oc get clusterserviceclasses -o=custom-columns=SERVICE\ NAME:.metadata.name,EXTERNAL\ NAME:.spec.externalName
+$ oc get clusterserviceplans -o=custom-columns=NAME:.metadata.name,EXTERNAL\ NAME:.spec.externalName,SERVICE\ CLASS:.spec.clusterServiceClassRef.name --sort-by=.spec.clusterServiceClassRef.name
 ```
 
 Currently the following Services and Service Plans are tested in OpenShift.
@@ -197,14 +204,6 @@ Currently the following Services and Service Plans are tested in OpenShift.
   </tr>
 </table>
 
-You can also find the lastest Services ```clusterserviceclasses``` and Service Plans ```clusterserviceplans``` by running the following command.
-
-```
-$ oc get clusterserviceclasses -o=custom-columns=SERVICE\ NAME:.metadata.name,EXTERNAL\ NAME:.spec.externalName
-
-$ oc get clusterserviceplans -o=custom-columns=NAME:.metadata.name,EXTERNAL\ NAME:.spec.externalName,SERVICE\ CLASS:.spec.clusterServiceClassRef.name --sort-by=.spec.clusterServiceClassRef.name
-```
-
 ### Usage
 
 Application Developers can start to consume the services
@@ -224,7 +223,7 @@ The ```mysql-service-instance.yaml``` example is using the Service ```rds-mysql`
 $ oc create -f mysql-service-instance.yaml
 ```
 
-The following command will get more informations about the created ```mysql-service-instance```.
+The following command will get more informations about the created ```mysql-service-instance```. Please make sure the ```Status``` of ```mysql-service-instance``` is OK before going to the next step.
 
 ```
 $ oc describe serviceinstance mysql-service-instance
