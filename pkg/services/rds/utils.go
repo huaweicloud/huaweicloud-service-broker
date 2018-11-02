@@ -53,7 +53,7 @@ func SyncStatusWithService(b *RDSBroker, instanceID string, serviceID string, pl
 	targetID string) (*instances.Instance, error, error) {
 	dbInstance := database.InstanceDetails{}
 	// Log opts
-	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService rds instance opts: instanceID: %s serviceID: %s " +
+	b.Logger.Debug(fmt.Sprintf("SyncStatusWithService rds instance opts: instanceID: %s serviceID: %s "+
 		"planID: %s targetID: %s", instanceID, serviceID, planID, targetID))
 
 	// Init rds client
@@ -89,7 +89,7 @@ func SyncStatusWithService(b *RDSBroker, instanceID string, serviceID string, pl
 
 	err = database.BackDBConnection.Save(&dbInstance).Error
 	if err != nil {
-		b.Logger.Debug(fmt.Sprintf("SyncStatusWithService update rds instance target status in back database failed. " +
+		b.Logger.Debug(fmt.Sprintf("SyncStatusWithService update rds instance target status in back database failed. "+
 			"Error: %s", err))
 		return instance, fmt.Errorf("SyncStatusWithService update rds instance target status failed. Error: %s", err), nil
 	}

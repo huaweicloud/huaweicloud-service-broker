@@ -135,7 +135,7 @@ func (cloudBroker *CloudServiceBroker) Provision(
 	}
 
 	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
-	if e != nil{
+	if e != nil {
 		return brokerapi.ProvisionedServiceSpec{}, e
 	}
 
@@ -165,7 +165,7 @@ func (cloudBroker *CloudServiceBroker) Deprovision(
 	cloudBroker.Logger.Debug(fmt.Sprintf("Deprovision received. instanceID: %s", instanceID))
 
 	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
-	if e != nil{
+	if e != nil {
 		return brokerapi.DeprovisionServiceSpec{}, e
 	}
 
@@ -245,7 +245,7 @@ func (cloudBroker *CloudServiceBroker) Update(
 	cloudBroker.Logger.Debug(fmt.Sprintf("Update received. instanceID: %s", instanceID))
 
 	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
-	if e != nil{
+	if e != nil {
 		return brokerapi.UpdateServiceSpec{}, e
 	}
 
