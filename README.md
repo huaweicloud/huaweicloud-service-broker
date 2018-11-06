@@ -60,7 +60,8 @@ The information of database instance will be used in the following Installation.
 ### Installation
 
 Download the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json)
-and modify the configuration file to include your own configurations. See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
+and modify the configuration file to include your own configurations. Different Clouds have different configurations.
+See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
 
 
 Using the standard `go get` (you must have [Go](https://golang.org/) already installed in your local machine):
@@ -90,7 +91,8 @@ $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
 $ cd huaweicloud-service-broker/openshift/deploy/
 $ vi config.json
 ```
-Modify the file ```config.json``` to include your own configurations. See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
+Modify the file ```config.json``` to include your own configurations. Different Clouds have different configurations.
+See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
 
 The [default authorization](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/config.json#L4-L5) for visiting huaweicloud service broker is as following:
 
@@ -260,7 +262,9 @@ $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
 $ cd huaweicloud-service-broker
 ```
 
-Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json) to include your own configurations. See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
+Modify the [configuration file](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/config.json) to include your own configurations.
+Different Clouds have different configurations.
+See [configuration.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/configuration.md) for instructions.
 
 Then you can push the broker to your [Cloud Foundry](https://www.cloudfoundry.org/) environment:
 
