@@ -4,11 +4,14 @@
 [![LICENSE](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/LICENSE)
 
 This is a [Service Broker](https://docs.cloudfoundry.org/services/overview.html) for Huawei Cloud.
+It also can be used for Flexible Engine and Open Telekom Cloud.
 Currently it includes the following services support:
 * [Distributed Cache Service (DCS)](http://www.huaweicloud.com/en-us/product/dcs.html)
 * [Distributed Message Service (DMS)](http://www.huaweicloud.com/en-us/product/dms.html)
 * [Object Storage Service (OBS)](http://www.huaweicloud.com/en-us/product/obs.html)
 * [Relational Database Service (RDS)](http://www.huaweicloud.com/en-us/product/rds.html)
+
+Different Clouds have different services, the users will be required to make their own configurations in the following ```Installation``` so that this Service Broker can be running normally.
 
 ## Prerequisites
 
