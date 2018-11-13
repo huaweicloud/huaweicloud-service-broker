@@ -16,7 +16,7 @@ func (b *DCSBroker) LastOperation(instanceID string, operationData database.Oper
 	b.Logger.Debug(fmt.Sprintf("lastoperation dcs instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
 	instance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
-		operationData.PlanID, operationData.TargetID)
+		operationData.PlanID, operationData.TargetID, operationData.OperationType)
 	if err != nil {
 		return brokerapi.LastOperation{}, err
 	}
