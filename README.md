@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/huaweicloud/huaweicloud-service-broker.svg?branch=master)](https://travis-ci.org/huaweicloud/huaweicloud-service-broker)
 [![LICENSE](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/LICENSE)
 
+Test OpenLab CI
+
 This is a [Service Broker](https://docs.cloudfoundry.org/services/overview.html) for Huawei Cloud.
 It also can be used for Flexible Engine and Open Telekom Cloud.
 Currently it includes the following services support:
