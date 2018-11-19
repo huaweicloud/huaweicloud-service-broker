@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/huaweicloud/golangsdk"
+	"github.com/huaweicloud/golangsdk/openstack/dcs/v1/instances"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
@@ -15,16 +16,15 @@ func (b *DCSBroker) LastOperation(instanceID string, operationData database.Oper
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("lastoperation dcs instance opts: instanceID: %s operationData: %v", instanceID, models.ToJson(operationData)))
 
-	instance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
-		operationData.PlanID, operationData.TargetID)
-	if err != nil {
-		return brokerapi.LastOperation{}, err
-	}
-
 	// Handle different cases
 	if (operationData.OperationType == models.OperationProvisioning) ||
 		(operationData.OperationType == models.OperationUpdating) {
 		// OperationProvisioning || OperationUpdating
+		instance, err, serviceErr := SyncStatusWithService(b, instanceID, operationData.ServiceID,
+			operationData.PlanID, operationData.TargetID)
+		if err != nil {
+			return brokerapi.LastOperation{}, err
+		}
 		if serviceErr != nil {
 			return brokerapi.LastOperation{
 				State:       brokerapi.Failed,
@@ -58,6 +58,13 @@ func (b *DCSBroker) LastOperation(instanceID string, operationData database.Oper
 		}
 	} else if operationData.OperationType == models.OperationDeprovisioning {
 		// OperationDeprovisioning
+		// Init dcs client
+		dcsClient, err := b.CloudCredentials.DCSV1Client()
+		if err != nil {
+			return brokerapi.LastOperation{}, fmt.Errorf("create dcs client failed. Error: %s", err)
+		}
+		// Invoke sdk get
+		instance, serviceErr := instances.Get(dcsClient, operationData.TargetID).Extract()
 		if serviceErr != nil {
 			e, ok := serviceErr.(golangsdk.ErrDefault404)
 			if ok {
