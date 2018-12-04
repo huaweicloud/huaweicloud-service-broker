@@ -204,6 +204,12 @@ func (h serviceBrokerHandler) provision(w http.ResponseWriter, req *http.Request
 	provisionResponse, err := h.serviceBroker.Provision(req.Context(), instanceID, details, asyncAllowed)
 
 	if err != nil {
+		// Replace 409 with 200
+		if err == ErrInstanceAlreadyExists {
+			logger.Error(instanceAlreadyExistsErrorKey, err)
+			h.respond(w, http.StatusOK, nil)
+			return
+		}
 		switch err := err.(type) {
 		case *FailureResponse:
 			logger.Error(err.LoggerAction(), err)
@@ -391,6 +397,12 @@ func (h serviceBrokerHandler) bind(w http.ResponseWriter, req *http.Request) {
 
 	binding, err := h.serviceBroker.Bind(req.Context(), instanceID, bindingID, details)
 	if err != nil {
+		// Replace 409 with 200
+		if err == ErrBindingAlreadyExists {
+			logger.Error(bindingAlreadyExistsErrorKey, err)
+			h.respond(w, http.StatusOK, nil)
+			return
+		}
 		switch err := err.(type) {
 		case *FailureResponse:
 			statusCode := err.ValidatedStatusCode(logger)
