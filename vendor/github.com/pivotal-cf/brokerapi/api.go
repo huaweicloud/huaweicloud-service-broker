@@ -205,9 +205,9 @@ func (h serviceBrokerHandler) provision(w http.ResponseWriter, req *http.Request
 
 	if err != nil {
 		// Replace 409 with 200
-		if err == ErrInstanceAlreadyExists {
+		if err == ErrInstanceAlreadyExistsSame {
 			logger.Error(instanceAlreadyExistsErrorKey, err)
-			h.respond(w, http.StatusOK, nil)
+			h.respond(w, ErrInstanceAlreadyExistsSame.statusCode, nil)
 			return
 		}
 		switch err := err.(type) {
@@ -398,9 +398,9 @@ func (h serviceBrokerHandler) bind(w http.ResponseWriter, req *http.Request) {
 	binding, err := h.serviceBroker.Bind(req.Context(), instanceID, bindingID, details)
 	if err != nil {
 		// Replace 409 with 200
-		if err == ErrBindingAlreadyExists {
+		if err == ErrBindingAlreadyExistsSame {
 			logger.Error(bindingAlreadyExistsErrorKey, err)
-			h.respond(w, http.StatusOK, nil)
+			h.respond(w, ErrBindingAlreadyExistsSame.statusCode, nil)
 			return
 		}
 		switch err := err.(type) {

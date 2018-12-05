@@ -28,6 +28,30 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 	// ErrInstanceAlreadyExists
 	if length > 0 {
+		// Get InstanceDetails in back database
+		iddetail := database.InstanceDetails{}
+		err = database.BackDBConnection.
+			Where("instance_id = ? and service_id = ? and plan_id = ?", instanceID, details.ServiceID, details.PlanID).
+			First(&iddetail).Error
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get instance in back database failed. Error: %s", err)
+		}
+
+		// Get additional info from InstanceDetails
+		addtionalparamdetail := map[string]string{}
+		err = iddetail.GetAdditionalInfo(&addtionalparamdetail)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get instance additional info failed. Error: %s", err)
+		}
+
+		// Check AddtionalParamRequest exist
+		if _, ok := addtionalparamdetail[AddtionalParamRequest]; ok {
+			if (addtionalparamdetail[AddtionalParamRequest] != "") &&
+				(addtionalparamdetail[AddtionalParamRequest] == string(details.RawParameters)) {
+				return brokerapi.ProvisionedServiceSpec{}, brokerapi.ErrInstanceAlreadyExistsSame
+			}
+		}
+
 		return brokerapi.ProvisionedServiceSpec{}, brokerapi.ErrInstanceAlreadyExists
 	}
 
@@ -230,6 +254,7 @@ func (b *RDSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	addtionalparam := map[string]string{}
 	addtionalparam[AddtionalParamDBUsername] = metadataParameters.DatabaseUsername
 	addtionalparam[AddtionalParamDBPassword] = provisionOpts.DbRtPd
+	addtionalparam[AddtionalParamRequest] = string(details.RawParameters)
 
 	// Marshal addtional info
 	addtionalinfo, err := json.Marshal(addtionalparam)

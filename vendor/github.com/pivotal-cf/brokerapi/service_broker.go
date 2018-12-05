@@ -181,6 +181,10 @@ var (
 		errors.New(instanceExistsMsg), http.StatusConflict, instanceAlreadyExistsErrorKey,
 	).WithEmptyResponse().Build()
 
+	ErrInstanceAlreadyExistsSame = NewFailureResponseBuilder(
+		errors.New(instanceExistsMsg), http.StatusOK, instanceAlreadyExistsErrorKey,
+	).WithEmptyResponse().Build()
+
 	ErrInstanceDoesNotExist = NewFailureResponseBuilder(
 		errors.New(instanceDoesntExistMsg), http.StatusGone, instanceMissingErrorKey,
 	).WithEmptyResponse().Build()
@@ -191,6 +195,10 @@ var (
 
 	ErrBindingAlreadyExists = NewFailureResponse(
 		errors.New(bindingExistsMsg), http.StatusConflict, bindingAlreadyExistsErrorKey,
+	)
+
+	ErrBindingAlreadyExistsSame = NewFailureResponse(
+		errors.New(bindingExistsMsg), http.StatusOK, bindingAlreadyExistsErrorKey,
 	)
 
 	ErrBindingDoesNotExist = NewFailureResponseBuilder(

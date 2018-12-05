@@ -85,4 +85,6 @@ const (
 	AddtionalParamDBUsername string = "dbusername"
 	// AddtionalParamDBPassword for dbpassword
 	AddtionalParamDBPassword string = "dbpassword"
+	// AddtionalParamRequest fo request
+	AddtionalParamRequest string = "request"
 )
