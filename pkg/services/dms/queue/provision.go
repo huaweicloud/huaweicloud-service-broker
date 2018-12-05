@@ -26,6 +26,30 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	}
 	// ErrInstanceAlreadyExists
 	if length > 0 {
+		// Get InstanceDetails in back database
+		iddetail := database.InstanceDetails{}
+		err = database.BackDBConnection.
+			Where("instance_id = ? and service_id = ? and plan_id = ?", instanceID, details.ServiceID, details.PlanID).
+			First(&iddetail).Error
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get instance in back database failed. Error: %s", err)
+		}
+
+		// Get additional info from InstanceDetails
+		addtionalparamdetail := map[string]string{}
+		err = iddetail.GetAdditionalInfo(&addtionalparamdetail)
+		if err != nil {
+			return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("get instance additional info failed. Error: %s", err)
+		}
+
+		// Check AddtionalParamRequest exist
+		if _, ok := addtionalparamdetail[AddtionalParamRequest]; ok {
+			if (addtionalparamdetail[AddtionalParamRequest] != "") &&
+				(addtionalparamdetail[AddtionalParamRequest] == string(details.RawParameters)) {
+				return brokerapi.ProvisionedServiceSpec{}, brokerapi.ErrInstanceAlreadyExistsSame
+			}
+		}
+
 		return brokerapi.ProvisionedServiceSpec{}, brokerapi.ErrInstanceAlreadyExists
 	}
 
@@ -148,6 +172,16 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("marshal dms queue failed. Error: %s", err)
 	}
 
+	// Constuct addtional info
+	addtionalparam := map[string]string{}
+	addtionalparam[AddtionalParamRequest] = string(details.RawParameters)
+
+	// Marshal addtional info
+	addtionalinfo, err := json.Marshal(addtionalparam)
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("marshal dms addtional info failed. Error: %s", err)
+	}
+
 	// create InstanceDetails in back database
 	idsOpts := database.InstanceDetails{
 		ServiceID:      details.ServiceID,
@@ -157,7 +191,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		TargetName:     freshQueue.Name,
 		TargetStatus:   "",
 		TargetInfo:     string(targetinfo),
-		AdditionalInfo: "",
+		AdditionalInfo: string(addtionalinfo),
 	}
 
 	// log InstanceDetails opts

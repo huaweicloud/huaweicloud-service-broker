@@ -58,3 +58,8 @@ type UpdateParameters struct {
 	BucketPolicy string `json:"bucket_policy,omitempty"`
 	Status       string `json:"status,omitempty"`
 }
+
+const (
+	// AddtionalParamRequest for request
+	AddtionalParamRequest string = "request"
+)

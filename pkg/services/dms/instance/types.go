@@ -81,4 +81,6 @@ const (
 	AddtionalParamUsername string = "username"
 	// AddtionalParamPassword for password
 	AddtionalParamPassword string = "password"
+	// AddtionalParamRequest for request
+	AddtionalParamRequest string = "request"
 )

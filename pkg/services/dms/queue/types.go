@@ -69,4 +69,6 @@ const (
 	ProtocolTypeHTTPS string = "HTTPS"
 	// ProtocolTypeTCP for TCP
 	ProtocolTypeTCP string = "TCP"
+	// AddtionalParamRequest for request
+	AddtionalParamRequest string = "request"
 )
