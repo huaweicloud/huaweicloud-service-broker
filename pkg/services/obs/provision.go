@@ -14,6 +14,14 @@ import (
 // Provision implematation
 func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDetails, asyncAllowed bool) (brokerapi.ProvisionedServiceSpec, error) {
 
+	// Check accepts_incomplete if this service support async
+	if models.OperationAsyncOBS {
+		e := b.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+		if e != nil {
+			return brokerapi.ProvisionedServiceSpec{}, e
+		}
+	}
+
 	// Check obs instance length in back database
 	var length int
 	err := database.BackDBConnection.
@@ -145,7 +153,7 @@ func (b *OBSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	// Marshal addtional info
 	addtionalinfo, err := json.Marshal(addtionalparam)
 	if err != nil {
-		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("marshal rds addtional info failed. Error: %s", err)
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("marshal obs addtional info failed. Error: %s", err)
 	}
 
 	// create InstanceDetails in back database

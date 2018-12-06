@@ -13,6 +13,14 @@ import (
 // Update implematation
 func (b *OBSBroker) Update(instanceID string, details brokerapi.UpdateDetails, asyncAllowed bool) (brokerapi.UpdateServiceSpec, error) {
 
+	// Check accepts_incomplete if this service support async
+	if models.OperationAsyncOBS {
+		e := b.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+		if e != nil {
+			return brokerapi.UpdateServiceSpec{}, e
+		}
+	}
+
 	// Check obs bucket length in back database
 	var length int
 	err := database.BackDBConnection.

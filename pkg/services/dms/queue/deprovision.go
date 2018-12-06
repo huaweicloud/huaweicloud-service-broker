@@ -12,6 +12,14 @@ import (
 // Deprovision implematation
 func (b *DMSBroker) Deprovision(instanceID string, details brokerapi.DeprovisionDetails, asyncAllowed bool) (brokerapi.DeprovisionServiceSpec, error) {
 
+	// Check accepts_incomplete if this service support async
+	if models.OperationAsyncDMSQueue {
+		e := b.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+		if e != nil {
+			return brokerapi.DeprovisionServiceSpec{}, e
+		}
+	}
+
 	// Check dms instance length in back database
 	var length int
 	err := database.BackDBConnection.

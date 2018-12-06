@@ -134,10 +134,10 @@ func (cloudBroker *CloudServiceBroker) Provision(
 		return brokerapi.ProvisionedServiceSpec{}, error
 	}
 
-	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+	/*e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
 	if e != nil {
 		return brokerapi.ProvisionedServiceSpec{}, e
-	}
+	}*/
 
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
@@ -164,10 +164,10 @@ func (cloudBroker *CloudServiceBroker) Deprovision(
 
 	cloudBroker.Logger.Debug(fmt.Sprintf("Deprovision received. instanceID: %s", instanceID))
 
-	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+	/*e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
 	if e != nil {
 		return brokerapi.DeprovisionServiceSpec{}, e
-	}
+	}*/
 
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
@@ -244,10 +244,10 @@ func (cloudBroker *CloudServiceBroker) Update(
 
 	cloudBroker.Logger.Debug(fmt.Sprintf("Update received. instanceID: %s", instanceID))
 
-	e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+	/*e := cloudBroker.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
 	if e != nil {
 		return brokerapi.UpdateServiceSpec{}, e
-	}
+	}*/
 
 	// find service plan
 	_, err := cloudBroker.Catalog.FindServicePlan(details.ServiceID, details.PlanID)

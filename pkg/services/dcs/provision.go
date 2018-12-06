@@ -16,6 +16,14 @@ import (
 // Provision implematation
 func (b *DCSBroker) Provision(instanceID string, details brokerapi.ProvisionDetails, asyncAllowed bool) (brokerapi.ProvisionedServiceSpec, error) {
 
+	// Check accepts_incomplete if this service support async
+	if models.OperationAsyncDCS {
+		e := b.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+		if e != nil {
+			return brokerapi.ProvisionedServiceSpec{}, e
+		}
+	}
+
 	// Check dcs instance length in back database
 	var length int
 	err := database.BackDBConnection.

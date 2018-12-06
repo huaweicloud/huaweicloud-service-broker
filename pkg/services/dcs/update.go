@@ -14,6 +14,14 @@ import (
 // Update implematation
 func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, asyncAllowed bool) (brokerapi.UpdateServiceSpec, error) {
 
+	// Check accepts_incomplete if this service support async
+	if models.OperationAsyncDCS {
+		e := b.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+		if e != nil {
+			return brokerapi.UpdateServiceSpec{}, e
+		}
+	}
+
 	// Check dcs instance length in back database
 	var length int
 	err := database.BackDBConnection.

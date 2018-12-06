@@ -17,6 +17,14 @@ import (
 // Provision implematation
 func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDetails, asyncAllowed bool) (brokerapi.ProvisionedServiceSpec, error) {
 
+	// Check accepts_incomplete if this service support async
+	if models.OperationAsyncDMSInstance {
+		e := b.Catalog.ValidateAcceptsIncomplete(asyncAllowed)
+		if e != nil {
+			return brokerapi.ProvisionedServiceSpec{}, e
+		}
+	}
+
 	// Check dms instance length in back database
 	var length int
 	err := database.BackDBConnection.
