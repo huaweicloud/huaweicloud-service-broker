@@ -22,9 +22,9 @@ func (b *RDSBroker) Bind(instanceID, bindingID string, details brokerapi.BindDet
 	if err != nil {
 		return brokerapi.Binding{}, fmt.Errorf("check rds bind length in back database failed. Error: %s", err)
 	}
-	// ErrBindingAlreadyExists
+	// ErrBindingAlreadyExistsSame
 	if length > 0 {
-		return brokerapi.Binding{}, brokerapi.ErrBindingAlreadyExists
+		return brokerapi.Binding{}, brokerapi.ErrBindingAlreadyExistsSame
 	}
 
 	// Check rds instance length in back database
