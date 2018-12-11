@@ -26,6 +26,6 @@
 | vpc_id                 | string     | Specifies the VPC ID.
 | subnet_id              | string     | Specifies the UUID for nics information.
 | security_group_id      | string     | Specifies the security group ID which the RDS DB instance belongs to.
-| database_username      | string     | Specifies the username of the database. The default value of username is root.
+| database_username      | string     | Specifies the username of the database. Currently the only supported value of username is root.
 
 These plans are only differently configured by the Parameter Name [```datastore_version```].
