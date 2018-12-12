@@ -207,7 +207,10 @@ func (h serviceBrokerHandler) provision(w http.ResponseWriter, req *http.Request
 		// Replace 409 with 200
 		if err == ErrInstanceAlreadyExistsSame {
 			logger.Error(instanceAlreadyExistsErrorKey, err)
-			h.respond(w, ErrInstanceAlreadyExistsSame.statusCode, nil)
+			h.respond(w, ErrInstanceAlreadyExistsSame.statusCode, ProvisioningResponse{
+				DashboardURL:  provisionResponse.DashboardURL,
+				OperationData: provisionResponse.OperationData,
+			})
 			return
 		}
 		switch err := err.(type) {
