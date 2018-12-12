@@ -400,7 +400,7 @@ func (h serviceBrokerHandler) bind(w http.ResponseWriter, req *http.Request) {
 		// Replace 409 with 200
 		if err == ErrBindingAlreadyExistsSame {
 			logger.Error(bindingAlreadyExistsErrorKey, err)
-			h.respond(w, ErrBindingAlreadyExistsSame.statusCode, nil)
+			h.respond(w, ErrBindingAlreadyExistsSame.statusCode, binding)
 			return
 		}
 		switch err := err.(type) {
