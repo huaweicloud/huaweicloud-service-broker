@@ -26,7 +26,7 @@
 | vpc_id                 | string     | Tenant's VPC ID.
 | subnet_id              | string     | Subnet ID.
 | security_group_id      | string     | Tenant's security group ID.
-| availability_zones     | []string   | IDs of the AZs where cache nodes reside. For details about how to obtain this parameter value, see [Regions and Endpoints](https://developer.huaweicloud.com/endpoint).
+| availability_zones     | []string   | IDs of the AZs where cache nodes reside. For details about how to obtain this parameter value, see [Regions and Endpoints](https://developer.huaweicloud.com/endpoint). ```Note: In the current version of Orange Cloud, only one AZ ID can be set in the request.```
 
 
 These plans are only differently configured by the Parameter Name [```speccode```].

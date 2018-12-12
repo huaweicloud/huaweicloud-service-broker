@@ -231,7 +231,7 @@
                                 "vpc_id": "******",
                                 "subnet_id": "******",
                                 "security_group_id": "******",
-                                "availability_zones": ["eu-west-0a", "eu-west-0b"]
+                                "availability_zones": ["eu-west-0a"]
                             }
                         }
                     }
