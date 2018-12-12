@@ -179,6 +179,63 @@
                         }
                     }
                 ]
+            },
+            {
+                "id": "c05f3e0b-86fd-4303-946c-171374d29150",
+                "name": "dcs-redis",
+                "description": "Distributed Cache Service for Redis",
+                "bindable": true,
+                "tags": [
+                    "redis",
+                    "cache"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Cache Service for Redis",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "Distributed Cache Service for Redis",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
+                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcs.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "c15f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "SingleNode",
+                        "description": "Redis Single Node",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Redis",
+                                "engine_version": "3.0.7",
+                                "speccode":"dcs.single_node",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "availability_zones": ["eu-west-0a"]
+                            }
+                        }
+                    },
+                    {
+                        "id": "c25f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "MasterStandby",
+                        "description": "Redis Master Standby",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Redis",
+                                "engine_version": "3.0.7",
+                                "speccode":"dcs.master_standby",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "******",
+                                "subnet_id": "******",
+                                "security_group_id": "******",
+                                "availability_zones": ["eu-west-0a", "eu-west-0b"]
+                            }
+                        }
+                    }
+                ]
             }
         ]
     }

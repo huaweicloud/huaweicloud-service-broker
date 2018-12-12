@@ -207,6 +207,16 @@ Currently the following Services and Service Plans are tested in OpenShift.
     <td>2014-SP2-SE</td>
     <td>RDS SQLServer 2014 SP2 SE</td>
   </tr>
+  <tr>
+    <td rowspan="2">dcs-redis</td>
+    <td rowspan="2">Distributed Cache Service for Redis</td>
+    <td>SingleNode</td>
+    <td>Redis Single Node</td>
+  </tr>
+  <tr>
+    <td>MasterStandby</td>
+    <td>Redis Master Standby</td>
+  </tr>
 </table>
 
 ### Usage

@@ -1,0 +1,11 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: redis-service-binding
+  namespace: default
+spec:
+  # References service instance name
+  instanceRef:
+    name: redis-service-instance
+  # Binding credentials result in this secret
+  secretName: redis-service-secret

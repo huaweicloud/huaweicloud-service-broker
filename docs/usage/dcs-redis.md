@@ -27,7 +27,6 @@ Provision a new instance for Distributed Cache Service for Redis.
 | subnet_id                    | string     | N         | Subnet ID. The default value is in the config file.
 | security_group_id            | string     | N         | Tenant's security group ID. The default value is in the config file.
 | availability_zones           | []string   | N         | IDs of the AZs where cache nodes reside. For details about how to obtain this parameter value, see [Regions and Endpoints](https://developer.huaweicloud.com/endpoint). The default value is in the config file.
-| username                     | string     | Y         | Username of a Redis instance.
 | password                     | string     | Y         | Password of a Redis instance. The password of a Redis instance must meet the following complexity requirements: A string of 6–32 characters. Contains at least two of the following character types: Uppercase letters; Lowercase letters; Digits; Special characters, such as `~!@#$%^&*()-_=+\|[{}]:'",<.>/?.
 | name                         | string     | Y         | Redis instance name. An instance name is a string of 4–64 characters that contain letters, digits, underscores (_), and hyphens (-). An instance name must start with letters.
 | description                  | string     | N         | Brief description of the Redis instance. A brief description supports up to 1024 characters.
@@ -50,7 +49,6 @@ Bind returns the following connection details and credentials.
 |:-----------------------|:-----------|:-----------
 | host                   | string     | The fully-qualified address of Redis instance.
 | port                   | int        | The port number to connect to Redis instance.
-| username               | string     | Username of a Redis instance.
 | password               | string     | Password of a Redis instance.
 | name                   | string     | Redis instance name.
 | type                   | string     | The service type. The value is dcs-redis.
@@ -94,7 +92,6 @@ The following command will create a service.
 
 ```
 cf create-service dcs-redis SingleNode myredis -c '{
-    "username": "username",
     "password": "Password1234!",
     "name": "RedisSingleNode",
     "description": "Redis Single Node Test"
