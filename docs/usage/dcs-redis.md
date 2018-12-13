@@ -141,8 +141,7 @@ To update a service, use the `cf update-service` command.
 cf update-service myredis -c '{
     "name": "RedisSingleNode1",
     "description": "Redis Single Node Test1",
-    "old_password": "Password1234!",
-    "new_password": "Password1234$"
+    "new_capacity": 8
 }'
 ```
 

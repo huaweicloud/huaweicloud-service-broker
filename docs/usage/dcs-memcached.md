@@ -143,9 +143,7 @@ To update a service, use the `cf update-service` command.
 cf update-service mymemcached -c '{
     "name": "MemcachedSingleNode1",
     "description": "Memcached Single Node Test1",
-    "new_capacity": 8,
-    "old_password": "Password1234!",
-    "new_password": "Password1234$"
+    "new_capacity": 8
 }'
 ```
 
