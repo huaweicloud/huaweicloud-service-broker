@@ -81,6 +81,8 @@ func Open(dialect string, args ...interface{}) (db *DB, err error) {
 		if err = d.Ping(); err != nil {
 			d.Close()
 		}
+		// https://github.com/go-sql-driver/mysql/issues/674
+		d.SetMaxIdleConns(0)
 	}
 	return
 }

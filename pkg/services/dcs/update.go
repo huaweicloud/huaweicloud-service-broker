@@ -165,18 +165,21 @@ func (b *DCSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 
 	// Extend capacity
 	if updateParameters.NewCapacity > 0 {
-		extendResult := instances.Extend(
-			dcsClient,
-			ids.TargetID,
-			instances.ExtendOpts{
-				NewCapacity: updateParameters.NewCapacity,
-			})
-		if extendResult.Err != nil {
-			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("extend dcs instance failed. Error: %s", err)
-		}
+		// Update in case of difference
+		if updateParameters.NewCapacity != instance.Capacity {
+			extendResult := instances.Extend(
+				dcsClient,
+				ids.TargetID,
+				instances.ExtendOpts{
+					NewCapacity: updateParameters.NewCapacity,
+				})
+			if extendResult.Err != nil {
+				return brokerapi.UpdateServiceSpec{}, fmt.Errorf("extend dcs instance failed. Error: %s", err)
+			}
 
-		// Log result
-		b.Logger.Debug(fmt.Sprintf("extend dcs instance result: %v", models.ToJson(extendResult)))
+			// Log result
+			b.Logger.Debug(fmt.Sprintf("extend dcs instance result: %v", models.ToJson(extendResult)))
+		}
 	}
 
 	// Invoke sdk get

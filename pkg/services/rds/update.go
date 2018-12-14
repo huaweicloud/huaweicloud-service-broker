@@ -84,21 +84,24 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 
 	// Invoke sdk
 	if updateParameters.VolumeSize > 0 {
-		// UpdateVolumeSize
-		rdsInstance, err := instances.UpdateVolumeSize(
-			rdsClient,
-			instances.UpdateOps{
-				Volume: map[string]interface{}{
-					"size": updateParameters.VolumeSize,
+		// Update in case of difference
+		if instance.Volume.Size != updateParameters.VolumeSize {
+			// UpdateVolumeSize
+			rdsInstance, err := instances.UpdateVolumeSize(
+				rdsClient,
+				instances.UpdateOps{
+					Volume: map[string]interface{}{
+						"size": updateParameters.VolumeSize,
+					},
 				},
-			},
-			ids.TargetID).Extract()
-		if err != nil {
-			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance volume size failed. Error: %s", err)
-		}
+				ids.TargetID).Extract()
+			if err != nil {
+				return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance volume size failed. Error: %s", err)
+			}
 
-		// Log result
-		b.Logger.Debug(fmt.Sprintf("update rds instance volume size result: %v", models.ToJson(rdsInstance)))
+			// Log result
+			b.Logger.Debug(fmt.Sprintf("update rds instance volume size result: %v", models.ToJson(rdsInstance)))
+		}
 	}
 
 	// Invoke sdk
@@ -173,19 +176,22 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 		}
 		b.Logger.Debug(fmt.Sprintf("Received datastore ID: %s", flavorID))
 
-		// UpdateFlavorRef
-		rdsInstance, err := instances.UpdateFlavorRef(
-			rdsClient,
-			instances.UpdateFlavorOps{
-				FlavorRef: flavorID,
-			},
-			ids.TargetID).Extract()
-		if err != nil {
-			return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance flavor failed. Error: %s", err)
-		}
+		// Update in case of difference
+		if instance.Flavor.Id != flavorID {
+			// UpdateFlavorRef
+			rdsInstance, err := instances.UpdateFlavorRef(
+				rdsClient,
+				instances.UpdateFlavorOps{
+					FlavorRef: flavorID,
+				},
+				ids.TargetID).Extract()
+			if err != nil {
+				return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance flavor failed. Error: %s", err)
+			}
 
-		// Log result
-		b.Logger.Debug(fmt.Sprintf("update rds instance flavor result: %v", models.ToJson(rdsInstance)))
+			// Log result
+			b.Logger.Debug(fmt.Sprintf("update rds instance flavor result: %v", models.ToJson(rdsInstance)))
+		}
 	}
 
 	// Invoke sdk get
