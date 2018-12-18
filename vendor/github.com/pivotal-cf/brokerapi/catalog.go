@@ -47,7 +47,7 @@ type ServicePlan struct {
 	Free        *bool                `json:"free,omitempty"`
 	Bindable    *bool                `json:"bindable,omitempty"`
 	Metadata    *ServicePlanMetadata `json:"metadata,omitempty"`
-	Schemas     *ServiceSchemas      `json:"schemas,omitempty"`
+	Schemas     *PlanSchemas         `json:"schemas,omitempty"`
 }
 
 type ServiceSchemas struct {

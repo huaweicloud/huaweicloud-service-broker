@@ -19,4 +19,6 @@ type ServiceBrokerProxy interface {
 	Update(instanceID string, details brokerapi.UpdateDetails, asyncAllowed bool) (brokerapi.UpdateServiceSpec, error)
 
 	LastOperation(instanceID string, operationData database.OperationDetails) (brokerapi.LastOperation, error)
+
+	GetPlanSchemas(serviceID string, planID string, metadata *brokerapi.ServicePlanMetadata) (*brokerapi.PlanSchemas, error)
 }

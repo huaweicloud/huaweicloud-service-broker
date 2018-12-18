@@ -75,7 +75,7 @@ Update a previously provisioned instance.
 | backup_strategy_period_type  | string     | N         | Interval at which backup is performed. Currently, only weekly backup is supported.
 | maintain_begin               | string     | N         | Time at which the maintenance time window starts.
 | maintain_end                 | string     | N         | Time at which the maintenance time window ends.
-| security_group_id            | string     | N         | Subnet ID.
+| security_group_id            | string     | N         | Tenant's security group ID.
 
 ## Deprovision
 

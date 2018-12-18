@@ -67,6 +67,12 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("create dms client failed. Error: %s", err)
 	}
 
+	// Find service
+	service, err := b.Catalog.FindService(details.ServiceID)
+	if err != nil {
+		return brokerapi.ProvisionedServiceSpec{}, fmt.Errorf("find dms service failed. Error: %s", err)
+	}
+
 	// Find service plan
 	servicePlan, err := b.Catalog.FindServicePlan(details.ServiceID, details.PlanID)
 	if err != nil {
@@ -112,7 +118,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 	// queue mode
 	provisionOpts.QueueMode = metadataParameters.QueueMode
 	// Queue Type: DMSStandardServiceName
-	if servicePlan.Name == models.DMSStandardServiceName {
+	if service.Name == models.DMSStandardServiceName {
 		// Queue Mode: NORMAL, FIFO
 		if metadataParameters.RedrivePolicy != "" {
 			provisionOpts.RedrivePolicy = metadataParameters.RedrivePolicy
@@ -129,7 +135,7 @@ func (b *DMSBroker) Provision(instanceID string, details brokerapi.ProvisionDeta
 		}
 	}
 	// Queue Type: DMSKafkaServiceName
-	if servicePlan.Name == models.DMSKafkaServiceName {
+	if service.Name == models.DMSKafkaServiceName {
 		// Queue Mode: KAFKA_HA, KAFKA_HT
 		if metadataParameters.RetentionHours > 0 {
 			provisionOpts.RetentionHours = metadataParameters.RetentionHours

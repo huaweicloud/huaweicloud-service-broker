@@ -107,6 +107,27 @@ func New(logger lager.Logger, config config.Config) (*CloudServiceBroker, error)
 		delete(self.ServiceBrokerMap, service.Name)
 	}
 
+	// fill with plan schemas
+	for i := range self.Catalog.Services {
+		// get detail service broker proxy from ServiceBrokerMap
+		self.Logger.Debug(fmt.Sprintf("Catalog Services ID: %s. Name: %s",
+			self.Catalog.Services[i].ID, self.Catalog.Services[i].Name))
+		servicebrokerproxy := self.ServiceBrokerMap[self.Catalog.Services[i].ID]
+		if servicebrokerproxy == nil {
+			return &self, fmt.Errorf("could not fill with service broker: %s", self.Catalog.Services[i].ID)
+		}
+		for j := range self.Catalog.Services[i].Plans {
+			schemas, err := servicebrokerproxy.GetPlanSchemas(
+				self.Catalog.Services[i].ID,
+				self.Catalog.Services[i].Plans[j].ID,
+				self.Catalog.Services[i].Plans[j].Metadata)
+			if err != nil {
+				return &self, err
+			}
+			self.Catalog.Services[i].Plans[j].Schemas = schemas
+		}
+	}
+
 	return &self, nil
 }
 

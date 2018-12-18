@@ -74,7 +74,7 @@ Update a previously provisioned instance.
 | backup_strategy_period_type  | string     | N         | Interval at which backup is performed. Currently, only weekly backup is supported.
 | maintain_begin               | string     | N         | Time at which the maintenance time window starts.
 | maintain_end                 | string     | N         | Time at which the maintenance time window ends.
-| security_group_id            | string     | N         | Subnet ID.
+| security_group_id            | string     | N         | Tenant's security group ID.
 | new_capacity                 | int        | N         | New cache capacity. Unit: GB. For a Redis instance in single node or master standby mode, the cache capacity can be 2 GB, 4 GB, 8 GB, 16 GB, 32 GB, or 64 GB. **For a Redis instance in cluster mode, it does not support extend the cache capacity.**
 | old_password                 | string     | N         | The previous password of Redis instance.
 | new_password                 | string     | N         | The new password of Redis instance.

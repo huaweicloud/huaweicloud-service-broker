@@ -69,7 +69,7 @@ Update a previously provisioned instance.
 | Parameter Name               | Type       | Required  | Description
 |:-----------------------------|:-----------|:----------|:-----------
 | volume_size                  | int        | N         | Specifies the volume size. Its value must be a multiple of 10 and the value range is 100 GB to 2000 GB.
-| speccode                     | string     | N         | Indicates the resource specifications code. Use rds.dec.mssql.s1.xlarge as an example. rds indicates RDS, mssql indicates the DB engine, and s1.xlarge indicates the performance specification. The parameter containing rr indicates the read replica specifications. The parameter not containing rr indicates the single or primary/standby DB instance specifications.
+| speccode                     | string     | N         | Indicates the resource specifications code. Use rds.dec.mssql.s1.xlarge as an example. rds indicates RDS, mssql indicates the DB engine, and s1.xlarge indicates the performance specification. The parameter containing rr indicates the read replica specifications. The parameter not containing rr indicates the single or primary/standby DB instance specifications. If you enable HA, the suffix ```.ha``` need be added to the DB instance name. For example, the DB instance name is ```rds.db.s1.xlarge.ha```.
 
 ## Deprovision
 
