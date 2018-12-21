@@ -82,6 +82,9 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", models.ToJson(updateParameters)))
 
+	// additionalInfo
+	odAdditionalInfo := ids.AdditionalInfo
+
 	// Invoke sdk
 	isUpdateVolumeSize := false
 	if updateParameters.VolumeSize > 0 {
@@ -195,7 +198,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 				if err != nil {
 					return brokerapi.UpdateServiceSpec{}, fmt.Errorf("marshal instance addtional info failed in update. Error: %s", err)
 				}
-				ids.AdditionalInfo = string(addtionalinfo)
+				odAdditionalInfo = string(addtionalinfo)
 			} else {
 				// UpdateFlavorRef
 				rdsInstance, err := instances.UpdateFlavorRef(
@@ -254,7 +257,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 			TargetName:     ids.TargetName,
 			TargetStatus:   ids.TargetStatus,
 			TargetInfo:     ids.TargetInfo,
-			AdditionalInfo: ids.AdditionalInfo,
+			AdditionalInfo: odAdditionalInfo,
 		}
 
 		operationdata, err := ods.ToString()
