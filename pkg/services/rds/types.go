@@ -87,4 +87,6 @@ const (
 	AddtionalParamDBPassword string = "dbpassword"
 	// AddtionalParamRequest for request
 	AddtionalParamRequest string = "request"
+	// AddtionalParamFlavorID for flavorid
+	AddtionalParamFlavorID string = "flavorid"
 )

@@ -66,6 +66,85 @@ func SyncStatusWithService(b *RDSBroker, instanceID string, serviceID string, pl
 	if serviceErr != nil {
 		return nil, nil, serviceErr
 	}
+
+	// Check other update operation
+	if instance.Status == "ACTIVE" {
+		// Check OperationDetails length in back database
+		var length int
+		err := database.BackDBConnection.
+			Model(&database.OperationDetails{}).
+			Where("instance_id = ? and operation_type = ?", instanceID, models.OperationUpdating).
+			Count(&length).Error
+		if err != nil {
+			return nil, nil, err
+		}
+
+		// last OperationDetails is exist
+		if length > 0 {
+			// Log length
+			b.Logger.Debug(fmt.Sprintf("instance: %s operation: %s length: %d", instanceID, models.OperationUpdating, length))
+
+			// get last OperationDetails in back database
+			ods := database.OperationDetails{}
+			err := database.BackDBConnection.
+				Where("instance_id = ? and operation_type = ?", instanceID, models.OperationUpdating).
+				Last(&ods).Error
+			if err != nil {
+				return nil, nil, err
+			}
+			// Get additional info from OperationDetails
+			addtionalparamdetail := map[string]string{}
+			err = ods.GetAdditionalInfo(&addtionalparamdetail)
+			if err != nil {
+				return nil, nil, err
+			}
+			// Check AddtionalParamFlavorID exist
+			if _, ok := addtionalparamdetail[AddtionalParamFlavorID]; ok {
+				if (addtionalparamdetail[AddtionalParamFlavorID] != "") &&
+					(addtionalparamdetail[AddtionalParamFlavorID] != instance.Flavor.Id) {
+					// Log begin
+					b.Logger.Debug(fmt.Sprintf("update rds instance %s flavor %s begin.",
+						targetID, addtionalparamdetail[AddtionalParamFlavorID]))
+
+					// UpdateFlavorRef
+					rdsInstance, err := instances.UpdateFlavorRef(
+						rdsClient,
+						instances.UpdateFlavorOps{
+							FlavorRef: addtionalparamdetail[AddtionalParamFlavorID],
+						},
+						targetID).Extract()
+					if err != nil {
+						return nil, nil, fmt.Errorf("update rds instance flavor failed. Error: %s", err)
+					}
+
+					// Log result
+					b.Logger.Debug(fmt.Sprintf("update rds instance flavor result: %v", models.ToJson(rdsInstance)))
+
+					// Invoke sdk get again
+					instance, serviceErr = instances.Get(rdsClient, targetID).Extract()
+					if serviceErr != nil {
+						return nil, nil, serviceErr
+					}
+
+					// Remove AddtionalParamFlavorID
+					delete(addtionalparamdetail, AddtionalParamFlavorID)
+					// Marshal addtional info
+					addtionalinfo, err := json.Marshal(addtionalparamdetail)
+					if err != nil {
+						// Just log
+						b.Logger.Debug(fmt.Sprintf("marshal rds addtional info failed. Error: %s", err))
+					}
+					ods.AdditionalInfo = string(addtionalinfo)
+					err = database.BackDBConnection.Save(&ods).Error
+					if err != nil {
+						// Just log
+						b.Logger.Debug(fmt.Sprintf("Remove %s from OperationDetails in back database failed.", AddtionalParamFlavorID))
+					}
+				}
+			}
+		}
+	}
+
 	// get InstanceDetails in back database
 	err = database.BackDBConnection.
 		Where("instance_id = ? and service_id = ? and plan_id = ?", instanceID, serviceID, planID).

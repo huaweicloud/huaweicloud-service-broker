@@ -83,6 +83,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 	b.Logger.Debug(fmt.Sprintf("update rds instance opts: %v", models.ToJson(updateParameters)))
 
 	// Invoke sdk
+	isUpdateVolumeSize := false
 	if updateParameters.VolumeSize > 0 {
 		// Update in case of difference
 		if instance.Volume.Size != updateParameters.VolumeSize {
@@ -101,6 +102,7 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 
 			// Log result
 			b.Logger.Debug(fmt.Sprintf("update rds instance volume size result: %v", models.ToJson(rdsInstance)))
+			isUpdateVolumeSize = true
 		}
 	}
 
@@ -178,19 +180,37 @@ func (b *RDSBroker) Update(instanceID string, details brokerapi.UpdateDetails, a
 
 		// Update in case of difference
 		if instance.Flavor.Id != flavorID {
-			// UpdateFlavorRef
-			rdsInstance, err := instances.UpdateFlavorRef(
-				rdsClient,
-				instances.UpdateFlavorOps{
-					FlavorRef: flavorID,
-				},
-				ids.TargetID).Extract()
-			if err != nil {
-				return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance flavor failed. Error: %s", err)
-			}
+			// If Update Volume Size is running
+			if isUpdateVolumeSize {
+				// Get additional info from InstanceDetails
+				addtionalparamdetail := map[string]string{}
+				err = ids.GetAdditionalInfo(&addtionalparamdetail)
+				if err != nil {
+					return brokerapi.UpdateServiceSpec{}, fmt.Errorf("get instance additional info failed in update. Error: %s", err)
+				}
+				// Add AddtionalParamFlavorID
+				addtionalparamdetail[AddtionalParamFlavorID] = flavorID
+				// Marshal addtional info
+				addtionalinfo, err := json.Marshal(addtionalparamdetail)
+				if err != nil {
+					return brokerapi.UpdateServiceSpec{}, fmt.Errorf("marshal instance addtional info failed in update. Error: %s", err)
+				}
+				ids.AdditionalInfo = string(addtionalinfo)
+			} else {
+				// UpdateFlavorRef
+				rdsInstance, err := instances.UpdateFlavorRef(
+					rdsClient,
+					instances.UpdateFlavorOps{
+						FlavorRef: flavorID,
+					},
+					ids.TargetID).Extract()
+				if err != nil {
+					return brokerapi.UpdateServiceSpec{}, fmt.Errorf("update rds instance flavor failed. Error: %s", err)
+				}
 
-			// Log result
-			b.Logger.Debug(fmt.Sprintf("update rds instance flavor result: %v", models.ToJson(rdsInstance)))
+				// Log result
+				b.Logger.Debug(fmt.Sprintf("update rds instance flavor result: %v", models.ToJson(rdsInstance)))
+			}
 		}
 	}
 
