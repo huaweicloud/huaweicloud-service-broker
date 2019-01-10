@@ -143,7 +143,7 @@ $ oc create -f serivce.yaml
 #### 4. Creating service broker in OpenShift Cluster
 
 If you do not use the default configurations in Step 3, you can update the key ```url``` value in [service-broker.yaml](
-https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service-broker.yaml#L12) file by the service ```name```, ```namespace``` and ```Port``` which are created by Step 3.
+https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service-broker.yaml#L12) file by the service ```name```, ```namespace``` and ```port``` which are created by Step 3.
 
 ```
 $ vi service-broker.yaml
