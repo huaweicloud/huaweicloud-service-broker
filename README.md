@@ -134,7 +134,7 @@ $ oc create -f secret-config.yaml
 
 #### 3. Creating service in OpenShift Cluster
 
-You can find more information by openning the file [service.yaml](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml). The default [port](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml#L85) for the service is ```12345```, and then you can run the following command to create ```service.yaml```. Please make sure the service is running before going to the next step.
+You can find more information by openning the file [service.yaml](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml). The default [name](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml#L77) for the service is ```service-broker```, and the default ```namespace``` is for the service is ```default```, and the default [port](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml#L85) for the service is ```12345```, and then you can run the following command to create ```service.yaml```. Please make sure the service is running before going to the next step.
 
 ```
 $ oc create -f serivce.yaml
@@ -142,15 +142,13 @@ $ oc create -f serivce.yaml
 
 #### 4. Creating service broker in OpenShift Cluster
 
-Firstly you need to get the service ```ClusterIP``` and ```Port``` which are created by Step 3.
+If you do not use the default configurations in Step 3, you can update the key ```url``` value in [service-broker.yaml](
+https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service-broker.yaml#L12) file by the service ```name```, ```namespace``` and ```Port``` which are created by Step 3.
 
 ```
-$ oc get svc | grep service-broker
 $ vi service-broker.yaml
 ```
-
-Update the key ```url``` value in [service-broker.yaml](
-https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service-broker.yaml#L7) file by the service ```ClusterIP``` and ```Port```. If it is possible, you can register ```ClusterIP``` and ```Port``` into the DNS Server so that you can use the domain name as the key ```url``` value. Then you can run the following command to create ```service-broker.yaml```.
+Then you can run the following command to create ```service-broker.yaml```.
 
 ```
 $ oc create -f service-broker.yaml
