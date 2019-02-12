@@ -31,62 +31,84 @@ func (b *RDSBroker) GetPlanSchemas(serviceID string, planID string, metadata *br
 					"name",
 					"database_password",
 				},
-				PropertySchemas: map[string]brokerapi.PropertySchema{
-					"name": &brokerapi.StringPropertySchema{
-						Description: "Specifies the DB instance name. The DB instance name of the same DB engine is unique for the same tenant. Valid value: The value must be 4 to 64 characters in length and start with a letter. It is case-insensitive and can contain only letters, digits, hyphens (-), and underscores (_).",
+				PropertySchemas: json.RawMessage(`{
+					"name": {
+						"type": "string",
+						"description": "Specifies the DB instance name. The DB instance name of the same DB engine is unique for the same tenant. Valid value: The value must be 4 to 64 characters in length and start with a letter. It is case-insensitive and can contain only letters, digits, hyphens (-), and underscores (_)."
 					},
-					"database_password": &brokerapi.StringPropertySchema{
-						Description: "Specifies the password for user root of the database. Valid value: The value cannot be empty and should contain 8 to 32 characters, including uppercase and lowercase letters, digits, and the following special characters: ~!@#%^*-_=+?",
+					"database_password": {
+						"type": "string",
+						"description": "Specifies the password for user root of the database. Valid value: The value cannot be empty and should contain 8 to 32 characters, including uppercase and lowercase letters, digits, and the following special characters: ~!@#%^*-_=+?."
 					},
-					"speccode": &brokerapi.StringPropertySchema{
-						Description: "Indicates the resource specifications code. Use rds.mysql.m1.xlarge as an example. rds indicates RDS, mysql indicates the DB engine, and m1.xlarge indicates the performance specification (large-memory). The parameter containing rr indicates the read replica specifications. The parameter not containing rr indicates the single or primary/standby DB instance specifications. If you enable HA, the suffix .ha need be added to the DB instance name. For example, the DB instance name is rds.db.s1.xlarge.ha.",
+					"speccode": {
+						"type": "string",
+						"description": "Indicates the resource specifications code. Use rds.mysql.m1.xlarge as an example. rds indicates RDS, mysql indicates the DB engine, and m1.xlarge indicates the performance specification (large-memory). The parameter containing rr indicates the read replica specifications. The parameter not containing rr indicates the single or primary/standby DB instance specifications. If you enable HA, the suffix .ha need be added to the DB instance name. For example, the DB instance name is rds.db.s1.xlarge.ha.",
+						"default": "` + metadataParameters.SpecCode + `"
 					},
-					"volume_type": &brokerapi.StringPropertySchema{
-						Description: "Specifies the volume type. Valid value: It must be COMMON (SATA) or ULTRAHIGH (SSD) and is case-sensitive.",
+					"volume_type": {
+						"type": "string",
+						"description": "Specifies the volume type. Valid value: It must be COMMON (SATA) or ULTRAHIGH (SSD) and is case-sensitive.",
+						"default": "` + metadataParameters.VolumeType + `"
 					},
-					"volume_size": &brokerapi.IntPropertySchema{
-						Description: "Specifies the volume size. Its value must be a multiple of 10 and the value range is 100 GB to 2000 GB.",
+					"volume_size": {
+						"type": "integer",
+						"description": "Specifies the volume size. Its value must be a multiple of 10 and the value range is 100 GB to 2000 GB.",
+						"default": ` + fmt.Sprintf("%d", metadataParameters.VolumeSize) + `
 					},
-					"availability_zone": &brokerapi.StringPropertySchema{
-						Description: "Specifies the ID of the AZ.",
+					"availability_zone": {
+						"type": "string",
+						"description": "Specifies the ID of the AZ.",
+						"default": "` + metadataParameters.AvailabilityZone + `"
 					},
-					"vpc_id": &brokerapi.StringPropertySchema{
-						Description: "Specifies the VPC ID.",
+					"vpc_id": {
+						"type": "string",
+						"description": "Specifies the VPC ID.",
+						"default": "` + metadataParameters.VPCID + `"
 					},
-					"subnet_id": &brokerapi.StringPropertySchema{
-						Description: "Specifies the UUID for nics information.",
+					"subnet_id": {
+						"type": "string",
+						"description": "Specifies the UUID for nics information.",
+						"default": "` + metadataParameters.SubnetID + `"
 					},
-					"security_group_id": &brokerapi.StringPropertySchema{
-						Description: "Specifies the security group ID which the RDS DB instance belongs to.",
+					"security_group_id": {
+						"type": "string",
+						"description": "Specifies the security group ID which the RDS DB instance belongs to.",
+						"default": "` + metadataParameters.SecurityGroupID + `"
 					},
-					"database_port": &brokerapi.StringPropertySchema{
-						Description: "Specifies the database port number.",
+					"database_port": {
+						"type": "string",
+						"description": "Specifies the database port number."
 					},
-					"backup_strategy_starttime": &brokerapi.StringPropertySchema{
-						Description: "Indicates the backup start time that has been set. The backup task will be triggered within one hour after the backup start time.",
+					"backup_strategy_starttime": {
+						"type": "string",
+						"description": "Indicates the backup start time that has been set. The backup task will be triggered within one hour after the backup start time."
 					},
-					"backup_strategy_keepdays": &brokerapi.IntPropertySchema{
-						Description: "Specifies the number of days to retain the generated backup files. Its value range is 0 to 35.",
+					"backup_strategy_keepdays": {
+						"type": "integer",
+						"description": "Specifies the number of days to retain the generated backup files. Its value range is 0 to 35."
 					},
-					"ha_enable": &brokerapi.StringPropertySchema{
-						Description:   "Specifies the HA configuration parameter. Valid value: The value is true or false. The value true indicates creating HA DB instances. The value false indicates creating a single DB instance.",
-						AllowedValues: []string{"true", "false"},
-						DefaultValue:  "false",
+					"ha_enable": {
+						"type": "boolean",
+						"description": "Specifies the HA configuration parameter. Valid value: The value is true or false. The value true indicates creating HA DB instances. The value false indicates creating a single DB instance.",
+						"default":  false
 					},
-					"ha_replicationmode": &brokerapi.StringPropertySchema{
-						Description: "Specifies the replication mode for the standby DB instance. The value cannot be empty. For MySQL, the value is async or semisync.",
-					},
-				},
+					"ha_replicationmode": {
+						"type": "string",
+						"description": "Specifies the replication mode for the standby DB instance. For MySQL, the value is async or semisync."
+					}
+				}`),
 			},
 			UpdatingParametersSchema: &brokerapi.InputParametersSchema{
-				PropertySchemas: map[string]brokerapi.PropertySchema{
-					"volume_size": &brokerapi.IntPropertySchema{
-						Description: "Specifies the volume size. Its value must be a multiple of 10 and the value range is 100 GB to 2000 GB.",
+				PropertySchemas: json.RawMessage(`{
+					"volume_size": {
+						"type": "integer",
+						"description": "Specifies the volume size. Its value must be a multiple of 10 and the value range is 100 GB to 2000 GB."
 					},
-					"speccode": &brokerapi.StringPropertySchema{
-						Description: "Indicates the resource specifications code. Use rds.mysql.m1.xlarge as an example. rds indicates RDS, mysql indicates the DB engine, and m1.xlarge indicates the performance specification (large-memory). The parameter containing rr indicates the read replica specifications. The parameter not containing rr indicates the single or primary/standby DB instance specifications. If you enable HA, the suffix .ha need be added to the DB instance name. For example, the DB instance name is rds.db.s1.xlarge.ha.",
-					},
-				},
+					"speccode": {
+						"type": "string",
+						"description": "Indicates the resource specifications code. Use rds.mysql.m1.xlarge as an example. rds indicates RDS, mysql indicates the DB engine, and m1.xlarge indicates the performance specification (large-memory). The parameter containing rr indicates the read replica specifications. The parameter not containing rr indicates the single or primary/standby DB instance specifications. If you enable HA, the suffix .ha need be added to the DB instance name. For example, the DB instance name is rds.db.s1.xlarge.ha."
+					}
+				}`),
 			},
 		},
 		ServiceBindings: nil,

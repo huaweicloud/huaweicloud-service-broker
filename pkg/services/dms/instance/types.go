@@ -2,6 +2,9 @@ package instance
 
 import (
 	"encoding/json"
+	"fmt"
+	"reflect"
+	"strings"
 
 	"code.cloudfoundry.org/lager"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/config"
@@ -63,6 +66,20 @@ func (f *ProvisionParameters) MarshalJSON() ([]byte, error) {
 func (f *ProvisionParameters) UnmarshalJSON(b []byte) error {
 	var j map[string]interface{}
 	json.Unmarshal(b, &j)
+	fmt.Printf("DMS UnmarshalJSON ProvisionParameters: %v\n", j)
+	// Compatibles Array and String for availability_zones
+	if j["availability_zones"] != nil {
+		t := reflect.TypeOf(j["availability_zones"]).Kind()
+		fmt.Printf("DMS UnmarshalJSON availability_zones type: %v\n", t)
+		if t == reflect.String {
+			str := FormatStr(j["availability_zones"].(string))
+			if str != "" {
+				j["availability_zones"] = strings.Split(str, ",")
+				fmt.Printf("DMS UnmarshalJSON availability_zones value: %v\n", j["availability_zones"])
+			}
+		}
+	}
+
 	b, _ = bson.Marshal(&j)
 	return bson.Unmarshal(b, f)
 }
@@ -74,6 +91,14 @@ type UpdateParameters struct {
 	MaintainBegin   string  `json:"maintain_begin,omitempty"`
 	MaintainEnd     string  `json:"maintain_end,omitempty"`
 	SecurityGroupID string  `json:"security_group_id,omitempty"`
+}
+
+func FormatStr(str string) string {
+	str = strings.Replace(str, " ", "", -1)
+	str = strings.Replace(str, `"`, "", -1)
+	str = strings.TrimPrefix(str, "[")
+	str = strings.TrimSuffix(str, "]")
+	return str
 }
 
 const (

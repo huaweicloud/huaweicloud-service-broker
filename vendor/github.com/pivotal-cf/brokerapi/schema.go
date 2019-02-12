@@ -32,8 +32,8 @@ type BindingSchemas struct {
 // InputParametersSchema encapsulates schema for validating input parameters
 // to any single operation.
 type InputParametersSchema struct {
-	RequiredProperties []string                  `json:"required,omitempty"`
-	PropertySchemas    map[string]PropertySchema `json:"properties,omitempty"`
+	RequiredProperties []string        `json:"required,omitempty"`
+	PropertySchemas    json.RawMessage `json:"properties,omitempty"`
 }
 
 // MarshalJSON defines custom JSON marshaling for InputParametersSchema and
@@ -69,7 +69,7 @@ func (i InputParametersSchema) Validate(valMap map[string]interface{}) error {
 			return NewValidationError(requiredProperty, "field is required")
 		}
 	}
-	for k, v := range valMap {
+	/*for k, v := range valMap {
 		propertySchema, ok := i.PropertySchemas[k]
 		if !ok {
 			return NewValidationError(k, "unrecognized field")
@@ -77,7 +77,7 @@ func (i InputParametersSchema) Validate(valMap map[string]interface{}) error {
 		if err := propertySchema.validate(k, v); err != nil {
 			return err
 		}
-	}
+	}*/
 	return nil
 }
 
