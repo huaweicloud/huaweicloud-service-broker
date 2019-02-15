@@ -3,6 +3,7 @@ package obs
 import (
 	"fmt"
 
+	"github.com/huaweicloud/golangsdk/openstack/obs"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/database"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/models"
 	"github.com/pivotal-cf/brokerapi"
@@ -57,6 +58,36 @@ func (b *OBSBroker) Deprovision(instanceID string, details brokerapi.Deprovision
 
 	// Log opts
 	b.Logger.Debug(fmt.Sprintf("deprovision obs bucket opts: %s", instanceID))
+
+	// delete objects in bucket
+	// build bucket listOpts
+	listOpts := &obs.ListObjectsInput{}
+	listOpts.Bucket = ids.TargetID
+
+	// list objects in bucket
+	listResponse, err := obsClient.ListObjects(listOpts)
+	if err != nil {
+		return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("Couldn't list objects in OBS: %v", err)
+	}
+	b.Logger.Debug(fmt.Sprintf("List objects response: %v", listResponse))
+
+	// delete objects in bucket
+	if len(listResponse.Contents) > 0 {
+		objects := make([]obs.ObjectToDelete, 0, len(listResponse.Contents))
+		for _, val := range listResponse.Contents {
+			objects = append(objects, obs.ObjectToDelete{Key: val.Key})
+		}
+		deleteOpts := &obs.DeleteObjectsInput{}
+		deleteOpts.Bucket = ids.TargetID
+		deleteOpts.Objects = objects
+
+		// delete objects in bucket
+		deleteResponse, err := obsClient.DeleteObjects(deleteOpts)
+		if err != nil {
+			return brokerapi.DeprovisionServiceSpec{}, fmt.Errorf("Couldn't delete objects in OBS: %v", err)
+		}
+		b.Logger.Debug(fmt.Sprintf("Delete objects response: %v", deleteResponse))
+	}
 
 	// Invoke sdk
 	obsResponse, err := obsClient.DeleteBucket(ids.TargetID)
