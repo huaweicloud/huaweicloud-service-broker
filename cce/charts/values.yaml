@@ -27,7 +27,7 @@ backDatabase:
   # database host ip
   databaseHost: "127.0.0.1"
   # database port
-  databasePort: "3306"
+  databasePort: 3306
   # database name
   databaseName: "broker"
   # database username

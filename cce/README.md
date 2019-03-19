@@ -11,6 +11,8 @@
 For convenience we can export environment variables firstly.
 ```
 export backDatabase_databaseHost=<back database host ip>
+export backDatabase_databasePort=<back database port>
+export backDatabase_databaseName=<back database name>
 export backDatabase_databaseUsername=<back database username>
 export backDatabase_databasePassword=<back database password>
 export cloudCredentials_authUrl=<auth url for cloud>
@@ -32,8 +34,11 @@ Installation of this chart is by helm.
 
 ```
 $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
+$ cd huaweicloud-service-broker
 $ helm install cce/charts/ --name service-broker --namespace huaweicloud \
   --set backDatabase.databaseHost=$backDatabase_databaseHost \
+  --set backDatabase.databasePort=$backDatabase_databasePort \
+  --set backDatabase.databaseName=$backDatabase_databaseName \
   --set backDatabase.databaseUsername=$backDatabase_databaseUsername \
   --set backDatabase.databasePassword=$backDatabase_databasePassword \
   --set cloudCredentials.authUrl=$cloudCredentials_authUrl \
@@ -64,7 +69,7 @@ please see the following configurable parameters that can be configured during i
 | brokerConfig.password | broker auth password | "password" |
 | backDatabase.databaseType | back database type | "mysql" |
 | backDatabase.databaseHost | back database host ip | "127.0.0.1" |
-| backDatabase.databasePort | back database port | "3306" |
+| backDatabase.databasePort | back database port | 3306 |
 | backDatabase.databaseName | back database name | "broker" |
 | backDatabase.databaseUsername | back database username | "******" |
 | backDatabase.databasePassword | back database password | "******" |
