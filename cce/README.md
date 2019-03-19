@@ -6,7 +6,7 @@
 - [Helm](https://github.com/helm/helm#install) 2.7.0+ has been installed.
 - [Kubernetes Service Catalog](https://github.com/kubernetes-incubator/service-catalog/blob/master/docs/install.md) has been installed.
 
-## Installing the Chart
+### Installing the Chart
 
 For convenience we can export environment variables firstly.
 ```
@@ -51,9 +51,7 @@ $ helm install cce/charts/ --name service-broker --namespace huaweicloud \
   --set catalog.securityGroupID=$catalog_securityGroupID
 ```
 
-If you'd like to customize the installation,
-please see the following configurable parameters to see options
-that can be configured during installation.
+please see the following configurable parameters that can be configured during installation.
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
@@ -99,57 +97,7 @@ $ kubectl get clusterserviceclasses -o=custom-columns=SERVICE\ NAME:.metadata.na
 $ kubectl get clusterserviceplans -o=custom-columns=NAME:.metadata.name,EXTERNAL\ NAME:.spec.externalName,SERVICE\ CLASS:.spec.clusterServiceClassRef.name --sort-by=.spec.clusterServiceClassRef.name
 ```
 
-Currently the following Services and Service Plans are tested in CCE.
-<table>
-  <tr align="left">
-    <th width="20%">Service Name</th>
-    <th width="30%">Service Description</th>
-    <th width="20%">Service Plan Name</th>
-    <th width="30%">Service Plan Description</th>
-  </tr>
-  <tr>
-    <td rowspan="5">rds-mysql</td>
-    <td rowspan="5">RDS MySQL Service</td>
-    <td>5-7-17</td>
-    <td>RDS MySQL 5.7.17</td>
-  </tr>
-  <tr>
-    <td>5-6-35</td>
-    <td>RDS MySQL 5.6.35</td>
-  </tr>
-  <tr>
-    <td>5-6-34</td>
-    <td>RDS MySQL 5.6.34</td>
-  </tr>
-  <tr>
-    <td>5-6-33</td>
-    <td>RDS MySQL 5.6.33</td>
-  </tr>
-  <tr>
-    <td>5-6-30</td>
-    <td>RDS MySQL 5.6.30</td>
-  </tr>
-  <tr>
-    <td>rds-sqlserver</td>
-    <td>RDS SQLServer Service</td>
-    <td>2014-SP2-SE</td>
-    <td>RDS SQLServer 2014 SP2 SE</td>
-  </tr>
-  <tr>
-    <td rowspan="2">dcs-redis</td>
-    <td rowspan="2">Distributed Cache Service for Redis</td>
-    <td>SingleNode</td>
-    <td>Redis Single Node</td>
-  </tr>
-  <tr>
-    <td>MasterStandby</td>
-    <td>Redis Master Standby</td>
-  </tr>
-</table>
-
-## Uninstalling the Chart
-
-To uninstall the `service-broker` deployment:
+### Uninstalling the Chart
 
 ```
 $ helm delete --purge service-broker

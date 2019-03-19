@@ -51,7 +51,7 @@ cloudCredentials:
   region: "eu-west-0"
   # access key for cloud
   accessKey: "******"
-  # secret key fro cloud
+  # secret key for cloud
   secretKey: "******"
 
 # catalog info
