@@ -1,0 +1,242 @@
+{
+    "broker_config": {
+        "log_level": "%s",
+        "username": "%s",
+        "password": "%s"
+    },
+    "back_database": {
+        "database_type": "%s",
+        "database_host": "%s",
+        "database_port": "%s",
+        "database_name": "%s",
+        "database_username": "%s",
+        "database_password": "%s"
+    },
+    "cloud_credentials": {
+        "auth_url": "%s",
+        "user_name": "%s",
+        "password": "%s",
+        "domain_name": "%s",
+        "tenant_name": "%s",
+        "region": "%s",
+        "access_key": "%s",
+        "secret_key": "%s"
+    },
+    "catalog": {
+        "services": [
+            {
+                "id": "a05f3e0b-86fd-4303-946c-171374d29150",
+                "name": "rds-mysql",
+                "description": "RDS MySQL Service",
+                "bindable": true,
+                "tags": [
+                    "mysql",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS MySQL",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS MySQL Service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0044262671.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "a15f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-7-17",
+                        "description": "RDS MySQL 5.7.17",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.7.17",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a25f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-35",
+                        "description": "RDS MySQL 5.6.35",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.35",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a35f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-34",
+                        "description": "RDS MySQL 5.6.34",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.34",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a45f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-33",
+                        "description": "RDS MySQL 5.6.33",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.33",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a55f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "5-6-30",
+                        "description": "RDS MySQL 5.6.30",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6.30",
+                                "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "b05f3e0b-86fd-4303-946c-171374d29150",
+                "name": "rds-sqlserver",
+                "description": "RDS SQLServer Service",
+                "bindable": true,
+                "tags": [
+                    "sqlserver",
+                    "relational"
+                ],
+                "metadata": {
+                    "displayName": "RDS SQLServer",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "RDS SQLServer Service",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-rds/en-us_topic_0053089719.html",
+                    "supportUrl": "http://www.huaweicloud.com/en-us/product/rds.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "b15f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "2014-SP2-SE",
+                        "description": "RDS SQLServer 2014 SP2 SE",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "SQLServer",
+                                "datastore_version": "2014 SP2 SE",
+                                "speccode": "rds.mssql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "rdsuser"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "c05f3e0b-86fd-4303-946c-171374d29150",
+                "name": "dcs-redis",
+                "description": "Distributed Cache Service for Redis",
+                "bindable": true,
+                "tags": [
+                    "redis",
+                    "cache"
+                ],
+                "metadata": {
+                    "displayName": "Distributed Cache Service for Redis",
+                    "imageUrl": "data:image/png;",
+                    "longDescription": "Distributed Cache Service for Redis",
+                    "providerDisplayName": "Huawei Cloud Services",
+                    "documentationUrl": "https://support.huaweicloud.com/en-us/usermanual-dcs/en-us_topic_0054235836.html",
+                    "supportUrl": "https://www.huaweicloud.com/en-us/product/dcs.html"
+                },
+                "plan_updateable": true,
+                "plans": [
+                    {
+                        "id": "c15f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "SingleNode",
+                        "description": "Redis Single Node",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Redis",
+                                "engine_version": "3.0.7",
+                                "speccode":"dcs.single_node",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "availability_zones": ["%s"]
+                            }
+                        }
+                    },
+                    {
+                        "id": "c25f3e0b-86fd-4303-946c-171374d29150",
+                        "name": "MasterStandby",
+                        "description": "Redis Master Standby",
+                        "metadata": {
+                            "parameters": {
+                                "engine": "Redis",
+                                "engine_version": "3.0.7",
+                                "speccode":"dcs.master_standby",
+                                "charging_type": "Hourly",
+                                "capacity": 2,
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "availability_zones": ["%s"]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

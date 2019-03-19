@@ -1,0 +1,3 @@
+name: huaweicloud-service-broker
+description: huaweicloud service broker deployment helm chart
+version: 0.0.1

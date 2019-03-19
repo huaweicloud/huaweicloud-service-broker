@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "fullname" . }}
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ template "fullname" . }}-role
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "get", "delete"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["list", "watch", "create", "update", "patch"]
+
+---
+
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ template "fullname" . }}-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "fullname" . }}
+    namespace: {{ .Release.Namespace | quote }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "fullname" . }}-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+kind: StatefulSet
+apiVersion: apps/v1beta1
+metadata:
+  name: {{ template "fullname" . }}
+spec:
+  serviceName: "{{ template "fullname" . }}"
+  replicas: {{ .Values.service.replicas }}
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname" . }}"
+    spec:
+      serviceAccount: "{{ template "fullname" . }}"
+      containers:
+        - name: huaweicloud-service-broker
+          image: {{ .Values.service.image }}
+          imagePullPolicy: {{ .Values.service.imagePullPolicy }}
+          args:
+            - "--config=$(CONFIG_JSON)"
+            - "--port={{ .Values.service.containerPort }}"
+          env:
+            - name: CONFIG_JSON
+              value: /etc/config/config.json
+          ports:
+            - containerPort: {{ .Values.service.containerPort }}
+          volumeMounts:
+            - name: config-secret-dir
+              mountPath: /etc/config
+      volumes:
+        - name: config-secret-dir
+          secret:
+            secretName: {{ template "fullname" . }}-config-secret
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+spec:
+  selector:
+    app: {{ template "fullname" . }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.containerPort }}

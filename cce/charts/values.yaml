@@ -1,0 +1,68 @@
+# service
+service:
+  # replicas count
+  replicas: 1
+  # image name and version
+  image: quay.io/huaweicloud/huaweicloud-service-broker:latest
+  # image pull policy
+  imagePullPolicy: Always
+  # container port
+  containerPort: 3000
+  # service port
+  port: 12345
+
+# broker config
+brokerConfig:
+  # log level
+  logLevel: "DEBUG"
+  # broker auth username
+  username: "username"
+  # broker auth password
+  password: "password"
+
+# back database
+backDatabase:
+  # database type
+  databaseType: "mysql"
+  # database host ip
+  databaseHost: "127.0.0.1"
+  # database port
+  databasePort: "3306"
+  # database name
+  databaseName: "broker"
+  # database username
+  databaseUsername: "******"
+  # database password
+  databasePassword: "******"
+
+# cloud credentials
+cloudCredentials:
+  # auth url for cloud
+  authUrl: "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
+  # username for cloud
+  username: "******"
+  # password for cloud
+  password: "******"
+  # domain name for cloud
+  domainName: "******"
+  # tenant name for cloud
+  tenantName: "eu-west-0"
+  # region name for cloud
+  region: "eu-west-0"
+  # access key for cloud
+  accessKey: "******"
+  # secret key fro cloud
+  secretKey: "******"
+
+# catalog info
+catalog:
+  # primary availability zone
+  primaryAvailabilityZone: "eu-west-0a"
+  # secondary availability zone
+  secondaryAvailabilityZone: "eu-west-0b"
+  # vpc id
+  vpcID:  "******"
+  # subnet id
+  subnetID: "******"
+  # security group id
+  securityGroupID: "******"
