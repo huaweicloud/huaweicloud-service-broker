@@ -138,7 +138,7 @@ $ kubectl describe serviceinstance mysql-service-instance
 
 ```
 $ vi mysql-service-binding.yaml
-$ oc create -f mysql-service-binding.yaml
+$ kubectl create -f mysql-service-binding.yaml
 ```
 
 This example will store the binding informations into a secret resource named ```mysql-service-secret```.
