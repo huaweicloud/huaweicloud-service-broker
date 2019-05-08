@@ -60,7 +60,7 @@ $ oc create -f secret-config.yaml
 You can find more information by openning the file [service.yaml](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml). The default [name](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml#L77) for the service is ```service-broker```, and the default ```namespace``` for the service is ```default```, and the default [port](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/openshift/deploy/service.yaml#L85) for the service is ```12345```, and then you can run the following command to create ```service.yaml```. Please make sure the service is running before going to the next step.
 
 ```
-$ oc create -f serivce.yaml
+$ oc create -f service.yaml
 ```
 
 #### 4. Creating service broker in OpenShift Cluster
