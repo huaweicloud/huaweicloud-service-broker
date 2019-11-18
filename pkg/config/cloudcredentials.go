@@ -35,6 +35,7 @@ type CloudCredentials struct {
 	Token            string `json:"token"`
 	Username         string `json:"user_name"`
 	UserID           string `json:"user_id"`
+	RdsVersion       string `json:"rds_version"`
 
 	OpenStackClient *gophercloud.ProviderClient
 	CloudClient     *golangsdk.ProviderClient
@@ -261,6 +262,14 @@ func (c *CloudCredentials) NetworkingV2Client() (*gophercloud.ServiceClient, err
 // RDSV1Client return rds v1 client
 func (c *CloudCredentials) RDSV1Client() (*golangsdk.ServiceClient, error) {
 	return openstack.NewRdsServiceV1(c.CloudClient, golangsdk.EndpointOpts{
+		Region:       c.Region,
+		Availability: c.getEndpointType(),
+	})
+}
+
+// RDSV3Client return rds v3 client
+func (c *CloudCredentials) RDSV3Client() (*golangsdk.ServiceClient, error) {
+	return openstack.NewRDSV3(c.CloudClient, golangsdk.EndpointOpts{
 		Region:       c.Region,
 		Availability: c.getEndpointType(),
 	})

@@ -13,7 +13,8 @@ import (
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dms/instance"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/dms/queue"
 	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/obs"
-	"github.com/huaweicloud/huaweicloud-service-broker/pkg/services/rds"
+	rds "github.com/huaweicloud/huaweicloud-service-broker/pkg/services/rds/v1"
+	rdsv3 "github.com/huaweicloud/huaweicloud-service-broker/pkg/services/rds/v3"
 	"github.com/pivotal-cf/brokerapi"
 )
 
@@ -78,27 +79,56 @@ func New(logger lager.Logger, config config.Config) (*CloudServiceBroker, error)
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
 		},
+	}
+
+	if self.CloudCredentials.RdsVersion == "v1" {
 		//RDS
-		models.RDSMysqlServiceName: &rds.RDSBroker{
+		self.ServiceBrokerMap[models.RDSMysqlServiceName] = &rds.RDSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
-		},
-		models.RDSPostgresqlServiceName: &rds.RDSBroker{
+		}
+
+		self.ServiceBrokerMap[models.RDSPostgresqlServiceName] = &rds.RDSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
-		},
-		models.RDSSqlserverServiceName: &rds.RDSBroker{
+		}
+
+		self.ServiceBrokerMap[models.RDSSqlserverServiceName] = &rds.RDSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
-		},
-		models.RDSHwsqlServiceName: &rds.RDSBroker{
+		}
+		self.ServiceBrokerMap[models.RDSHwsqlServiceName] = &rds.RDSBroker{
 			CloudCredentials: self.CloudCredentials,
 			Catalog:          self.Catalog,
 			Logger:           self.Logger,
-		},
+		}
+	} else {
+		//RDS V3
+		self.ServiceBrokerMap[models.RDSMysqlServiceName] = &rdsv3.RDSBroker{
+			CloudCredentials: self.CloudCredentials,
+			Catalog:          self.Catalog,
+			Logger:           self.Logger,
+		}
+
+		self.ServiceBrokerMap[models.RDSPostgresqlServiceName] = &rdsv3.RDSBroker{
+			CloudCredentials: self.CloudCredentials,
+			Catalog:          self.Catalog,
+			Logger:           self.Logger,
+		}
+
+		self.ServiceBrokerMap[models.RDSSqlserverServiceName] = &rdsv3.RDSBroker{
+			CloudCredentials: self.CloudCredentials,
+			Catalog:          self.Catalog,
+			Logger:           self.Logger,
+		}
+		self.ServiceBrokerMap[models.RDSHwsqlServiceName] = &rdsv3.RDSBroker{
+			CloudCredentials: self.CloudCredentials,
+			Catalog:          self.Catalog,
+			Logger:           self.Logger,
+		}
 	}
 
 	// replace the mapping from name to a mapping from id
