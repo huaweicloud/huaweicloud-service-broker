@@ -7,7 +7,7 @@
     "back_database": {
         "database_type": "%s",
         "database_host": "%s",
-        "database_port": "%.0f",
+        "database_port": "%s",
         "database_name": "%s",
         "database_username": "%s",
         "database_password": "%s"
