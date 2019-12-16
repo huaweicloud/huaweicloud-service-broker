@@ -81,6 +81,7 @@ please see the following configurable parameters that can be configured during i
 | cloudCredentials.region | region name for cloud | "eu-west-0" |
 | cloudCredentials.accessKey | access key for cloud | "******" |
 | cloudCredentials.secretKey | secret key for cloud | "******" |
+| cloudCredentials.rds_version | rds version | "******" |
 | catalog.primaryAvailabilityZone | primary availability zone | "eu-west-0a" |
 | catalog.secondaryAvailabilityZone | secondary availability zone | "eu-west-0b" |
 | catalog.vpcID | vpc id | "******" |
