@@ -2,7 +2,7 @@ apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
   name: mysql-service-instance-ha-with-2az
-  namespace: huaweicloud
+  namespace: default
 spec:
   # References service name and plan name
   clusterServiceClassExternalName: rds-mysql
