@@ -23,6 +23,7 @@ export cloudCredentials_tenantName=<tenant name for cloud>
 export cloudCredentials_region=<region name for cloud>
 export cloudCredentials_accessKey=<access key for cloud>
 export cloudCredentials_secretKey=<secret key for cloud>
+export cloudCredentials_rdsVersion="v3"
 export catalog_primaryAvailabilityZone=<primary availability zone>
 export catalog_secondaryAvailabilityZone=<secondary availability zone>
 export catalog_vpcID=<vpc id>
@@ -36,24 +37,25 @@ Installation of this chart is by helm.
 $ git clone https://github.com/huaweicloud/huaweicloud-service-broker.git
 $ cd huaweicloud-service-broker
 $ helm install cce/charts/ --name service-broker --namespace huaweicloud \
-  --set backDatabase.databaseHost=$backDatabase_databaseHost \
-  --set backDatabase.databasePort=$backDatabase_databasePort \
-  --set backDatabase.databaseName=$backDatabase_databaseName \
-  --set backDatabase.databaseUsername=$backDatabase_databaseUsername \
-  --set backDatabase.databasePassword=$backDatabase_databasePassword \
-  --set cloudCredentials.authUrl=$cloudCredentials_authUrl \
-  --set cloudCredentials.username=$cloudCredentials_username \
-  --set cloudCredentials.password=$cloudCredentials_password \
-  --set cloudCredentials.domainName=$cloudCredentials_domainName \
-  --set cloudCredentials.tenantName=$cloudCredentials_tenantName \
-  --set cloudCredentials.region=$cloudCredentials_region \
-  --set cloudCredentials.accessKey=$cloudCredentials_accessKey \
-  --set cloudCredentials.secretKey=$cloudCredentials_secretKey \
-  --set catalog.primaryAvailabilityZone=$catalog_primaryAvailabilityZone \
-  --set catalog.secondaryAvailabilityZone=$catalog_secondaryAvailabilityZone \
-  --set catalog.vpcID=$catalog_vpcID \
-  --set catalog.subnetID=$catalog_subnetID \
-  --set catalog.securityGroupID=$catalog_securityGroupID
+  --set-string backDatabase.databaseHost=$backDatabase_databaseHost \
+  --set-string backDatabase.databasePort=$backDatabase_databasePort \
+  --set-string backDatabase.databaseName=$backDatabase_databaseName \
+  --set-string backDatabase.databaseUsername=$backDatabase_databaseUsername \
+  --set-string backDatabase.databasePassword=$backDatabase_databasePassword \
+  --set-string cloudCredentials.authUrl=$cloudCredentials_authUrl \
+  --set-string cloudCredentials.username=$cloudCredentials_username \
+  --set-string cloudCredentials.password=$cloudCredentials_password \
+  --set-string cloudCredentials.domainName=$cloudCredentials_domainName \
+  --set-string cloudCredentials.tenantName=$cloudCredentials_tenantName \
+  --set-string cloudCredentials.region=$cloudCredentials_region \
+  --set-string cloudCredentials.accessKey=$cloudCredentials_accessKey \
+  --set-string cloudCredentials.secretKey=$cloudCredentials_secretKey \
+  --set-string cloudCredentials.rdsVersion=$cloudCredentials_rdsVersion \
+  --set-string catalog.primaryAvailabilityZone=$catalog_primaryAvailabilityZone \
+  --set-string catalog.secondaryAvailabilityZone=$catalog_secondaryAvailabilityZone \
+  --set-string catalog.vpcID=$catalog_vpcID \
+  --set-string catalog.subnetID=$catalog_subnetID \
+  --set-string catalog.securityGroupID=$catalog_securityGroupID
 ```
 
 please see the following configurable parameters that can be configured during installation.
@@ -81,6 +83,7 @@ please see the following configurable parameters that can be configured during i
 | cloudCredentials.region | region name for cloud | "eu-west-0" |
 | cloudCredentials.accessKey | access key for cloud | "******" |
 | cloudCredentials.secretKey | secret key for cloud | "******" |
+| cloudCredentials.rdsVersion | rds version | "v3" |
 | catalog.primaryAvailabilityZone | primary availability zone | "eu-west-0a" |
 | catalog.secondaryAvailabilityZone | secondary availability zone | "eu-west-0b" |
 | catalog.vpcID | vpc id | "******" |

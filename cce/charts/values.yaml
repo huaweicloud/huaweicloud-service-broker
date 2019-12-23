@@ -3,7 +3,7 @@ service:
   # replicas count
   replicas: 1
   # image name and version
-  image: quay.io/huaweicloud/huaweicloud-service-broker:latest
+  image: quay.io/huaweicloud/huaweicloud-service-broker:0.0.2
   # image pull policy
   imagePullPolicy: Always
   # container port

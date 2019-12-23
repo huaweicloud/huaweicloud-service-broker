@@ -7,7 +7,7 @@
     "back_database": {
         "database_type": "%s",
         "database_host": "%s",
-        "database_port": "%.0f",
+        "database_port": "%s",
         "database_name": "%s",
         "database_username": "%s",
         "database_password": "%s"
@@ -20,7 +20,8 @@
         "tenant_name": "%s",
         "region": "%s",
         "access_key": "%s",
-        "secret_key": "%s"
+        "secret_key": "%s",
+        "rds_version": "%s"
     },
     "catalog": {
         "services": [
@@ -52,6 +53,82 @@
                                 "datastore_type": "MySQL",
                                 "datastore_version": "5.7.17",
                                 "speccode": "rds.mysql.s1.xlarge",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a25f3e0b-86fd-4303-946c-171374d29153",
+                        "name": "5-6",
+                        "description": "RDS MySQL 5.6",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.6",
+                                "speccode": "rds.mysql.s1.large",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a25f3e0b-86fd-4303-946c-171374d29151",
+                        "name": "5-7-read-only-replica",
+                        "description": "RDS MySQL 5.7 read replication",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.7",
+                                "speccode": "rds.mysql.c6.large.2.rr",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a25f3e0b-86fd-4303-946c-171374d29152",
+                        "name": "5-7",
+                        "description": "RDS MySQL 5.7",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.7",
+                                "speccode": "rds.mysql.s1.large",
+                                "volume_type": "COMMON",
+                                "volume_size": 100,
+                                "availability_zone": "%s",
+                                "vpc_id": "%s",
+                                "subnet_id": "%s",
+                                "security_group_id": "%s",
+                                "database_username": "root"
+                            }
+                        }
+                    },
+                    {
+                        "id": "a15f3e0b-86fd-4303-946c-171374d29154",
+                        "name": "5-7-HA",
+                        "description": "RDS MySQL 5.7 HA with two AZs",
+                        "metadata": {
+                            "parameters": {
+                                "datastore_type": "MySQL",
+                                "datastore_version": "5.7",
+                                "speccode": "rds.mysql.s1.large.ha",
                                 "volume_type": "COMMON",
                                 "volume_size": 100,
                                 "availability_zone": "%s",

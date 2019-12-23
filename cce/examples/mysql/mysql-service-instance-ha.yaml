@@ -1,14 +1,17 @@
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: mysql-service-instance
-  namespace: default
+  name: mysql-service-instance-ha-with-2az
+  namespace: huaweicloud
 spec:
   # References service name and plan name
   clusterServiceClassExternalName: rds-mysql
-  clusterServicePlanExternalName: 5-7
+  clusterServicePlanExternalName: 5-7-HA
   # Additional parameters can be added here,
   # which may be used by the service broker.
   parameters:
+    ha_enable: true
+    ha_replicationmode: "async"
+    availability_zone: "eu-west-0a,eu-west-0b"
     name: "RDSMysql"
     database_password: "Password1234!"

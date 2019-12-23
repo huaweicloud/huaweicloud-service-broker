@@ -33,6 +33,7 @@ Provision a new instance for RDS MySQL Service.
 | database_password            | string     | Y         | Specifies the password for user root of the database. Valid value: The value cannot be empty and should contain 8 to 32 characters, including uppercase and lowercase letters, digits, and the following special characters: ~!@#%^*-_=+?
 | backup_strategy_starttime    | string     | N         | Indicates the backup start time that has been set. The backup task will be triggered within one hour after the backup start time.
 | backup_strategy_keepdays     | int        | N         | Specifies the number of days to retain the generated backup files. Its value range is 0 to 35.
+| replica_of_id                | string     | N         | Specifies the rds instance.
 | ha_enable                    | bool       | N         | Specifies the HA configuration parameter. Valid value: The value is true or false. The value true indicates creating HA DB instances. The value false indicates creating a single DB instance.
 | ha_replicationmode           | string     | N         | Specifies the replication mode for the standby DB instance. The value cannot be empty. For MySQL, the value is async or semisync.
 

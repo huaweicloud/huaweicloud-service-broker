@@ -515,3 +515,9 @@ func NewOBSService(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) 
 	sc, err := initClientOpts(client, eo, "object")
 	return sc, err
 }
+
+// NewRDSV3 creates a ServiceClient that may be used to access the RDS service.
+func NewRDSV3(client *golangsdk.ProviderClient, eo golangsdk.EndpointOpts) (*golangsdk.ServiceClient, error) {
+	sc, err := initClientOpts(client, eo, "rdsv3")
+	return sc, err
+}
