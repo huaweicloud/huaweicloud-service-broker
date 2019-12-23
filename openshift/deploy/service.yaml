@@ -52,7 +52,7 @@ spec:
       serviceAccount: service-broker
       containers:
         - name: huaweicloud-service-broker
-          image: quay.io/huaweicloud/huaweicloud-service-broker:latest
+          image: quay.io/huaweicloud/huaweicloud-service-broker:0.0.2
           imagePullPolicy: Always
           args:
             - "--config=$(CONFIG_JSON)"
