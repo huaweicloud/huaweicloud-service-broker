@@ -125,7 +125,7 @@ $ cd cce/examples/mysql/
 $ vi mysql-service-instance.yaml
 ```
 
-The ```mysql-service-instance.yaml``` example is using the Service ```rds-mysql``` and Service Plan ```5-7-17```. About the key [parameters](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/cce/examples/mysql/mysql-service-instance.yaml#L12), you can find more informations in the [rds-mysql.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/usage/rds-mysql.md#provision-parameters). Then you can run the following command to create ```mysql-service-instance.yaml```.
+The ```mysql-service-instance.yaml``` example is using the Service ```rds-mysql``` and Service Plan ```5-7```. About the key [parameters](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/cce/examples/mysql/mysql-service-instance.yaml#L12), you can find more informations in the [rds-mysql.md](https://github.com/huaweicloud/huaweicloud-service-broker/blob/master/docs/usage/rds-mysql.md#provision-parameters). Then you can run the following command to create ```mysql-service-instance.yaml```.
 
 ```
 $ kubectl create -f mysql-service-instance.yaml
