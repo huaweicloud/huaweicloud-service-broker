@@ -6,7 +6,7 @@ metadata:
 spec:
   # References service name and plan name
   clusterServiceClassExternalName: rds-mysql
-  clusterServicePlanExternalName: 5-7-17
+  clusterServicePlanExternalName: 5-7
   # Additional parameters can be added here,
   # which may be used by the service broker.
   parameters:
