@@ -8,10 +8,17 @@
 
 ## Plans
 
+### RDS V1 version
 | Plan Name                      | Description
 |:-------------------------------|:-----------
 | 5.6.39                         | RDS MySQL 5.6.39
 | 5.7.21                         | RDS MySQL 5.7.21
+
+### RDS V3 version
+| Plan Name                   | Description
+|:----------------------------|:-----------
+| 5.6                         | RDS MySQL 5.6
+| 5.7                         | RDS MySQL 5.7
 
 ## Provision
 
