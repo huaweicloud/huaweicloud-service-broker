@@ -31,7 +31,9 @@ export catalog_subnetID=<subnet id>
 export catalog_securityGroupID=<security group id>
 ```
 
-note: The catalog_subnetID value is the value of "Network ID" in public cloud console.
+::note:
+ 
+  The catalog_subnetID value is the value of "Network ID" in public cloud console.
 
 Installation of this chart is by helm.
 
